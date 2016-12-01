@@ -1,5 +1,8 @@
+import java.util.Date;
 
 public class main {
+	
+	boolean debug = false;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -17,9 +20,18 @@ public class main {
 		//send a link (create an alert at first)
 		
 		
-		
+	}
+	
+	public void parsePlay(String play) {
+		//check db if string contains a known player?
+		//get timestamp
+		Date date = new Date();
+		//get current time (to make sure video is less than 30 minutes old)
+		//get current date for use in search
 		
 	}
+	
+	
 
 
 }
