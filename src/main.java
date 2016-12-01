@@ -8,8 +8,7 @@ public class main {
 	boolean debug = false;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-gener
 		//debug flag for print statements
 		
 		//set up favorite teams/players - players and teams you want to track
@@ -23,6 +22,25 @@ public class main {
 		//send a link (create an alert at first)
 		
 		
+		//////////////////////////////////////////////////////////////////
+		//after picking teams, etc
+		//play alert is received from api
+		String playAlert = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
+		//determine if play is worth examining -- does it contain "goal"?
+		//if yes, parse play for keywords/query, set time, etc
+		//create a new play
+		//create a thread for each play, wait 10, then run each minute until 40 ----- crawlSites + thread
+		//each thread valides and checks where to send url, and sends it
+		///////////////////////////////////////////////////////////////////
+		
+	}
+	
+	public boolean isPlayWorthKeeping(String playAlert) {
+		if (playAlert.toLowerCase().contains("goal")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public String pickTeam(String team) {
@@ -43,16 +61,22 @@ public class main {
 		
 	
 	public void parsePlay(String play) {
-		String samplePlay = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
-		//check every play from ~10 streams at once, and parse for players - only send out tho if subscribed to that player
-		//get timestamp
-		Date date = new Date();
-		//get current time (to make sure video is less than 30 minutes old)
-		//get current date for use in search
+		String play1 = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
+		Date date = new Date(); //dot getNow
+		
+		ArrayList keywords = new ArrayList<String>();
+		String[] playArr = play1.split(" ");
+		for (int i=0; i<playArr.length; i++) {
+			keywords.add(playArr[i]);
+		}
+		
+		//find real tags ---- involves checking db if any known players are involved in the play string
+		
+		Play p = new Play(date, keywords, date, keywords);
+		//for each play p, start a thread
 		
 		//pass on to "crawlSites" method
-		String fullQuery = "something";
-		ArrayList keywords = new ArrayList<String>();
+		
 		
 	}
 	
