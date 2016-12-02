@@ -3,7 +3,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,27 +42,61 @@ public class main {
 		//play alert is received from api
 		
 		//possible to approximate file size before download
-		HttpURLConnection content = (HttpURLConnection) new URL("www.example.com").openConnection();
-		System.out.println(content.getContentLength());
+		HttpURLConnection content = (HttpURLConnection) new URL("https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html").openConnection();
+//		System.out.println(content.getContentLength());
 		
-		String playAlert = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
-		if (isPlayWorthKeeping(playAlert)) {
-			parsePlay(playAlert);
-		}		
+				
 		//determine if play is worth examining -- does it contain "goal"?
 		//if yes, parse play for keywords/query, set time, etc
 		//create a new play
 		//create a thread for each play, wait 10, then run each minute until 40 ----- crawlSites + thread
 		//each thread validates and checks where to send url, and sends it
 		///////////////////////////////////////////////////////////////////
-
+		
+		
+		//-----------------FAKE DATA ------------------------------
+		String playAlert = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
+		//users
+		ArrayList<String> tags1 = new ArrayList<String>();
+		tags1.add("dortmund");
+		tags1.add("reus");
+		ArrayList<String> tags2 = new ArrayList<String>();
+		tags2.add("real");
+		tags2.add("ronaldo");
+		users.add(new User("jonathan.axmann09@gmail.com", 1314940, tags1));
+		users.add(new User("k.chesser@tcs.com", 1314943, tags2));
+		//gcdTeams
+		gcdTeams.add("dortmund");
+		gcdTeams.add("real");
+		//gcdPlayers
+		gcdPlayers.add("reus");
+		gcdPlayers.add("ronaldo");
+		//fullTeams
+		fullTeams.add("Borussia Dortmund");
+		fullTeams.add("Real Madrid");
+		//fullPlayers
+		fullPlayers.add("Marco Reus");
+		fullPlayers.add("Christiano Ronaldo");
+		
+		
+		if (isPlayWorthKeeping(playAlert)) {
+			parsePlay(playAlert);
+		}
+		
 	}
 
 
 	public static boolean isPlayWorthKeeping(String playAlert) {
 		if (playAlert.toLowerCase().contains("goal")) {
+			if (main.DEBUG) {
+				System.out.println("isPlayWorthKeeping: TRUE");
+			}
 			return true;
+			
 		} 
+		if (main.DEBUG) {
+			System.out.println("isPlayWorthKeeping: FALSE");
+		}
 		return false;
 	}
 
@@ -66,25 +104,40 @@ public class main {
 	public static void parsePlay(String play) {
 		Date date = new Date(); 
 
-		ArrayList<String> keywords = new ArrayList<String>();
-		String score = null;
-
+		HashSet<String> keywords = new HashSet<String>();
+		int[] score = null;
+		
 		String[] playArr = play.split(" ");
+		
+		if (main.DEBUG) {
+			System.out.println("Play as array is: " + Arrays.toString(playArr));
+		}
+		
 		for (int i=0; i<playArr.length; i++) {
 			//teams
 			for (int j=0; j<gcdTeams.size(); j++) {
-				if (playArr[i].contains(gcdTeams.get(j))) {
+				if (playArr[i].toLowerCase().contains(gcdTeams.get(j))) {
 					keywords.add(fullTeams.get(j));
 				}
 			}
 			//players
 			for (int k=0; k<gcdPlayers.size(); k++) {
-				if (playArr[i].contains(gcdPlayers.get(k))) {
+				if (playArr[i].toLowerCase().contains(gcdPlayers.get(k))) {
 					keywords.add(fullPlayers.get(k));
 				}
 			}
+			//score - this is an array of 2 numbers
 			if (playArr[i].matches("\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)")) {
-				score = regexMatchString(playArr[i], "\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)");
+				score = regexBuildScore(playArr[i], "\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)");
+			}
+		}
+		
+		if (main.DEBUG) {
+			if (keywords.size() == 0) {
+				System.out.println("Keywords are empty :(");
+			}
+			for (String s : keywords) {
+				System.out.println(s);
 			}
 		}
 		
@@ -96,11 +149,13 @@ public class main {
 
 	}
 
-	public static String regexMatchString(String text, String regex) {
+	public static int[] regexBuildScore(String text, String regex) {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(text);
 		String matchingString = text.substring(matcher.start(), matcher.end());
-		return matchingString;
+		Scanner s = new Scanner(matchingString);
+		int[] scoreArr = {s.nextInt(), s.nextInt()};
+		return scoreArr;
 
 	}
 

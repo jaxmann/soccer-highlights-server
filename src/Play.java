@@ -1,14 +1,14 @@
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 public class Play {
 
-	private ArrayList<String> keywords;
+	private HashSet<String> keywords;
 	private Date date;
-	private String score;
+	private int[] score;
 
 
-	Play(Date timeNow, ArrayList<String> keywords, Date date, String score) {
+	Play(Date timeNow, HashSet<String> keywords, Date date, int[] score) {
 		this.score = score;
 		this.keywords = keywords;
 		this.date = date;
@@ -22,11 +22,11 @@ public class Play {
 	}
 
 
-	public ArrayList<String> getKeywords() {
+	public HashSet<String> getKeywords() {
 		return keywords;
 	}
 
-	public void setKeywords(ArrayList<String> keywords) {
+	public void setKeywords(HashSet<String> keywords) {
 		this.keywords = keywords;
 	}
 
@@ -38,11 +38,11 @@ public class Play {
 		this.date = date;
 	}
 
-	public String getScore() {
+	public int[] getScore() {
 		return score;
 	}
 
-	public void setScore(String score) {
+	public void setScore(int[] score) {
 		this.score = score;
 	}
 

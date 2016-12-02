@@ -6,14 +6,12 @@ public class User {
 
 	private String email;
 	private int userID;
-	private ArrayList<String> teams;
-	private ArrayList<String> players;
+	private ArrayList<String> tags;
 
-	public User(String email, int userID, ArrayList<String> teams, ArrayList<String> players) {
+	public User(String email, int userID, ArrayList<String> tags) {
 		this.email = email;
 		this.userID = userID;
-		this.teams = teams;
-		this.players = players;
+		this.tags = tags;
 	}
 
 	public void sendAlert(String url) {
@@ -29,20 +27,12 @@ public class User {
 		this.userID = userID;
 	}
 
-	public ArrayList<String> getTeams() {
-		return teams;
+	public ArrayList<String> getTags() {
+		return tags;
 	}
 
-	public void setTeams(ArrayList<String> teams) {
-		this.teams = teams;
-	}
-
-	public ArrayList<String> getPlayers() {
-		return players;
-	}
-
-	public void setPlayers(ArrayList<String> players) {
-		this.players = players;
+	public void setTags(ArrayList<String> tags) {
+		this.tags = tags;
 	}
 
 	public String getEmail() {
