@@ -126,6 +126,7 @@ public class main {
 					keywords.add(fullPlayers.get(k));
 				}
 			}
+<<<<<<< HEAD
 			//score - this is an array of 2 numbers
 			if (playArr[i].matches("\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)")) {
 				score = regexBuildScore(playArr[i], "\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)");
@@ -138,6 +139,11 @@ public class main {
 			}
 			for (String s : keywords) {
 				System.out.println(s);
+=======
+			if (playArr[i].matches("(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])")) {
+
+				score = regexMatchString(playArr[i], "(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])");
+>>>>>>> 7d34f3826509cdd749c42912d47a86706f451d4d
 			}
 		}
 		
