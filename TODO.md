@@ -10,4 +10,4 @@
 
  - [ ] send a link (create an alert at first)
 
- - [ ] set up SQLite db for players and teams
+ - [x] set up SQLite db for players and teams

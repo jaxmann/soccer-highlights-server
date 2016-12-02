@@ -1,0 +1,14 @@
+CREATE TABLE Player
+(
+FullName varchar(60),
+FirstName varchar(30),
+LastName varchar(30),
+CommonName varchar(30),
+TeamName varchar(50)
+);
+
+CREATE TABLE Team
+(
+TeamName varchar(50),
+Location varchar(50)
+);
