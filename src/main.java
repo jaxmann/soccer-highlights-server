@@ -83,8 +83,9 @@ public class main {
 					keywords.add(fullPlayers.get(k));
 				}
 			}
-			if (playArr[i].matches("\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)")) {
-				score = regexMatchString(playArr[i], "\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)");
+			if (playArr[i].matches("(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])")) {
+
+				score = regexMatchString(playArr[i], "(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])");
 			}
 		}
 		
