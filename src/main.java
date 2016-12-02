@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -14,10 +18,7 @@ public class main {
 	public static ArrayList<String> fullPlayers = new ArrayList<String>();
 
 
-	public static void main(String[] args) {
-
-
-		// TODO Auto-gener
+	public static void main(String[] args) throws MalformedURLException, IOException {
 		//debug flag for print statements
 
 		//set up favorite teams/players - players and teams you want to track
@@ -31,14 +32,19 @@ public class main {
 		//send a link (create an alert at first)
 
 		
-
-
 		//////////////////////////////////////////////////////////////////
 		//after picking teams, etc
 		//do big db call to populate teams/players arraylist
 		//play alert is received from api
+		
+		//possible to approximate file size before download
+		HttpURLConnection content = (HttpURLConnection) new URL("www.example.com").openConnection();
+		System.out.println(content.getContentLength());
+		
 		String playAlert = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
-		submitPlay(playAlert);
+		if (isPlayWorthKeeping(playAlert)) {
+			parsePlay(playAlert);
+		}		
 		//determine if play is worth examining -- does it contain "goal"?
 		//if yes, parse play for keywords/query, set time, etc
 		//create a new play
@@ -48,18 +54,12 @@ public class main {
 
 	}
 
-	public static void submitPlay(String play) {
-		if (isPlayWorthKeeping(play)) {
-			parsePlay(play);
-		}
-	}
 
 	public static boolean isPlayWorthKeeping(String playAlert) {
 		if (playAlert.toLowerCase().contains("goal")) {
 			return true;
-		} else {
-			return false;
-		}
+		} 
+		return false;
 	}
 
 
@@ -69,7 +69,6 @@ public class main {
 		ArrayList<String> keywords = new ArrayList<String>();
 		String score = null;
 
-		//don't add all words, make a regex or something that looks for mm/dd, or /mmm/dd for instance, and then for player names, and score
 		String[] playArr = play.split(" ");
 		for (int i=0; i<playArr.length; i++) {
 			//teams
@@ -90,8 +89,6 @@ public class main {
 		}
 		
 		
-
-
 		Play p = new Play(date, keywords, date, score);
 		//for each play p, start a thread
 		//add a new worker thread (newWorkerThread)
@@ -128,9 +125,5 @@ public class main {
 		String playerPicked = "Marco Reus";
 		return playerPicked;
 	}
-
-
-
-
 
 }

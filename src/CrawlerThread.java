@@ -9,7 +9,6 @@ public class CrawlerThread implements Runnable {
 		this.play = play;
 	}
 
-
 	@Override
 	public void run() {
 		if (main.DEBUG) {
@@ -20,7 +19,6 @@ public class CrawlerThread implements Runnable {
 		figureOutWhoToSendItTo(main.users, play.getKeywords()); //also calls send method
 
 	}
-
 
 	public static void figureOutWhoToSendItTo(ArrayList<User> users, ArrayList<String> keywords) {
 		//given the associated keywords with the video, see if they match "tags" that one can subscribe to (either team name/players)

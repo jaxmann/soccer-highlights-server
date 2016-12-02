@@ -3,10 +3,8 @@ import java.util.Date;
 
 public class Play {
 
-	private Date timeNow;
 	private ArrayList<String> keywords;
 	private Date date;
-	private ArrayList<String> tags;
 	private String score;
 
 
@@ -14,13 +12,12 @@ public class Play {
 		this.score = score;
 		this.keywords = keywords;
 		this.date = date;
-		this.tags = tags;
 	}
 
 	public String crawlSites() {
 		//see if any one video contains MOST of the keywords, and pick that video?
 		//validate url - make sure its a video
-		
+
 		return "sampleUrl";
 	}
 
@@ -39,14 +36,6 @@ public class Play {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public ArrayList<String> getTags() {
-		return tags;
-	}
-
-	public void setTags(ArrayList<String> tags) {
-		this.tags = tags;
 	}
 
 	public String getScore() {
