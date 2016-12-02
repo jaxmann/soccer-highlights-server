@@ -14,9 +14,13 @@ public class CrawlerThread implements Runnable {
 		if (main.DEBUG) {
 			System.out.println("do some operations here");
 		}
-		String url = play.crawlSites();
+		
+		String url = null;
+		url = "sampleURL";
+		url = play.crawlSites();
+
 		//crawl sites with the given play
-		figureOutWhoToSendItTo(url, main.users, play.getKeywords()); //also calls send method
+		figureOutWhoToSendItTo(url, main.users, play.getShortKeywords()); //also calls send method
 	}
 
 	public static void figureOutWhoToSendItTo(String url, ArrayList<User> users, HashSet<String> hashSet) {

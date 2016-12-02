@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +54,7 @@ public class main {
 
 
 		//-----------------FAKE DATA ------------------------------
-		String playAlert = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
+		String playAlert = "Goal by Reus! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
 		//users
 		ArrayList<String> tags1 = new ArrayList<String>();
 		tags1.add("dortmund");

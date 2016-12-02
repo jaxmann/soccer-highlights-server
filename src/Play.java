@@ -9,14 +9,16 @@ import org.jsoup.select.Elements;
 
 public class Play {
 
-	private HashSet<String> keywords;
+	private HashSet<String> shortKeywords;
+	private HashSet<String> longKeywords;
 	private Date date;
 	private int[] score;
 
 
 	Play(Date timeNow, HashSet<String> shortKeywords, HashSet<String> longKeywords, Date date, int[] score) {
 		this.score = score;
-		this.keywords = keywords;
+		this.shortKeywords = shortKeywords;
+		this.longKeywords = longKeywords;
 		this.date = date;
 	}
 
@@ -40,12 +42,21 @@ public class Play {
 	}
 
 
-	public HashSet<String> getKeywords() {
-		return keywords;
+
+	public HashSet<String> getShortKeywords() {
+		return shortKeywords;
 	}
 
-	public void setKeywords(HashSet<String> keywords) {
-		this.keywords = keywords;
+	public void setShortKeywords(HashSet<String> shortKeywords) {
+		this.shortKeywords = shortKeywords;
+	}
+
+	public HashSet<String> getLongKeywords() {
+		return longKeywords;
+	}
+
+	public void setLongKeywords(HashSet<String> longKeywords) {
+		this.longKeywords = longKeywords;
 	}
 
 	public Date getDate() {
