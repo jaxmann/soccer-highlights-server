@@ -28,8 +28,8 @@ public class CrawlerThread implements Runnable {
 		for (int i=0; i<users.size(); i ++) { //for each user...
 			//if tags match...
 			for (int k=0; k<users.get(i).getTags().size(); k++) { //for each tag within each user
-				for (int j=0; j<hashSet.size(); j++ ) { //check if the user has a tag that matches a tag in the play, if so, send an alert with the url to the play
-					if (users.get(i).getTags().get(k).contains(hashSet.get(j))) {
+				for (String q : hashSet) {
+					if (users.get(i).getTags().get(k).contains(q)) {
 						users.get(i).sendAlert(url);
 					}
 				}

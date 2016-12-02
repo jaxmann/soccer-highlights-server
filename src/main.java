@@ -35,25 +35,25 @@ public class main {
 
 		//send a link (create an alert at first)
 
-		
+
 		//////////////////////////////////////////////////////////////////
 		//after picking teams, etc
 		//do big db call to populate teams/players arraylist
 		//play alert is received from api
-		
+
 		//possible to approximate file size before download
 		HttpURLConnection content = (HttpURLConnection) new URL("https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html").openConnection();
-//		System.out.println(content.getContentLength());
-		
-				
+		//		System.out.println(content.getContentLength());
+
+
 		//determine if play is worth examining -- does it contain "goal"?
 		//if yes, parse play for keywords/query, set time, etc
 		//create a new play
 		//create a thread for each play, wait 10, then run each minute until 40 ----- crawlSites + thread
 		//each thread validates and checks where to send url, and sends it
 		///////////////////////////////////////////////////////////////////
-		
-		
+
+
 		//-----------------FAKE DATA ------------------------------
 		String playAlert = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
 		//users
@@ -77,12 +77,12 @@ public class main {
 		//fullPlayers
 		fullPlayers.add("Marco Reus");
 		fullPlayers.add("Christiano Ronaldo");
-		
-		
+
+
 		if (isPlayWorthKeeping(playAlert)) {
 			parsePlay(playAlert);
 		}
-		
+
 	}
 
 
@@ -92,7 +92,7 @@ public class main {
 				System.out.println("isPlayWorthKeeping: TRUE");
 			}
 			return true;
-			
+
 		} 
 		if (main.DEBUG) {
 			System.out.println("isPlayWorthKeeping: FALSE");
@@ -106,13 +106,13 @@ public class main {
 
 		HashSet<String> keywords = new HashSet<String>();
 		int[] score = null;
-		
+
 		String[] playArr = play.split(" ");
-		
+
 		if (main.DEBUG) {
 			System.out.println("Play as array is: " + Arrays.toString(playArr));
 		}
-		
+
 		for (int i=0; i<playArr.length; i++) {
 			//teams
 			for (int j=0; j<gcdTeams.size(); j++) {
@@ -126,28 +126,24 @@ public class main {
 					keywords.add(fullPlayers.get(k));
 				}
 			}
-<<<<<<< HEAD
-			//score - this is an array of 2 numbers
-			if (playArr[i].matches("\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)")) {
-				score = regexBuildScore(playArr[i], "\\(\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?\\)");
+			for (String s : keywords) {
+				System.out.println(s);
+				if (playArr[i].matches("(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])")) {
+					score = regexBuildScore(playArr[i], "(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])");
+				}
 			}
 		}
-		
+		//score - this is an array of 2 numbers
+
+
 		if (main.DEBUG) {
 			if (keywords.size() == 0) {
 				System.out.println("Keywords are empty :(");
 			}
-			for (String s : keywords) {
-				System.out.println(s);
-=======
-			if (playArr[i].matches("(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])")) {
-
-				score = regexMatchString(playArr[i], "(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])");
->>>>>>> 7d34f3826509cdd749c42912d47a86706f451d4d
-			}
 		}
-		
-		
+
+
+
 		Play p = new Play(date, keywords, date, score);
 		//for each play p, start a thread
 		//add a new worker thread (newWorkerThread)
