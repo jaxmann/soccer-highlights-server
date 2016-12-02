@@ -1,13 +1,16 @@
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.JOptionPane;
 
 public class main {
 	
-	boolean debug = false;
+	public static final boolean DEBUG = true;
+	public static ArrayList<User> users = new ArrayList<User>();
+
 
 	public static void main(String[] args) {
+		
+
 		// TODO Auto-gener
 		//debug flag for print statements
 		
@@ -22,10 +25,12 @@ public class main {
 		//send a link (create an alert at first)
 		
 		
+		
 		//////////////////////////////////////////////////////////////////
 		//after picking teams, etc
 		//play alert is received from api
 		String playAlert = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
+		submitPlay(playAlert);
 		//determine if play is worth examining -- does it contain "goal"?
 		//if yes, parse play for keywords/query, set time, etc
 		//create a new play
@@ -35,7 +40,13 @@ public class main {
 		
 	}
 	
-	public boolean isPlayWorthKeeping(String playAlert) {
+	public static void submitPlay(String play) {
+		if (isPlayWorthKeeping(play)) {
+			parsePlay(play);
+		}
+	}
+	
+	public static boolean isPlayWorthKeeping(String playAlert) {
 		if (playAlert.toLowerCase().contains("goal")) {
 			return true;
 		} else {
@@ -60,12 +71,11 @@ public class main {
 	
 		
 	
-	public void parsePlay(String play) {
-		String play1 = "Goal by Ronaldo! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
+	public static void parsePlay(String play) {
 		Date date = new Date(); //dot getNow
 		
-		ArrayList keywords = new ArrayList<String>();
-		String[] playArr = play1.split(" ");
+		ArrayList<String> keywords = new ArrayList<String>();
+		String[] playArr = play.split(" ");
 		for (int i=0; i<playArr.length; i++) {
 			keywords.add(playArr[i]);
 		}
@@ -74,31 +84,19 @@ public class main {
 		
 		Play p = new Play(date, keywords, date, keywords);
 		//for each play p, start a thread
-		
-		//pass on to "crawlSites" method
+		//add a new worker thread (newWorkerThread)
+		newWorkerThread(p);
 		
 		
 	}
 	
-	public void crawlSites(String fullQuery, ArrayList keywords) {
-		//fullQuery is all combined keywords with overall best chance of success?
-		//OR see if any one video contains MOST of the keywords, and pick that video?
-		
-		
-		
-		//pass it on to "figureOutWhoToSendItTo" method
+	public static void newWorkerThread(Play p) {
+		//create one at a time
+		CrawlerThread t = new CrawlerThread(p);
+		t.run();
 	}
 	
-	public void figureOutWhoToSendItTo(String keywords) {
-		//given the associated keywords with the video, see if they match "tags" that one can subscribe to (either team name/players)
-		//and only send the message to people who are subscribed
-		//pass on to "sendAlert" method
-	}
 	
-	public void sendAlert(String url) {
-		//this would be an email or push notification or something, for now, just an alert/pop-up
-		JOptionPane.showMessageDialog(null, "MarcoReusIsAnAnimal.mp4");
-	}
 	
 	
 	

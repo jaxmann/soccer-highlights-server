@@ -4,15 +4,25 @@ import java.util.Date;
 public class Play {
 
 	private Date timeNow;
-	private ArrayList keywords;
+	private ArrayList<String> keywords;
 	private Date date;
-	private ArrayList tags;
+	private ArrayList<String> tags;
 	
-	Play(Date timeNow, ArrayList keywords, Date day, ArrayList tags) {
+	Play(Date timeNow, ArrayList<String> keywords, Date date, ArrayList<String> tags) {
 		this.timeNow = timeNow;
 		this.keywords = keywords;
 		this.date = date;
 		this.tags = tags;
+	}
+	
+	public String crawlSites() {
+		
+		//see if any one video contains MOST of the keywords, and pick that video?
+		
+		
+		//pass it on to "figureOutWhoToSendItTo" method
+		
+		return "sampleUrl";
 	}
 
 	public Date getTimeNow() {
@@ -23,11 +33,11 @@ public class Play {
 		this.timeNow = timeNow;
 	}
 
-	public ArrayList getKeywords() {
+	public ArrayList<String> getKeywords() {
 		return keywords;
 	}
 
-	public void setKeywords(ArrayList keywords) {
+	public void setKeywords(ArrayList<String> keywords) {
 		this.keywords = keywords;
 	}
 
@@ -39,11 +49,11 @@ public class Play {
 		this.date = date;
 	}
 
-	public ArrayList getTags() {
+	public ArrayList<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(ArrayList tags) {
+	public void setTags(ArrayList<String> tags) {
 		this.tags = tags;
 	}
 	
