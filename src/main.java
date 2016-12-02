@@ -11,17 +11,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class main {
+public class main extends PMRTreeView {
 
 	public static final boolean DEBUG = true;
 	public static ArrayList<User> users = new ArrayList<User>();
+	public static ArrayList<Player> players = new ArrayList<Player>();
 	public static ArrayList<String> gcdTeams = new ArrayList<String>();
 	public static ArrayList<String> gcdPlayers = new ArrayList<String>();
 	public static ArrayList<String> fullTeams = new ArrayList<String>();
 	public static ArrayList<String> fullPlayers = new ArrayList<String>();
 
 
-	public static void main(String[] args) throws MalformedURLException, IOException {
+	public static void main(String[] args) {
 		//debug flag for print statements
 
 		//set up favorite teams/players - players and teams you want to track
@@ -41,9 +42,14 @@ public class main {
 		//play alert is received from api
 
 		//possible to approximate file size before download
-		HttpURLConnection content = (HttpURLConnection) new URL("https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html").openConnection();
+//		HttpURLConnection content = (HttpURLConnection) new URL("https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html").openConnection();
 		//		System.out.println(content.getContentLength());
-
+		
+		
+		players.add(new Player("Marco Reus", "Borussia Dortmund", "Bundeliga"));
+		players.add(new Player("Christiano Ronaldo", "Real Madrid", "La Liga"));
+		players.add(new Player("Emre Mor", "Borussia Dortmund", "Bundesliga"));
+		PMRTreeView.launch(args);
 
 		//determine if play is worth examining -- does it contain "goal"?
 		//if yes, parse play for keywords/query, set time, etc
@@ -175,7 +181,6 @@ public class main {
 		CrawlerThread t = new CrawlerThread(p);
 		t.run();
 	}
-
 
 	public String pickTeam(String team) {
 		//connect to a db and validate their input (checking permutations of what they said, e.g. "dortmund" = "Borussia Dortmund") - like watson..
