@@ -7,31 +7,23 @@ public class Play {
 	private ArrayList<String> keywords;
 	private Date date;
 	private ArrayList<String> tags;
-	
-	Play(Date timeNow, ArrayList<String> keywords, Date date, ArrayList<String> tags) {
-		this.timeNow = timeNow;
+	private String score;
+
+
+	Play(Date timeNow, ArrayList<String> keywords, Date date, String score) {
+		this.score = score;
 		this.keywords = keywords;
 		this.date = date;
 		this.tags = tags;
 	}
-	
+
 	public String crawlSites() {
-		
 		//see if any one video contains MOST of the keywords, and pick that video?
-		
-		
-		//pass it on to "figureOutWhoToSendItTo" method
+		//validate url - make sure its a video
 		
 		return "sampleUrl";
 	}
 
-	public Date getTimeNow() {
-		return timeNow;
-	}
-
-	public void setTimeNow(Date timeNow) {
-		this.timeNow = timeNow;
-	}
 
 	public ArrayList<String> getKeywords() {
 		return keywords;
@@ -56,7 +48,15 @@ public class Play {
 	public void setTags(ArrayList<String> tags) {
 		this.tags = tags;
 	}
-	
-	
-	
+
+	public String getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
+	}
+
+
+
 }
