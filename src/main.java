@@ -104,7 +104,8 @@ public class main {
 	public static void parsePlay(String play) {
 		Date date = new Date(); 
 
-		HashSet<String> keywords = new HashSet<String>();
+		HashSet<String> shortKeywords = new HashSet<String>();
+		HashSet<String> longKeywords = new HashSet<String>();
 		int[] score = null;
 
 		String[] playArr = play.split(" ");
@@ -117,34 +118,43 @@ public class main {
 			//teams
 			for (int j=0; j<gcdTeams.size(); j++) {
 				if (playArr[i].toLowerCase().contains(gcdTeams.get(j))) {
-					keywords.add(fullTeams.get(j));
+					shortKeywords.add(gcdTeams.get(j));
+					longKeywords.add(fullTeams.get(j));
 				}
 			}
 			//players
 			for (int k=0; k<gcdPlayers.size(); k++) {
 				if (playArr[i].toLowerCase().contains(gcdPlayers.get(k))) {
-					keywords.add(fullPlayers.get(k));
+					shortKeywords.add(gcdPlayers.get(k));
+					longKeywords.add(fullPlayers.get(k));
 				}
 			}
-			for (String s : keywords) {
-				System.out.println(s);
-				if (playArr[i].matches("(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])")) {
-					score = regexBuildScore(playArr[i], "(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])");
-				}
-			}
+//			for (String s : keywords) {
+//				if (playArr[i].matches("(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])")) {
+//					//score - this is an array of 2 numbers
+//					score = regexBuildScore(playArr[i], "(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])");
+//				}
+//			}
 		}
-		//score - this is an array of 2 numbers
+
+		if (main.DEBUG) {
+			System.out.println("Score should be 2 ints: " + Arrays.toString(score));
+		}
 
 
 		if (main.DEBUG) {
-			if (keywords.size() == 0) {
+			if (shortKeywords.size() == 0) {
 				System.out.println("Keywords are empty :(");
+			} else {
+				for (String q : longKeywords) {
+					System.out.println("Keyword: " + q);
+				}
 			}
+
 		}
 
 
-
-		Play p = new Play(date, keywords, date, score);
+		Play p = new Play(date, shortKeywords, longKeywords, date, score);
 		//for each play p, start a thread
 		//add a new worker thread (newWorkerThread)
 		newWorkerThread(p);

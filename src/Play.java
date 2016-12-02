@@ -8,7 +8,7 @@ public class Play {
 	private int[] score;
 
 
-	Play(Date timeNow, HashSet<String> keywords, Date date, int[] score) {
+	Play(Date timeNow, HashSet<String> shortKeywords, HashSet<String> longKeywords, Date date, int[] score) {
 		this.score = score;
 		this.keywords = keywords;
 		this.date = date;
