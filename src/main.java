@@ -19,7 +19,7 @@ public class main {
 	public static ArrayList<String> gcdPlayers = new ArrayList<String>();
 	public static ArrayList<String> fullTeams = new ArrayList<String>();
 	public static ArrayList<String> fullPlayers = new ArrayList<String>();
-
+	public static ArrayList<HighlightLink> highlightLinks = new ArrayList<HighlightLink>();
 
 	public static void main(String[] args) throws MalformedURLException, IOException {
 		//debug flag for print statements
@@ -128,12 +128,6 @@ public class main {
 					longKeywords.add(fullPlayers.get(k));
 				}
 			}
-//			for (String s : keywords) {
-//				if (playArr[i].matches("(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])")) {
-//					//score - this is an array of 2 numbers
-//					score = regexBuildScore(playArr[i], "(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\])");
-//				}
-//			}
 		}
 
 		if (main.DEBUG) {

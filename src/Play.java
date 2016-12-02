@@ -25,32 +25,6 @@ public class Play {
 		this.date = date;
 	}
 
-	public String crawlSites() {
-		//see if any one video contains MOST of the keywords, and pick that video?
-		//validate url - make sure its a video
-		String redditURL = "http://www.reddit.com/r/soccer/new";
-		Document document = null;
-		try {
-			document = Jsoup.connect(redditURL).userAgent(USER_AGENT).timeout(0).get(); //Get the url
-			Elements links = document.select("a[href]"); //Get the links from the url
-			System.out.println("Links: " + links.size());
-			for(Element link: links){
-				System.out.println("#Link: " + link.attr("abs:href") + " " + link.text());
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		//Check content size and see if it is approximately the size we'd expect a video to be
-		//HttpURLConnection content = (HttpURLConnection) new URL("https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html").openConnection();
-		//System.out.println(content.getContentLength());
-		return "sampleUrl";
-	}
-
-
-
 	public HashSet<String> getShortKeywords() {
 		return shortKeywords;
 	}

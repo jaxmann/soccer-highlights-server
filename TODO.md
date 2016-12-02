@@ -6,7 +6,9 @@
 	
  - [ ] identify a search query based on the play/identify keywords used to search, make sure post is recent 		(PMR)
 
- - [ ] perform search on websites, save url, verify its a smallish video file
+ - [x] perform search on websites, save url 
+
+ - [ ] verify link has smallish video file
 
  - [ ] send a link (create an alert at first)
 
