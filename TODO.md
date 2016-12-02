@@ -1,4 +1,4 @@
- - [ ] debug flag for print statements
+ - [x] debug flag for print statements
 		
  - [ ] set up favorite teams/players - players and teams you want to track
 
@@ -9,3 +9,5 @@
  - [ ] perform search on websites, save url, verify its a smallish video file
 
  - [ ] send a link (create an alert at first)
+
+ - [ ] set up SQLite db for players and teams
