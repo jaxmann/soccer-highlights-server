@@ -11,5 +11,5 @@ LeagueName varchar(50)
 CREATE TABLE Team
 (
 TeamName varchar(50),
-Location varchar(50)
+LeagueName varchar(50)
 );
