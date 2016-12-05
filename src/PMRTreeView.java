@@ -26,6 +26,8 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 public class PMRTreeView extends Application {
+	
+	public static ArrayList<String> selectedKeywords = new ArrayList<String>();
 
 	private final Node rootIcon = 
 			new ImageView(new Image(getClass().getResourceAsStream("/epl.png"))); //placeholder picture for now
@@ -47,15 +49,17 @@ public class PMRTreeView extends Application {
 
 		
 		rootNode.setIndependent(true);
-		//these all have to be initialised independently 
+		//these all have to be initialized independently 
 		CheckBoxTreeItem<String> bundes = new CheckBoxTreeItem<String>("Bundesliga", new ImageView(depIcon));
 		bundes.setIndependent(true);
 		bundes.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (newValue) {
 					System.out.println("The selected item is " + bundes.valueProperty().get());
+					selectedKeywords.add(bundes.valueProperty().get());
 				} else {
 					System.out.println("Item deselected");
+					selectedKeywords.remove(bundes.valueProperty().get());
 				}
 			}
 		});
@@ -67,8 +71,10 @@ public class PMRTreeView extends Application {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (newValue) {
 					System.out.println("The selected item is " + epl.valueProperty().get());
+					selectedKeywords.add(epl.valueProperty().get());
 				} else {
 					System.out.println("Item deselected");
+					selectedKeywords.remove(bundes.valueProperty().get());
 				}
 			}
 		});
@@ -80,8 +86,10 @@ public class PMRTreeView extends Application {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (newValue) {
 					System.out.println("The selected item is " + LaLiga.valueProperty().get());
+					selectedKeywords.add(LaLiga.valueProperty().get());
 				} else {
 					System.out.println("Item deselected");
+					selectedKeywords.remove(LaLiga.valueProperty().get());
 				}
 			}
 		});
@@ -93,8 +101,10 @@ public class PMRTreeView extends Application {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (newValue) {
 					System.out.println("The selected item is " + l1.valueProperty().get());
+					selectedKeywords.add(l1.valueProperty().get());
 				} else {
 					System.out.println("Item deselected");
+					selectedKeywords.remove(l1.valueProperty().get());
 				}
 			}
 		});
@@ -106,8 +116,10 @@ public class PMRTreeView extends Application {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (newValue) {
 					System.out.println("The selected item is " + serieA.valueProperty().get());
+					selectedKeywords.add(serieA.valueProperty().get());
 				} else {
 					System.out.println("Item deselected");
+					selectedKeywords.remove(serieA.valueProperty().get());
 				}
 			}
 		});
@@ -115,7 +127,7 @@ public class PMRTreeView extends Application {
 		
 
 
-		//dont fiddle with this, it somewhow actually works
+		//dont fiddle with this, it somehow actually works
 		for (int i=0; i<main.players.size(); i++) {
 			for (TreeItem<String> league : rootNode.getChildren()) {
 				if (league.getValue().contentEquals(main.players.get(i).getLeagueName())) {
@@ -133,8 +145,10 @@ public class PMRTreeView extends Application {
 										public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 											if (newValue) {
 												System.out.println("The selected item is " + a.valueProperty().get());
+												selectedKeywords.add(a.valueProperty().get());
 											} else {
 												System.out.println("Item deselected");
+												selectedKeywords.remove(a.valueProperty().get());
 											}
 										}
 									});
@@ -147,8 +161,10 @@ public class PMRTreeView extends Application {
 									public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 										if (newValue) {
 											System.out.println("The selected item is " + b.valueProperty().get());
+											selectedKeywords.add(b.valueProperty().get());
 										} else {
 											System.out.println("Item deselected");
+											selectedKeywords.remove(b.valueProperty().get());
 										}
 									}
 								});
@@ -163,8 +179,10 @@ public class PMRTreeView extends Application {
 							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 								if (newValue) {
 									System.out.println("The selected item is " + c.valueProperty().get());
+									selectedKeywords.add(c.valueProperty().get());
 								} else {
 									System.out.println("Item deselected");
+									selectedKeywords.remove(c.valueProperty().get());
 								}
 							}
 						});
@@ -176,8 +194,10 @@ public class PMRTreeView extends Application {
 							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 								if (newValue) {
 									System.out.println("The selected item is " + d.valueProperty().get());
+									selectedKeywords.add(d.valueProperty().get());
 								} else {
 									System.out.println("Item deselected");
+									selectedKeywords.remove(d.valueProperty().get());
 								}
 							}
 						});
@@ -211,7 +231,7 @@ public class PMRTreeView extends Application {
 		stage.show();
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 	          public void handle(WindowEvent we) {
-	        	  
+	        	  System.out.println(selectedKeywords);
 	              System.out.println("Stage is closing");
 	          }
 	      }); 
