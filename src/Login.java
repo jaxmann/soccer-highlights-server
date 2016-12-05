@@ -31,7 +31,7 @@ import javafx.stage.Stage;
  */
 public class Login extends Application {
 
-	
+
 	String user = "JavaFX2";
 	String pw = "password";
 	String checkUser, checkPw;
@@ -66,7 +66,7 @@ public class Login extends Application {
 		Button btnRegister = new Button("Register");
 		Button btnLogin = new Button("  Login  ");
 		final Label lblMessage = new Label();
-		
+
 
 		//Adding Nodes to GridPane layout
 		gridPane.add(lblUserName, 0, 0);
@@ -119,35 +119,35 @@ public class Login extends Application {
 				} else{
 					lblMessage.setText("Incorrect user or password.");
 					lblMessage.setTextFill(Color.RED);
-					
+
 				}
 				txtUserName.setText("");
 				pf.setText("");
 			}
 		});
-		
+
 		//Action for btnRegister
-				btnLogin.setOnAction(new EventHandler() {
-					public void handle(Event event) {
-						checkUser = txtUserName.getText().toString();
-						checkPw = pf.getText().toString();
-						//sql lookup here
-						if(checkUser.equals(user) && checkPw.equals(pw)){
-							lblMessage.setText("Congratulations!");
-							lblMessage.setTextFill(Color.GREEN);
-							Stage stage = new Stage();
-							PMRStage pmrstage = new PMRStage();
-							pmrstage.buildStage(stage);
-							primaryStage.close();					
-						} else{
-							lblMessage.setText("Incorrect user or password.");
-							lblMessage.setTextFill(Color.RED);
-							
-						}
-						txtUserName.setText("");
-						pf.setText("");
-					}
-				});
+		btnRegister.setOnAction(new EventHandler() {
+			public void handle(Event event) {
+				checkUser = txtUserName.getText().toString();
+				checkPw = pf.getText().toString();
+				//sql lookup here
+				if(checkUser.equals(user) && checkPw.equals(pw)){
+					lblMessage.setText("Congratulations!");
+					lblMessage.setTextFill(Color.GREEN);
+					Stage stage = new Stage();
+					PMRStage pmrstage = new PMRStage();
+					pmrstage.buildStage(stage);
+					primaryStage.close();					
+				} else{
+					lblMessage.setText("Incorrect user or password.");
+					lblMessage.setTextFill(Color.RED);
+
+				}
+				txtUserName.setText("");
+				pf.setText("");
+			}
+		});
 
 		//Add HBox and GridPane layout to BorderPane Layout
 		bp.setTop(hb);
