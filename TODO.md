@@ -1,4 +1,6 @@
  - [x] debug flag for print statements
+
+ - [x] create login screen
 		
  - [ ] set up favorite teams/players - players and teams you want to track
 
@@ -14,6 +16,10 @@
 
  - [ ] send a link 
 
- - [x] set up SQLite db for players and teams
+ - [x] set up SQLite db for players, team, and users
+
+ - [x] insert all teams into db
+
+ - [ ] insert all players into db
  
- - [ ] register/add user
+ - [ ] register/add user to db
