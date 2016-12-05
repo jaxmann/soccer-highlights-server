@@ -46,9 +46,10 @@ public class main extends PMRTreeView {
 		//		System.out.println(content.getContentLength());
 		
 		
-		players.add(new Player("Marco Reus", "Borussia Dortmund", "Bundeliga"));
+		players.add(new Player("Marco Reus", "Borussia Dortmund", "Bundesliga"));
 		players.add(new Player("Christiano Ronaldo", "Real Madrid", "La Liga"));
 		players.add(new Player("Emre Mor", "Borussia Dortmund", "Bundesliga"));
+		
 		PMRTreeView.launch(args);
 
 		//determine if play is worth examining -- does it contain "goal"?
