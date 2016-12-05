@@ -1,2 +1,4 @@
 INSERT INTO Player (FullName, FirstName, LastName, CommonName, TeamName) VALUES ('', '', '', '', '');
-INSERT INTO Team (TeamName, Location) VALUES ('', '');
+INSERT INTO Player (FullName, FirstName, LastName, CommonName, TeamName) VALUES ('
+INSERT INTO Team (TeamName, LeagueName) VALUES ('', '');
+INSERT INTO Team (TeamName, LeagueName) VALUES ('
