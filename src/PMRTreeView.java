@@ -240,11 +240,6 @@ public class PMRTreeView extends Application {
 	}
 	
 
-	
-	
-	
-	
-
 	private final class TextFieldTreeCellImpl extends TreeCell<String> {
 
 		private TextField textField;

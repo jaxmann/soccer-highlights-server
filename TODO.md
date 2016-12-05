@@ -15,3 +15,5 @@
  - [ ] send a link 
 
  - [x] set up SQLite db for players and teams
+ 
+ - [ ] register/add user
