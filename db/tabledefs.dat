@@ -13,3 +13,10 @@ CREATE TABLE Team
 TeamName varchar(50),
 LeagueName varchar(50)
 );
+
+CREATE TABLE User
+(
+Username varchar(30),
+Password varchar(80),
+Keywords varchar(100000)
+);

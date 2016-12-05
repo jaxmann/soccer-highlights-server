@@ -10,6 +10,8 @@
 
  - [ ] verify link has smallish video file
 
- - [ ] send a link (create an alert at first)
+ - [x] create an alert
+
+ - [ ] send a link 
 
  - [x] set up SQLite db for players and teams
