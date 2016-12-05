@@ -1,8 +1,7 @@
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -38,40 +37,72 @@ public class PMRTreeView extends Application {
     @Override
     public void start(Stage stage) {
         rootNode.setExpanded(true);
-        TreeItem<String> depNode = new TreeItem<String>(
-        		//player name
-        		//player team
-        		//league name (dep name)
-        );
-        		
-        rootNode.getChildren().add()
-        for (Player player : main.players) {
-            TreeItem<String> empLeaf = new TreeItem<String>(player.getFullName());
-            
-            for (TreeItem<String> depNode : rootNode.getChildren()) {
-                if (depNode.getValue().contentEquals(player.getFullTeamName())){
-                    depNode.getChildren().add(empLeaf);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                TreeItem<String> depNode = new TreeItem<String>(
-                    player.getFullTeamName(), 
-                    new ImageView(depIcon)
-                );
-                rootNode.getChildren().add(depNode);
-                depNode.getChildren().add(empLeaf);
-            }
+                
+        rootNode.getChildren().add(new TreeItem<String>("Bundesliga", new ImageView(depIcon)));
+        rootNode.getChildren().add(new TreeItem<String>("EPL", new ImageView(depIcon)));
+        rootNode.getChildren().add(new TreeItem<String>("La Liga", new ImageView(depIcon)));
+        rootNode.getChildren().add(new TreeItem<String>("Ligue 1", new ImageView(depIcon)));
+        rootNode.getChildren().add(new TreeItem<String>("Serie A", new ImageView(depIcon)));
+        
+        
+     
+        //dont fiddle with this, it somewhow actually works
+        for (int i=0; i<main.players.size(); i++) {
+        	for (TreeItem<String> league : rootNode.getChildren()) {
+            	if (league.getValue().contentEquals(main.players.get(i).getLeagueName())) {
+            		if (league.getChildren().size() != 0) {
+            			for (TreeItem<String> team : league.getChildren()) {
+                			if (team.getChildren().size() != 0) {
+                				HashSet<String> hs = new HashSet<String>();
+                				for (TreeItem<String> player : team.getChildren()) {
+                					hs.add(player.getValue());
+                				}
+                				if (!hs.contains(main.players.get(i).getFullName())) {
+                					team.getChildren().add(new TreeItem<String>(main.players.get(i).getFullName()));
+                				}
+                			} else {
+                				team.getChildren().add(new TreeItem<String>(main.players.get(i).getFullName()));
+                			}
+                		}
+            		} else {
+            			league.getChildren().add(new TreeItem<String>(main.players.get(i).getFullTeamName()));
+            			league.getChildren().get(0).getChildren().add(new TreeItem<String>(main.players.get(i).getFullName()));
+            		}
+            	}
+        	}
         }
+        
+    
+       
+        		
+//        for (Player player : main.players) {
+//            TreeItem<String> empLeaf = new TreeItem<String>(player.getFullName());
+//            
+//            for (TreeItem<String> depNode : rootNode.getChildren()) {
+//                if (depNode.getValue().contentEquals(player.getFullTeamName())){
+//                    depNode.getChildren().add(empLeaf);
+//                    found = true;
+//                    break;
+//                }
+//            }
+//            if (!found) {
+//                TreeItem<String> depNode = new TreeItem<String>(
+//                    player.getFullTeamName(), 
+//                    new ImageView(depIcon)
+//                );
+//                rootNode.getChildren().add(depNode);
+//                depNode.getChildren().add(empLeaf);
+//            }
+//        }
  
-        stage.setTitle("Tree View Sample");
+        stage.setTitle("Player Selector Menu");
         VBox box = new VBox();
         final Scene scene = new Scene(box, 400, 300);
         scene.setFill(Color.LIGHTGRAY);
  
         TreeView<String> treeView = new TreeView<String>(rootNode);
         treeView.setEditable(true);
+        treeView.setShowRoot(false);
         treeView.setCellFactory(new Callback<TreeView<String>,TreeCell<String>>(){
             @Override
             public TreeCell<String> call(TreeView<String> p) {
