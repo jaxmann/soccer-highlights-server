@@ -1,8 +1,14 @@
+import java.io.IOException;
+
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,6 +31,7 @@ import javafx.stage.Stage;
  */
 public class Login extends Application {
 
+	
 	String user = "JavaFX2";
 	String pw = "password";
 	String checkUser, checkPw;
@@ -33,6 +40,7 @@ public class Login extends Application {
 		launch(args);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("PMR");
@@ -57,6 +65,7 @@ public class Login extends Application {
 		final PasswordField pf = new PasswordField();
 		Button btnLogin = new Button("Login");
 		final Label lblMessage = new Label();
+		
 
 		//Adding Nodes to GridPane layout
 		gridPane.add(lblUserName, 0, 0);
@@ -96,13 +105,18 @@ public class Login extends Application {
 			public void handle(Event event) {
 				checkUser = txtUserName.getText().toString();
 				checkPw = pf.getText().toString();
+				//sql lookup here
 				if(checkUser.equals(user) && checkPw.equals(pw)){
 					lblMessage.setText("Congratulations!");
 					lblMessage.setTextFill(Color.GREEN);
-				}
-				else{
+					Stage stage = new Stage();
+					PMRStage pmrstage = new PMRStage();
+					pmrstage.buildStage(stage);
+					primaryStage.close();					
+				} else{
 					lblMessage.setText("Incorrect user or password.");
 					lblMessage.setTextFill(Color.RED);
+					
 				}
 				txtUserName.setText("");
 				pf.setText("");

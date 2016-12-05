@@ -2,7 +2,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,7 +24,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
-public class PMRTreeView extends Application {
+public class PMRStage  {
 	
 	public static ArrayList<String> selectedKeywords = new ArrayList<String>();
 
@@ -35,16 +34,14 @@ public class PMRTreeView extends Application {
 			new Image(getClass().getResourceAsStream("/epl.png"));
 
 
-	CheckBoxTreeItem<String> rootNode = new CheckBoxTreeItem<String>("MyCompany Human Resources", rootIcon);
-
-	public static void main(String[] args) {
-		Application.launch(args);
+	public CheckBoxTreeItem<String> rootNode = new CheckBoxTreeItem<String>("MyCompany Human Resources", rootIcon);
+	
+	public PMRStage() {
+		
 	}
-
-
-	//for reference http://docs.oracle.com/javafx/2/ui_controls/tree-view.htm
-	@Override
-	public void start(Stage stage) {
+	
+	
+	public void buildStage(Stage stage) {
 		rootNode.setExpanded(true);
 
 		rootNode.setIndependent(true);

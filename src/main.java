@@ -34,8 +34,8 @@ public class main extends PMRTreeView {
 		//perform search/crawl on websites, save url, verify its a smallish video file
 
 		//send a link (create an alert at first)
-
-
+		
+		
 		//////////////////////////////////////////////////////////////////
 		//after picking teams, etc
 		//do big db call to populate teams/players arraylist
@@ -50,7 +50,7 @@ public class main extends PMRTreeView {
 		players.add(new Player("Christiano Ronaldo", "Real Madrid", "La Liga"));
 		players.add(new Player("Emre Mor", "Borussia Dortmund", "Bundesliga"));
 		
-		PMRTreeView.launch(args);
+		Login.main(args);
 
 		//determine if play is worth examining -- does it contain "goal"?
 		//if yes, parse play for keywords/query, set time, etc
