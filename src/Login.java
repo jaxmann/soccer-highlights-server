@@ -79,9 +79,9 @@ public class Login extends Application {
 
 
 		//Reflection for gridPane
-		Reflection r = new Reflection();
-		r.setFraction(0.7f);
-		gridPane.setEffect(r);
+		//		Reflection r = new Reflection();
+		//		r.setFraction(0.5f);
+		//		gridPane.setEffect(r);
 
 		//DropShadow effect 
 		DropShadow dropShadow = new DropShadow();
@@ -129,21 +129,12 @@ public class Login extends Application {
 		//Action for btnRegister
 		btnRegister.setOnAction(new EventHandler() {
 			public void handle(Event event) {
-				checkUser = txtUserName.getText().toString();
-				checkPw = pf.getText().toString();
-				//sql lookup here
-				if(checkUser.equals(user) && checkPw.equals(pw)){
-					lblMessage.setText("Congratulations!");
-					lblMessage.setTextFill(Color.GREEN);
-					Stage stage = new Stage();
-					PMRStage pmrstage = new PMRStage();
-					pmrstage.buildStage(stage);
-					primaryStage.close();					
-				} else{
-					lblMessage.setText("Incorrect user or password.");
-					lblMessage.setTextFill(Color.RED);
 
-				}
+				Stage stage = new Stage();
+				RegisterStage pmrstage = new RegisterStage();
+				pmrstage.buildStage(stage);
+				primaryStage.close();					
+
 				txtUserName.setText("");
 				pf.setText("");
 			}
