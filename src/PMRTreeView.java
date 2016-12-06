@@ -230,6 +230,7 @@ public class PMRTreeView extends Application {
 		stage.show();
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 	          public void handle(WindowEvent we) {
+	        	  //Insert selectedKeywords to user keywords in db
 	        	  System.out.println(selectedKeywords);
 	              System.out.println("Stage is closing");
 	          }

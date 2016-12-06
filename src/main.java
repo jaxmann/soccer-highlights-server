@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class main extends PMRTreeView {
 
 	public static final boolean DEBUG = true;
+	public static String currentUser = null;
 	public static ArrayList<User> users = new ArrayList<User>();
 	public static ArrayList<Player> players = new ArrayList<Player>();
 	public static ArrayList<String> gcdTeams = new ArrayList<String>();

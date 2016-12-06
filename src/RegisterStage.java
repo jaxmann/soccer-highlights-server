@@ -116,6 +116,7 @@ public class RegisterStage {
 		btnRegister.setOnAction(new EventHandler() {
 			public void handle(Event event) {
 				//validate email/username/password
+				main.currentUser = txtUserName.getText();
 				Connection connection = null;
 				try{
 					String url = "jdbc:sqlite:db/pmr.db";
@@ -130,6 +131,14 @@ public class RegisterStage {
 					System.out.println("Connection successful");
 				} catch (SQLException e){
 					System.out.println(e.getMessage());
+				} finally {
+					try{
+						if (connection != null){
+							connection.close();
+						}
+					} catch (SQLException ex) {
+						System.out.println(ex.getMessage());
+					}
 				}
 				
 				System.out.println("account created");

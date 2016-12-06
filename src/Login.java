@@ -1,3 +1,9 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -101,26 +107,56 @@ public class Login extends Application {
 		//Action for btnLogin
 		btnLogin.setOnAction(new EventHandler() {
 			public void handle(Event event) {
-				checkUser = txtUserName.getText().toString();
-				checkPw = pf.getText().toString();
-				//sql lookup here
-				if(checkUser.equals(user) && checkPw.equals(pw)){
-					lblMessage.setText("Congratulations!");
-					lblMessage.setTextFill(Color.GREEN);
-					Stage stage = new Stage();
-					PMRStage pmrstage = new PMRStage();
-					pmrstage.buildStage(stage);
-					primaryStage.close();					
-				} else{
-					lblMessage.setText("Incorrect user or password.");
-					lblMessage.setTextFill(Color.RED);
-
+				Connection connection = null;
+				ResultSet resultSet = null;
+				Statement statement = null;
+				try{
+					String url = "jdbc:sqlite:db/pmr.db";
+					connection = DriverManager.getConnection(url);
+					String sql = "Select * from User WHERE Username='" + txtUserName.getText() + "' AND Password='" + pf.getText() + "';";
+					System.out.println(sql);
+					//PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					//resultSet = preparedStatement.executeQuery(sql);
+					statement = connection.createStatement();
+					resultSet = statement.executeQuery(sql);
+					if(resultSet.next()){
+						main.currentUser = txtUserName.getText();
+						lblMessage.setText("Congratulations!");
+						lblMessage.setTextFill(Color.GREEN);
+						Stage stage = new Stage();
+						PMRStage pmrstage = new PMRStage();
+						pmrstage.buildStage(stage);
+						primaryStage.close();
+					} else{
+						lblMessage.setText("Incorrect user or password.");
+						lblMessage.setTextFill(Color.RED);		
+					}
+					System.out.println("Connection successful");
+				} catch (SQLException e){
+					System.out.println(e.getMessage());
+				} finally {
+					try{
+						if (connection != null){
+							resultSet.close();
+							statement.close();
+							connection.close();
+							txtUserName.setText("");
+							pf.setText("");
+						}
+					} catch (SQLException ex) {
+						System.out.println(ex.getMessage());
+					}
 				}
-				txtUserName.setText("");
-				pf.setText("");
 			}
 		});
 
+		
+		
+		
+		
+		
+		
+		
 		//Action for btnRegister
 		btnRegister.setOnAction(new EventHandler() {
 			public void handle(Event event) {

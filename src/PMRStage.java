@@ -1,4 +1,8 @@
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -227,6 +231,34 @@ public class PMRStage  {
 		stage.show();
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 	          public void handle(WindowEvent we) {
+	        	  //Insert selectedKeywords into keywords field of user table
+	        	  String keywords = "";
+	        	  for(int i = 0; i < selectedKeywords.size(); i++){
+	        		  if(i == selectedKeywords.size() - 1){
+	        			  keywords += selectedKeywords.get(i);
+	        		  } else{
+	        		  keywords += selectedKeywords.get(i) + "$";
+	        		  }
+	        	  }
+	        	  Connection connection = null;
+					try{
+						String url = "jdbc:sqlite:db/pmr.db";
+						connection = DriverManager.getConnection(url);
+						String sql = "UPDATE User set Keywords='" + keywords + "' WHERE Username='" + main.currentUser + "';";
+						PreparedStatement preparedStatement = connection.prepareStatement(sql);
+						preparedStatement.executeUpdate();
+						System.out.println("Connection successful");
+					} catch (SQLException e){
+						System.out.println(e.getMessage());
+					} finally {
+						try{
+							if (connection != null){
+								connection.close();
+							}
+						} catch (SQLException ex) {
+							System.out.println(ex.getMessage());
+						}
+					}
 	        	  System.out.println(selectedKeywords);
 	              System.out.println("Stage is closing");
 	          }
