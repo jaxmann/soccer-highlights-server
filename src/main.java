@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class main extends PMRTreeView {
+public class main {
 
 	public static final boolean DEBUG = true;
 	public static String currentUser = null;
