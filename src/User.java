@@ -17,7 +17,9 @@ public class User {
 	public void sendAlert(String url) {
 		//this would be an email or push notification or something, for now, just an alert/pop-up
 		System.out.println("send an email?");
-		JOptionPane.showMessageDialog(null, "send MarcoReusIsAnAnimal.mp4 to user " + this.userID + " + at email " + this.email);
+		
+		//uncomment this to receive alerts again
+//		JOptionPane.showMessageDialog(null, "send MarcoReusIsAnAnimal.mp4 to user " + this.userID + " + at email " + this.email);
 	}
 
 	public int getUserID() {
