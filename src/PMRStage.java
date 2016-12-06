@@ -45,7 +45,6 @@ public class PMRStage  {
 
 	}
 
-
 	public void buildStage(Stage stage) {
 		rootNode.setExpanded(true);
 
@@ -127,8 +126,6 @@ public class PMRStage  {
 		rootNode.getChildren().add(serieA);
 
 
-
-
 		//middle-out solution
 		HashMap<String, HashSet<String>> teams = new HashMap<String, HashSet<String>>(); //team names with hashset of players on that team 
 		HashMap<String, HashSet<String>> leagues = new HashMap<String, HashSet<String>>(); //league names with hashset of teams in that respective league
@@ -152,7 +149,7 @@ public class PMRStage  {
 		}
 
 
-		//		generate tree structure from hashmaps
+		//generate tree structure from hashmaps
 		for (TreeItem<String> league : rootNode.getChildren()) {
 			HashSet<String> leagueTeams = leagues.get(league.getValue());
 			if (leagueTeams != null) {
