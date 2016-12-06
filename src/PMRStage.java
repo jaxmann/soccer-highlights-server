@@ -4,9 +4,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import javafx.application.Application;
+import java.util.Iterator;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -29,7 +30,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 public class PMRStage  {
-	
+
 	public static ArrayList<String> selectedKeywords = new ArrayList<String>();
 
 	private final Node rootIcon = 
@@ -39,12 +40,12 @@ public class PMRStage  {
 
 
 	public CheckBoxTreeItem<String> rootNode = new CheckBoxTreeItem<String>("MyCompany Human Resources", rootIcon);
-	
+
 	public PMRStage() {
-		
+
 	}
-	
-	
+
+
 	public void buildStage(Stage stage) {
 		rootNode.setExpanded(true);
 
@@ -64,7 +65,7 @@ public class PMRStage  {
 			}
 		});
 		rootNode.getChildren().add(bundes);
-		
+
 		CheckBoxTreeItem<String> epl = new CheckBoxTreeItem<String>("EPL", new ImageView(depIcon));
 		epl.setIndependent(true);
 		epl.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -79,7 +80,7 @@ public class PMRStage  {
 			}
 		});
 		rootNode.getChildren().add(epl);
-		
+
 		CheckBoxTreeItem<String> LaLiga = new CheckBoxTreeItem<String>("La Liga", new ImageView(depIcon));
 		LaLiga.setIndependent(true);
 		LaLiga.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -94,7 +95,7 @@ public class PMRStage  {
 			}
 		});
 		rootNode.getChildren().add(LaLiga);
-		
+
 		CheckBoxTreeItem<String> l1 = new CheckBoxTreeItem<String>("Ligue 1", new ImageView(depIcon));
 		l1.setIndependent(true);
 		l1.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -109,7 +110,7 @@ public class PMRStage  {
 			}
 		});
 		rootNode.getChildren().add(l1);
-		
+
 		CheckBoxTreeItem<String> serieA = new CheckBoxTreeItem<String>("Serie A", new ImageView(depIcon));
 		serieA.setIndependent(true);
 		serieA.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -124,90 +125,164 @@ public class PMRStage  {
 			}
 		});
 		rootNode.getChildren().add(serieA);
-		
 
 
-		//dont fiddle with this, it somehow actually works
+
+
+		//middle-out solution
+		HashMap<String, HashSet<String>> teams = new HashMap<String, HashSet<String>>(); //team names with hashset of players on that team 
+		HashMap<String, HashSet<String>> leagues = new HashMap<String, HashSet<String>>(); //league names with hashset of teams in that respective league
+
+		//initialize hashMaps with empty hashsets - team name/league name entered as key
 		for (int i=0; i<main.players.size(); i++) {
-			for (TreeItem<String> league : rootNode.getChildren()) {
-				if (league.getValue().contentEquals(main.players.get(i).getLeagueName())) {
-					if (league.getChildren().size() != 0) {
-						for (TreeItem<String> team : league.getChildren()) {
-							if (team.getChildren().size() != 0) {
-								HashSet<String> hs = new HashSet<String>();
-								for (TreeItem<String> player : team.getChildren()) {
-									hs.add(player.getValue());
-								}
-								if (!hs.contains(main.players.get(i).getFullName())) {
-									CheckBoxTreeItem<String> a = new CheckBoxTreeItem<String>(main.players.get(i).getFullName());
-									a.setIndependent(true);
-									a.selectedProperty().addListener(new ChangeListener<Boolean>() {
-										public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-											if (newValue) {
-												System.out.println("The selected item is " + a.valueProperty().get());
-												selectedKeywords.add(a.valueProperty().get());
-											} else {
-												System.out.println("Item deselected");
-												selectedKeywords.remove(a.valueProperty().get());
-											}
-										}
-									});
-									team.getChildren().add(a);
-								}
-							} else {	
-								CheckBoxTreeItem<String> b = new CheckBoxTreeItem<String>(main.players.get(i).getFullName());
-								b.setIndependent(true);
-								b.selectedProperty().addListener(new ChangeListener<Boolean>() {
-									public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-										if (newValue) {
-											System.out.println("The selected item is " + b.valueProperty().get());
-											selectedKeywords.add(b.valueProperty().get());
-										} else {
-											System.out.println("Item deselected");
-											selectedKeywords.remove(b.valueProperty().get());
-										}
-									}
-								});
-								team.getChildren().add(b);
-								
+			if (!leagues.containsKey(main.players.get(i).getLeagueName())) {
+				leagues.put(main.players.get(i).getLeagueName(), new HashSet<String>());
+			}
+			if (!teams.containsKey(main.players.get(i).getFullTeamName())) {
+				teams.put(main.players.get(i).getFullTeamName(), new HashSet<String>());
+			}
+		}
+
+		//hashsets filled with checkboxtreeitems (representing teams/players)
+		for (int i=0; i<main.players.size(); i++) {
+
+			leagues.get(main.players.get(i).getLeagueName()).add(main.players.get(i).getFullTeamName());
+
+			teams.get(main.players.get(i).getFullTeamName()).add(main.players.get(i).getFullName());
+		}
+
+
+		//		generate tree structure from hashmaps
+		for (TreeItem<String> league : rootNode.getChildren()) {
+			HashSet<String> leagueTeams = leagues.get(league.getValue());
+			if (leagueTeams != null) {
+				for (String t : leagueTeams) {
+					CheckBoxTreeItem<String> a = new CheckBoxTreeItem<String>(t);
+					a.setIndependent(true);
+					a.selectedProperty().addListener(new ChangeListener<Boolean>() {
+						public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+							if (newValue) {
+								System.out.println("The selected item is " + a.valueProperty().get());
+								selectedKeywords.add(a.valueProperty().get());
+							} else {
+								System.out.println("Item deselected");
+								selectedKeywords.remove(a.valueProperty().get());
 							}
 						}
-					} else {
-						CheckBoxTreeItem<String> c = new CheckBoxTreeItem<String>(main.players.get(i).getFullTeamName());
-						c.setIndependent(true);
-						c.selectedProperty().addListener(new ChangeListener<Boolean>() {
+					});
+					league.getChildren().add(a);
+				}
+			}
+		}
+
+		for (TreeItem<String> league : rootNode.getChildren()) {
+			for (TreeItem<String> team : league.getChildren()) {
+				HashSet<String> teamPlayers = teams.get(team.getValue());
+				if (teamPlayers != null) {
+					for (String t : teamPlayers) {
+						CheckBoxTreeItem<String> a = new CheckBoxTreeItem<String>(t);
+						a.setIndependent(true);
+						a.selectedProperty().addListener(new ChangeListener<Boolean>() {
 							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 								if (newValue) {
-									System.out.println("The selected item is " + c.valueProperty().get());
-									selectedKeywords.add(c.valueProperty().get());
+									System.out.println("The selected item is " + a.valueProperty().get());
+									selectedKeywords.add(a.valueProperty().get());
 								} else {
 									System.out.println("Item deselected");
-									selectedKeywords.remove(c.valueProperty().get());
+									selectedKeywords.remove(a.valueProperty().get());
 								}
 							}
 						});
-						league.getChildren().add(c);
-						
-						CheckBoxTreeItem<String> d = new CheckBoxTreeItem<String>(main.players.get(i).getFullName());
-						d.setIndependent(true);
-						d.selectedProperty().addListener(new ChangeListener<Boolean>() {
-							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-								if (newValue) {
-									System.out.println("The selected item is " + d.valueProperty().get());
-									selectedKeywords.add(d.valueProperty().get());
-								} else {
-									System.out.println("Item deselected");
-									selectedKeywords.remove(d.valueProperty().get());
-								}
-							}
-						});
-						league.getChildren().get(0).getChildren().add(d);
+						team.getChildren().add(a);
 					}
 				}
 			}
 		}
 
-		
+
+
+
+		//		//dont fiddle with this, it somehow actually works
+		//		for (int i=0; i<main.players.size(); i++) {
+		//			for (TreeItem<String> league : rootNode.getChildren()) {
+		//				if (league.getValue().contentEquals(main.players.get(i).getLeagueName())) {
+		//					if (league.getChildren().size() != 0) {
+		//						for (TreeItem<String> team : league.getChildren()) {
+		//							if (team.getChildren().size() != 0) {
+		//								HashSet<String> hs = new HashSet<String>();
+		//								for (TreeItem<String> player : team.getChildren()) {
+		//									hs.add(player.getValue());
+		//								}
+		//								if (!hs.contains(main.players.get(i).getFullName())) {
+		//									CheckBoxTreeItem<String> a = new CheckBoxTreeItem<String>(main.players.get(i).getFullName());
+		//									a.setIndependent(true);
+		//									a.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		//										public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		//											if (newValue) {
+		//												System.out.println("The selected item is " + a.valueProperty().get());
+		//												selectedKeywords.add(a.valueProperty().get());
+		//											} else {
+		//												System.out.println("Item deselected");
+		//												selectedKeywords.remove(a.valueProperty().get());
+		//											}
+		//										}
+		//									});
+		//									team.getChildren().add(a);
+		//								}
+		//							} else {	
+		//								CheckBoxTreeItem<String> b = new CheckBoxTreeItem<String>(main.players.get(i).getFullName());
+		//								b.setIndependent(true);
+		//								b.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		//									public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		//										if (newValue) {
+		//											System.out.println("The selected item is " + b.valueProperty().get());
+		//											selectedKeywords.add(b.valueProperty().get());
+		//										} else {
+		//											System.out.println("Item deselected");
+		//											selectedKeywords.remove(b.valueProperty().get());
+		//										}
+		//									}
+		//								});
+		//								team.getChildren().add(b);
+		//								
+		//							}
+		//						}
+		//					} else {
+		//						CheckBoxTreeItem<String> c = new CheckBoxTreeItem<String>(main.players.get(i).getFullTeamName());
+		//						c.setIndependent(true);
+		//						c.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		//							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		//								if (newValue) {
+		//									System.out.println("The selected item is " + c.valueProperty().get());
+		//									selectedKeywords.add(c.valueProperty().get());
+		//								} else {
+		//									System.out.println("Item deselected");
+		//									selectedKeywords.remove(c.valueProperty().get());
+		//								}
+		//							}
+		//						});
+		//						league.getChildren().add(c);
+		//						
+		//						CheckBoxTreeItem<String> d = new CheckBoxTreeItem<String>(main.players.get(i).getFullName());
+		//						d.setIndependent(true);
+		//						d.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		//							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		//								if (newValue) {
+		//									System.out.println("The selected item is " + d.valueProperty().get());
+		//									selectedKeywords.add(d.valueProperty().get());
+		//								} else {
+		//									System.out.println("Item deselected");
+		//									selectedKeywords.remove(d.valueProperty().get());
+		//								}
+		//							}
+		//						});
+		//						league.getChildren().get(0).getChildren().add(d);
+		//					}
+		//				}
+		//			}
+		//		}
+
+
 
 		stage.setTitle("Player Selector Menu");
 		VBox box = new VBox();
@@ -263,16 +338,14 @@ public class PMRStage  {
 	              System.out.println("Stage is closing");
 	          }
 	      }); 
-		
-		
-		
-	}
-	
 
-	
-	
-	
-	
+	}
+
+
+
+
+
+
 
 	private final class TextFieldTreeCellImpl extends TreeCell<String> {
 

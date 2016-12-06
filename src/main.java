@@ -43,13 +43,20 @@ public class main extends PMRTreeView {
 		//play alert is received from api
 
 		//possible to approximate file size before download
-//		HttpURLConnection content = (HttpURLConnection) new URL("https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html").openConnection();
+		//HttpURLConnection content = (HttpURLConnection) new URL("https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html").openConnection();
 		//		System.out.println(content.getContentLength());
 		
 		
 		players.add(new Player("Marco Reus", "Borussia Dortmund", "Bundesliga"));
 		players.add(new Player("Christiano Ronaldo", "Real Madrid", "La Liga"));
 		players.add(new Player("Emre Mor", "Borussia Dortmund", "Bundesliga"));
+		players.add(new Player("Emre Can", "Liverpool", "EPL"));
+		players.add(new Player("Marek Hamsik", "Napoli", "Serie A"));
+		players.add(new Player("Edinson Cavani", "Paris Saint Germain", "Ligue 1"));
+		players.add(new Player("Robert Huth", "Leicester City", "EPL"));
+		players.add(new Player("Antoine Griezmann", "Atletico Madrid", "La Liga"));
+		players.add(new Player("Paul Pogba", "Manchester United", "EPL"));
+
 		
 		Login.main(args);
 
@@ -61,7 +68,6 @@ public class main extends PMRTreeView {
 		///////////////////////////////////////////////////////////////////
 
 
-		
 		
 		//-----------------FAKE DATA ------------------------------
 		String playAlert = "Goal by Reus! Marcelo crosses from left side and Ronaldo heads it home past Ter Stegen!";
