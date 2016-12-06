@@ -31,7 +31,7 @@ import javafx.stage.Stage;
  */
 public class Login extends Application {
 
-	
+
 	String user = "JavaFX2";
 	String pw = "password";
 	String checkUser, checkPw;
@@ -63,9 +63,10 @@ public class Login extends Application {
 		final TextField txtUserName = new TextField();
 		Label lblPassword = new Label("Password");
 		final PasswordField pf = new PasswordField();
-		Button btnLogin = new Button("Login");
+		Button btnRegister = new Button("Register");
+		Button btnLogin = new Button("  Login  ");
 		final Label lblMessage = new Label();
-		
+
 
 		//Adding Nodes to GridPane layout
 		gridPane.add(lblUserName, 0, 0);
@@ -73,6 +74,7 @@ public class Login extends Application {
 		gridPane.add(lblPassword, 0, 1);
 		gridPane.add(pf, 1, 1);
 		gridPane.add(btnLogin, 2, 1);
+		gridPane.add(btnRegister, 2, 0);
 		gridPane.add(lblMessage, 1, 2);
 
 
@@ -87,7 +89,7 @@ public class Login extends Application {
 		dropShadow.setOffsetY(5);
 
 		//Adding text and DropShadow effect to it
-		Text text = new Text("PMR");
+		Text text = new Text("      PMR");
 		text.setFont(Font.font("Courier New", FontWeight.BOLD, 28));
 		text.setEffect(dropShadow);
 
@@ -98,6 +100,7 @@ public class Login extends Application {
 		bp.setId("bp");
 		gridPane.setId("root");
 		btnLogin.setId("btnLogin");
+		btnRegister.setId("btnRegister");
 		text.setId("text");
 
 		//Action for btnLogin
@@ -116,7 +119,30 @@ public class Login extends Application {
 				} else{
 					lblMessage.setText("Incorrect user or password.");
 					lblMessage.setTextFill(Color.RED);
-					
+
+				}
+				txtUserName.setText("");
+				pf.setText("");
+			}
+		});
+
+		//Action for btnRegister
+		btnRegister.setOnAction(new EventHandler() {
+			public void handle(Event event) {
+				checkUser = txtUserName.getText().toString();
+				checkPw = pf.getText().toString();
+				//sql lookup here
+				if(checkUser.equals(user) && checkPw.equals(pw)){
+					lblMessage.setText("Congratulations!");
+					lblMessage.setTextFill(Color.GREEN);
+					Stage stage = new Stage();
+					PMRStage pmrstage = new PMRStage();
+					pmrstage.buildStage(stage);
+					primaryStage.close();					
+				} else{
+					lblMessage.setText("Incorrect user or password.");
+					lblMessage.setTextFill(Color.RED);
+
 				}
 				txtUserName.setText("");
 				pf.setText("");
