@@ -2,7 +2,7 @@
 
  - [x] create login screen
 		
- - [ ] set up favorite teams/players - players and teams you want to track
+ - [x] set up favorite teams/players - players and teams you want to track
 
  - [ ] parse play - figure out what happened - who scored, what team, what the score is, the date?, what sport, 		set time as NOW
 	
@@ -22,4 +22,4 @@
 
  - [ ] insert all players into db
  
- - [ ] register/add user to db
+ - [x] register/add user to db
