@@ -18,5 +18,6 @@ CREATE TABLE User
 (
 Username varchar(30),
 Password varchar(80),
+Email varchar(50),
 Keywords varchar(100000)
 );
