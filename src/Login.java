@@ -1,21 +1,13 @@
-import java.io.IOException;
-
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Reflection;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -25,15 +17,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- *
- * @web http://zoranpavlovic.blogspot.com/
- */
+
 public class Login extends Application {
 
 
-	String user = "JavaFX2";
-	String pw = "password";
+	String user = "a";
+	String pw = "a";
 	String checkUser, checkPw;
 
 	public static void main(String[] args) {
@@ -47,10 +36,13 @@ public class Login extends Application {
 
 		BorderPane bp = new BorderPane();
 		bp.setPadding(new Insets(10,50,50,50));
+		
 
 		//Adding HBox
 		HBox hb = new HBox();
 		hb.setPadding(new Insets(20,20,20,30));
+		
+		
 
 		//Adding GridPane
 		GridPane gridPane = new GridPane();
@@ -67,7 +59,10 @@ public class Login extends Application {
 		Button btnLogin = new Button("  Login  ");
 		final Label lblMessage = new Label();
 
-
+		
+		
+		
+		
 		//Adding Nodes to GridPane layout
 		gridPane.add(lblUserName, 0, 0);
 		gridPane.add(txtUserName, 1, 0);
@@ -143,6 +138,7 @@ public class Login extends Application {
 		//Add HBox and GridPane layout to BorderPane Layout
 		bp.setTop(hb);
 		bp.setCenter(gridPane);  
+		
 
 		//Adding BorderPane to the scene and loading CSS
 		Scene scene = new Scene(bp);

@@ -21,13 +21,7 @@
 #btnRegister {
     -fx-background-radius: 30, 30, 29, 28;
     -fx-padding: 3px 10px 3px 10px;
-    -fx-background-color: linear-gradient(#f4c842, orangered );
-}
-
-#btnBack {
-    -fx-background-radius: 30, 30, 29, 28;
-    -fx-padding: 3px 10px 3px 10px;
-    -fx-background-color: linear-gradient(pink, #f442e5 );
+    -fx-background-color: linear-gradient(orange, orangered );
 }
 
 #text {
