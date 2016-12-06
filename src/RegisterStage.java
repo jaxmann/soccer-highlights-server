@@ -1,3 +1,8 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -97,8 +102,6 @@ public class RegisterStage {
 		btnBack.setOnAction(new EventHandler() {
 			public void handle(Event event) {
 
-				//validate email/username/password
-
 				Stage stage = new Stage();
 				LoginStage pmrstage = new LoginStage();
 				pmrstage.loginStage(stage);
@@ -113,7 +116,22 @@ public class RegisterStage {
 		btnRegister.setOnAction(new EventHandler() {
 			public void handle(Event event) {
 				//validate email/username/password
-
+				Connection connection = null;
+				try{
+					String url = "jdbc:sqlite:db/pmr.db";
+					connection = DriverManager.getConnection(url);
+					String sql = "INSERT INTO User(Username, Password, Email, Keywords) VALUES(?,?,?,?)";
+					PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setString(1, txtUserName.getText());
+					preparedStatement.setString(2, pf.getText());
+					preparedStatement.setString(3, txtEmail.getText());
+					preparedStatement.setString(4, "");
+					preparedStatement.executeUpdate();
+					System.out.println("Connection successful");
+				} catch (SQLException e){
+					System.out.println(e.getMessage());
+				}
+				
 				System.out.println("account created");
 				Stage stage = new Stage();
 				PMRStage pmrstage = new PMRStage();
