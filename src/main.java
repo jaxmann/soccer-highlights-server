@@ -58,8 +58,6 @@ public class main {
 		players.add(new Player("Paul Pogba", "Manchester United", "EPL"));
 
 		
-		Login.main(args);
-
 		//determine if play is worth examining -- does it contain "goal"?
 		//if yes, parse play for keywords/query, set time, etc
 		//create a new play
