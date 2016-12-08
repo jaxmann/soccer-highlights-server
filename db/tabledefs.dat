@@ -19,5 +19,6 @@ CREATE TABLE User
 Username varchar(30),
 Password varchar(80),
 Email varchar(50),
+PhoneNumber varchar(10),
 Keywords varchar(100000)
 );
