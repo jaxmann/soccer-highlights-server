@@ -17,8 +17,10 @@ LeagueName varchar(50)
 CREATE TABLE User
 (
 Username varchar(30),
-Password varchar(80),
 Email varchar(50),
+PasswordHash varchar(80),
+PasswordSalt varchar(80),
 PhoneNumber varchar(10),
-Keywords varchar(100000)
+Keywords varchar(100000),
+UNIQUE(Username, Email, PhoneNumber) ON CONFLICT ABORT
 );
