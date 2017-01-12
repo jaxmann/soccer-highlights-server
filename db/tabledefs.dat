@@ -1,11 +1,8 @@
 CREATE TABLE Player
 (
-FullName varchar(60),
-FirstName varchar(30),
-LastName varchar(30),
-CommonName varchar(30),
-TeamName varchar(50),
-LeagueName varchar(50)
+League varchar(50),
+Team varchar(50),
+Player varchar(50)
 );
 
 CREATE TABLE Team
@@ -22,5 +19,7 @@ PasswordHash varchar(80),
 PasswordSalt varchar(80),
 PhoneNumber varchar(10),
 Keywords varchar(100000),
+ResetToken varchar(40),
+ResetExpiration varchar(40),
 UNIQUE(Username, Email, PhoneNumber) ON CONFLICT ABORT
 );
