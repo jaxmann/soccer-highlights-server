@@ -53,13 +53,15 @@ public class CrawlerThread implements Runnable {
 					try {
 						Date dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
-							System.out.println("new post found");
-							System.out.println(link.select("p.tagline").select("time").attr("title")); //time
-							System.out.println(link.select("p.title").select("a.title").text()); //title
-							System.out.println(link.select("p.title").select("a.title").attr("href")); //url
-							mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post
-							//if(link.text().matches(".*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*")){  //does the link text have something like (2-0) displaying the score of a game
-							//if above returns true, do a keyword check for content of the post, then do sql 'select user, email where keywords='<keywords>' etc..
+							//does the link text have something like (2-0) displaying the score of a game
+							if (link.select("p.title").select("a.title").text().matches(".*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*")) { 
+								// do a keyword check for content of the post, then do sql 'select user, email where keywords='<keywords>' etc..
+								System.out.println("new post found");
+								System.out.println(link.select("p.tagline").select("time").attr("title")); //time
+								System.out.println(link.select("p.title").select("a.title").text()); //title
+								System.out.println(link.select("p.title").select("a.title").attr("href")); //url
+								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post
+							}
 						}
 					} catch (ParseException e1) {
 						// TODO Auto-generated catch block
