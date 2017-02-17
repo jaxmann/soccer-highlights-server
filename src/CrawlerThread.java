@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,7 +39,7 @@ public class CrawlerThread implements Runnable {
 		while (true) { //run forever unless stopped
 			
 			try {
-				Thread.sleep(10000); //refresh page every n/1k seconds - it refreshes the entire page which is kind of unnecessary...
+				Thread.sleep(1000); //refresh page every n/1k seconds 
 			} catch (InterruptedException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -50,17 +52,20 @@ public class CrawlerThread implements Runnable {
 				System.out.println(mostRecentPostTime);
 				for (Element link: links) {
 					String inputTime = link.select("p.tagline").select("time").attr("title");
+					parseKeywords("Marco Reus scores against Hertha (1-0)");
 					try {
 						Date dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
 							//does the link text have something like (2-0) displaying the score of a game
-							if (link.select("p.title").select("a.title").text().matches(".*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*")) { 
+							if (link.select("p.title").select("a.title").text().matches(".*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*")) {
 								// do a keyword check for content of the post, then do sql 'select user, email where keywords='<keywords>' etc..
 								System.out.println("new post found");
 								System.out.println(link.select("p.tagline").select("time").attr("title")); //time
 								System.out.println(link.select("p.title").select("a.title").text()); //title
 								System.out.println(link.select("p.title").select("a.title").attr("href")); //url
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post
+								parseKeywords(link.select("p.title").select("a.title").text());
+								
 							}
 						}
 					} catch (ParseException e1) {
@@ -71,13 +76,6 @@ public class CrawlerThread implements Runnable {
 					
 					
 				}
-
-
-
-
-
-
-
 
 
 				//			for(Element link: links){
@@ -125,20 +123,38 @@ public class CrawlerThread implements Runnable {
 		//System.out.println("Done.");
 	}
 
-	public static void figureOutWhoToSendItTo(String url, ArrayList<User> users, HashSet<String> hashSet) {
-		//given the associated keywords with the video, see if they match "tags" that one can subscribe to (either team name/players)
-		//and only send the message to people who are subscribed
-		//pass on to "sendAlert" method
-		for (int i=0; i<users.size(); i ++) { //for each user...
-			//if tags match...
-			for (int k=0; k<users.get(i).getTags().size(); k++) { //for each tag within each user
-				for (String q : hashSet) {
-					if (users.get(i).getTags().get(k).toLowerCase().contains(q.toLowerCase())) {
-						users.get(i).sendAlert(url);
-					}
-				}
+//	public static void figureOutWhoToSendItTo(String url, ArrayList<User> users, HashSet<String> hashSet) {
+//		//given the associated keywords with the video, see if they match "tags" that one can subscribe to (either team name/players)
+//		//and only send the message to people who are subscribed
+//		//pass on to "sendAlert" method
+//		for (int i=0; i<users.size(); i ++) { //for each user...
+//			//if tags match...
+//			for (int k=0; k<users.get(i).getTags().size(); k++) { //for each tag within each user
+//				for (String q : hashSet) {
+//					if (users.get(i).getTags().get(k).toLowerCase().contains(q.toLowerCase())) {
+//						users.get(i).sendAlert(url);
+//					}
+//				}
+//			}
+//		}
+//	}
+	
+	public static ArrayList<String> parseKeywords(String postDescription) {
+		ArrayList<String> keywords = new ArrayList<String>();
+		try {
+			BufferedReader reader = new BufferedReader (new FileReader("..//list-of-players.csv"));
+			String line;
+			while (postDescription.contains((line = reader.readLine()))) {
+				System.out.println(line);
+				keywords.add(line);
 			}
+			reader.close();
+		} catch (Exception e) {
+			System.err.println("Error trying to read player file");
+			e.printStackTrace();
 		}
+		
+		return keywords;
 	}
 
 
