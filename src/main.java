@@ -92,14 +92,18 @@ public class main {
 		fullPlayers.add("Christiano Ronaldo");
 
 
-		if (isPlayWorthKeeping(playAlert)) {
-			parsePlay(playAlert);
-		}
+//		if (isPlayWorthKeeping(playAlert)) {
+//			parsePlay(playAlert);
+//		}
+		
+		
+		CrawlerThread t = new CrawlerThread();
+		t.run();
 
 	}
 
 
-	public static boolean isPlayWorthKeeping(String playAlert) {
+	/*public static boolean isPlayWorthKeeping(String playAlert) {
 		if (playAlert.toLowerCase().contains("goal")) {
 			if (main.DEBUG) {
 				System.out.println("isPlayWorthKeeping: TRUE");
@@ -111,62 +115,62 @@ public class main {
 			System.out.println("isPlayWorthKeeping: FALSE");
 		}
 		return false;
-	}
+	}*/
 
 
-	public static void parsePlay(String play) {
-		Date date = new Date(); 
-
-		HashSet<String> shortKeywords = new HashSet<String>();
-		HashSet<String> longKeywords = new HashSet<String>();
-		int[] score = null;
-
-		String[] playArr = play.split(" ");
-
-		if (main.DEBUG) {
-			System.out.println("Play as array is: " + Arrays.toString(playArr));
-		}
-
-		for (int i=0; i<playArr.length; i++) {
-			//teams
-			for (int j=0; j<gcdTeams.size(); j++) {
-				if (playArr[i].toLowerCase().contains(gcdTeams.get(j))) {
-					shortKeywords.add(gcdTeams.get(j));
-					longKeywords.add(fullTeams.get(j));
-				}
-			}
-			//players
-			for (int k=0; k<gcdPlayers.size(); k++) {
-				if (playArr[i].toLowerCase().contains(gcdPlayers.get(k))) {
-					shortKeywords.add(gcdPlayers.get(k));
-					longKeywords.add(fullPlayers.get(k));
-				}
-			}
-		}
-
-		if (main.DEBUG) {
-			System.out.println("Score should be 2 ints: " + Arrays.toString(score));
-		}
-
-
-		if (main.DEBUG) {
-			if (shortKeywords.size() == 0) {
-				System.out.println("Keywords are empty :(");
-			} else {
-				for (String q : longKeywords) {
-					System.out.println("Keyword: " + q);
-				}
-			}
-
-		}
-
-
-		Play p = new Play(date, shortKeywords, longKeywords, date, score);
-		//for each play p, start a thread
-		//add a new worker thread (newWorkerThread)
-		newWorkerThread(p);
-
-	}
+//	public static void parsePlay(String play) {
+//		Date date = new Date(); 
+//
+//		HashSet<String> shortKeywords = new HashSet<String>();
+//		HashSet<String> longKeywords = new HashSet<String>();
+//		int[] score = null;
+//
+//		String[] playArr = play.split(" ");
+//
+//		if (main.DEBUG) {
+//			System.out.println("Play as array is: " + Arrays.toString(playArr));
+//		}
+//
+//		for (int i=0; i<playArr.length; i++) {
+//			//teams
+//			for (int j=0; j<gcdTeams.size(); j++) {
+//				if (playArr[i].toLowerCase().contains(gcdTeams.get(j))) {
+//					shortKeywords.add(gcdTeams.get(j));
+//					longKeywords.add(fullTeams.get(j));
+//				}
+//			}
+//			//players
+//			for (int k=0; k<gcdPlayers.size(); k++) {
+//				if (playArr[i].toLowerCase().contains(gcdPlayers.get(k))) {
+//					shortKeywords.add(gcdPlayers.get(k));
+//					longKeywords.add(fullPlayers.get(k));
+//				}
+//			}
+//		}
+//
+//		if (main.DEBUG) {
+//			System.out.println("Score should be 2 ints: " + Arrays.toString(score));
+//		}
+//
+//
+//		if (main.DEBUG) {
+//			if (shortKeywords.size() == 0) {
+//				System.out.println("Keywords are empty :(");
+//			} else {
+//				for (String q : longKeywords) {
+//					System.out.println("Keyword: " + q);
+//				}
+//			}
+//
+//		}
+//
+//
+//		Play p = new Play(date, shortKeywords, longKeywords, date, score);
+//		//for each play p, start a thread
+//		//add a new worker thread (newWorkerThread)
+//		newWorkerThread(p);
+//
+//	}
 
 	public static int[] regexBuildScore(String text, String regex) {
 		Pattern pattern = Pattern.compile(regex);
@@ -178,25 +182,25 @@ public class main {
 
 	}
 
-	public static void newWorkerThread(Play p) {
-		//create one at a time
-		CrawlerThread t = new CrawlerThread(p);
-		t.run();
-	}
+//	public static void newWorkerThread(Play p) {
+//		//create one at a time
+//		CrawlerThread t = new CrawlerThread(p);
+//		t.run();
+//	}
 
-	public String pickTeam(String team) {
-		//connect to a db and validate their input (checking permutations of what they said, e.g. "dortmund" = "Borussia Dortmund") - like watson..
-		//for now...
-		String teamPicked = "Borussia Dortmund";
-		return teamPicked;
-		//this will be different from "add team", etc, which will also check if the team already exists, etc
-	}
+//	public String pickTeam(String team) {
+//		//connect to a db and validate their input (checking permutations of what they said, e.g. "dortmund" = "Borussia Dortmund") - like watson..
+//		//for now...
+//		String teamPicked = "Borussia Dortmund";
+//		return teamPicked;
+//		//this will be different from "add team", etc, which will also check if the team already exists, etc
+//	}
 
-	public String pickPlayer(String player, String team) {
-		//prompt for team first, then prompt for player
-		//validate their player against the players full/last name in db, for each player associated with every team :/
-		String playerPicked = "Marco Reus";
-		return playerPicked;
-	}
+//	public String pickPlayer(String player, String team) {
+//		//prompt for team first, then prompt for player
+//		//validate their player against the players full/last name in db, for each player associated with every team :/
+//		String playerPicked = "Marco Reus";
+//		return playerPicked;
+//	}
 
 }
