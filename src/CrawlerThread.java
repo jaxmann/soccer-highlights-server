@@ -56,7 +56,6 @@ public class CrawlerThread implements Runnable {
 				
 				for (Element link: links) {
 					String inputTime = link.select("p.tagline").select("time").attr("title");
-					
 					try {
 						Date dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
@@ -147,16 +146,17 @@ public class CrawlerThread implements Runnable {
 		ArrayList<String> keywords = new ArrayList<String>();
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("list-of-players.csv"));
-			System.out.println("File found, trying to find player in play");
+			System.out.println("File found, trying to find player in play snippet");
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (postDescription.contains(line)) {
 					System.out.println(line);
 					keywords.add(line);
+					break; //no need to continue wasting compute time once we've found (hopefully) the only match - might need to be revised if we look for multiple players or assists (?)
 				}
-				
 			}
 			reader.close();
+			System.out.println("Done parsing for keywords.");
 		} catch (Exception e) {
 			System.err.println("Error trying to read player file");
 			e.printStackTrace();
