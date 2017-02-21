@@ -36,8 +36,11 @@ public class CrawlerThread implements Runnable {
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
-		while (true) { //run forever unless stopped
-			
+		parseKeywords("Marco Reus scores against Hertha (1-0)");
+		
+		int i=0;
+		while (i<2) { //run forever unless stopped
+			i=2;
 			try {
 				Thread.sleep(1000); //refresh page every n/1k seconds 
 			} catch (InterruptedException e2) {
@@ -50,9 +53,10 @@ public class CrawlerThread implements Runnable {
 				Elements links = document.select("div.thing"); //Get the entire posts from the doc
 				System.out.println("Total Links: " + links.size());
 				System.out.println(mostRecentPostTime);
+				
 				for (Element link: links) {
 					String inputTime = link.select("p.tagline").select("time").attr("title");
-					parseKeywords("Marco Reus scores against Hertha (1-0)");
+					
 					try {
 						Date dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
@@ -142,11 +146,15 @@ public class CrawlerThread implements Runnable {
 	public static ArrayList<String> parseKeywords(String postDescription) {
 		ArrayList<String> keywords = new ArrayList<String>();
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("..//list-of-players.csv"));
+			BufferedReader reader = new BufferedReader (new FileReader("list-of-players.csv"));
+			System.out.println("File found, trying to find player in play");
 			String line;
-			while (postDescription.contains((line = reader.readLine()))) {
-				System.out.println(line);
-				keywords.add(line);
+			while ((line = reader.readLine()) != null) {
+				if (postDescription.contains(line)) {
+					System.out.println(line);
+					keywords.add(line);
+				}
+				
 			}
 			reader.close();
 		} catch (Exception e) {
