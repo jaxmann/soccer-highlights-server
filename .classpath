@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="lib" path="lib/jsoup-1.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.15.1.jar"/>
+	<classpathentry kind="lib" path="/home/jonathan/Downloads/sendgrid-java-3.1.0-jar.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

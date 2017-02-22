@@ -16,6 +16,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.sendgrid.*;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -43,14 +45,12 @@ public class CrawlerThread implements Runnable {
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
-		String keyword_marco = parseKeywords("Marco Reus scores against Hertha (1-0)");
-		System.out.println(findSubscribedUsers(keyword_marco));
 		
-		int i=0;
-		while (i<2) { //run forever unless stopped
-			i=2;
+
+		while (true) { //run forever unless stopped
+	
 			try {
-				Thread.sleep(1000); //refresh page every n/1k seconds 
+				Thread.sleep(60000); //refresh page every n/1k seconds 
 			} catch (InterruptedException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -71,87 +71,35 @@ public class CrawlerThread implements Runnable {
 							if (link.select("p.title").select("a.title").text().matches(".*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*")) {
 								// do a keyword check for content of the post, then do sql 'select user, email where keywords='<keywords>' etc..
 								System.out.println("new post found");
-								System.out.println(link.select("p.tagline").select("time").attr("title")); //time
-								System.out.println(link.select("p.title").select("a.title").text()); //title
-								System.out.println(link.select("p.title").select("a.title").attr("href")); //url
+								String time = link.select("p.tagline").select("time").attr("title");
+								System.out.println(time); //time
+								String title = link.select("p.title").select("a.title").text();
+								System.out.println(title); //title
+								String url = link.select("p.title").select("a.title").attr("href");
+								System.out.println(url); //url
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post
-								parseKeywords(link.select("p.title").select("a.title").text());
+								String keyword = parseKeywords(title);
+								if (findSubscribedUsers(keyword) != null) {
+									sendEmail(url, keyword, findSubscribedUsers(keyword));
+								}
+								
 								
 							}
 						}
 					} catch (ParseException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					}
-					
-					
-					
+					}	
 				}
-
-
-				//			for(Element link: links){
-				//				System.out.println(link);
-				//				if(link.text().matches(".*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*")){  //does the link text have something like (2-0) displaying the score of a game
-				//					System.out.println("#: " + link.text());
-				//					long currentTime = System.currentTimeMillis();
-				//					ArrayList<String> keywords = new ArrayList<String>();
-				//					for(String playerName: main.fullPlayers){ //Use list of full player names, split into parts and check link text against player names add to keyword list
-				//						String[] playerNameSplit = playerName.split(" ");
-				//						for(int i = 0; i < playerNameSplit.length; i++){
-				//							if(link.text().contains(playerNameSplit[i])){
-				//								keywords.add(playerNameSplit[i]);
-				//							}
-				//						}
-				//					}
-				//					for(String teamName: main.fullTeams){ //Use list of full teams, split into parts and check link text against split up team names add to keyword list
-				//						String[] teamNameSplit = teamName.split(" ");
-				//						for(int i = 0; i < teamNameSplit.length; i++){
-				//							if(link.text().contains(teamNameSplit[i])){
-				//								keywords.add(teamNameSplit[i]);
-				//							}
-				//						}
-				//					}
-				//					//link.attr("abs:href") - The actual link --- link.text() - the link's text
-				//					HighlightLink highlightLink = new HighlightLink(link.attr("abs:href"), link.text(), keywords, currentTime);
-				//					main.highlightLinks.add(highlightLink);
-				//				}
-				//			}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-
-		//Check content size and see if it is approximately the size we'd expect a video to be
-		//HttpURLConnection content = (HttpURLConnection) new URL("https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html").openConnection();
-		//System.out.println(content.getContentLength());
-
-//		String url = null;
-//		url = "sampleURL";
-
-		//crawl sites with the given play
-		//figureOutWhoToSendItTo(url, main.users, play.getShortKeywords()); //also calls send method
-		//System.out.println("Done.");
 	}
 
-//	public static void figureOutWhoToSendItTo(String url, ArrayList<User> users, HashSet<String> hashSet) {
-//		//given the associated keywords with the video, see if they match "tags" that one can subscribe to (either team name/players)
-//		//and only send the message to people who are subscribed
-//		//pass on to "sendAlert" method
-//		for (int i=0; i<users.size(); i ++) { //for each user...
-//			//if tags match...
-//			for (int k=0; k<users.get(i).getTags().size(); k++) { //for each tag within each user
-//				for (String q : hashSet) {
-//					if (users.get(i).getTags().get(k).toLowerCase().contains(q.toLowerCase())) {
-//						users.get(i).sendAlert(url);
-//					}
-//				}
-//			}
-//		}
-//	}
 	
 	public static String parseKeywords(String postDescription) { //should return ArrayList<String>
-		ArrayList<String> keywords = new ArrayList<String>();
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("list-of-players.csv"));
 			System.out.println("File found, trying to find player in play snippet");
@@ -159,9 +107,7 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 				if (postDescription.contains(line)) {
 					System.out.println(line);
-					return line; //remove later - just for marco testing
-					//keywords.add(line);
-					//break; //no need to continue wasting compute time once we've found (hopefully) the only match - might need to be revised if we look for multiple players or assists (?)
+					return line; //found a keyword - we're done
 				}
 			}
 			reader.close();
@@ -174,9 +120,8 @@ public class CrawlerThread implements Runnable {
 		return null;
 	}
 	
-	public static ArrayList<String> findSubscribedUsers(String keyword) {
+	public static String findSubscribedUsers(String keyword) { //change to arraylist of users later
 		
-		System.out.println("Keyword entering subscriber search is " + keyword);
 		Connection connection = null;
 		ResultSet resultSet = null;
 		Statement statement = null;
@@ -187,8 +132,10 @@ public class CrawlerThread implements Runnable {
 			System.out.println(sql);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
-			System.out.println(resultSet.getString("Email"));
 			System.out.println("Connection successful");
+			
+			return resultSet.getString("Email");
+			
 		} catch (SQLException e){
 			System.out.println(e.getMessage());
 		} finally {
@@ -203,9 +150,33 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 		
-		
 		return null;
 	}
+	
+	public static void sendEmail(String link, String keyword, String emailAddress) {
+		
+		
+		Email from = new Email(""); //censor this
+		String subject = "PMR Highlight Found - " + keyword;
+		//Email to = new Email(email);
+		Email to = new Email(emailAddress);
+		Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").");
+		Mail mail = new Mail(from, subject, to, content);
+		SendGrid sg = new SendGrid(""); //censor this
+		Request request = new Request();
+		
 
+		try {
+		  request.method = Method.POST;
+		  request.endpoint = "mail/send";
+		  request.body = mail.build();
+		  Response response = sg.api(request);
+		  System.out.println(response.statusCode);
+		  System.out.println(response.body);
+		  System.out.println(response.headers);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
 }
