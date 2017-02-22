@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -15,6 +16,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class CrawlerThread implements Runnable {
 
 	private Play play;
@@ -24,7 +32,6 @@ public class CrawlerThread implements Runnable {
 
 	}
 
-	@Override
 	public void run() {
 
 
@@ -36,7 +43,8 @@ public class CrawlerThread implements Runnable {
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
-		parseKeywords("Marco Reus scores against Hertha (1-0)");
+		String keyword_marco = parseKeywords("Marco Reus scores against Hertha (1-0)");
+		System.out.println(findSubscribedUsers(keyword_marco));
 		
 		int i=0;
 		while (i<2) { //run forever unless stopped
@@ -142,7 +150,7 @@ public class CrawlerThread implements Runnable {
 //		}
 //	}
 	
-	public static ArrayList<String> parseKeywords(String postDescription) {
+	public static String parseKeywords(String postDescription) { //should return ArrayList<String>
 		ArrayList<String> keywords = new ArrayList<String>();
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("list-of-players.csv"));
@@ -151,8 +159,9 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 				if (postDescription.contains(line)) {
 					System.out.println(line);
-					keywords.add(line);
-					break; //no need to continue wasting compute time once we've found (hopefully) the only match - might need to be revised if we look for multiple players or assists (?)
+					return line; //remove later - just for marco testing
+					//keywords.add(line);
+					//break; //no need to continue wasting compute time once we've found (hopefully) the only match - might need to be revised if we look for multiple players or assists (?)
 				}
 			}
 			reader.close();
@@ -162,7 +171,40 @@ public class CrawlerThread implements Runnable {
 			e.printStackTrace();
 		}
 		
-		return keywords;
+		return null;
+	}
+	
+	public static ArrayList<String> findSubscribedUsers(String keyword) {
+		
+		System.out.println("Keyword entering subscriber search is " + keyword);
+		Connection connection = null;
+		ResultSet resultSet = null;
+		Statement statement = null;
+		try{
+			String url = "jdbc:sqlite:../server/db/pmr.db";
+			connection = DriverManager.getConnection(url);
+			String sql = "Select * from User WHERE Keywords like '%" + keyword + "%';";
+			System.out.println(sql);
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+			System.out.println(resultSet.first());
+			System.out.println("Connection successful");
+		} catch (SQLException e){
+			System.out.println(e.getMessage());
+		} finally {
+			try{
+				if (connection != null){
+					resultSet.close();
+					statement.close();
+					connection.close();
+				}
+			} catch (SQLException ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
+		
+		
+		return null;
 	}
 
 
