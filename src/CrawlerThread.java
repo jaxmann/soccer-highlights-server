@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -107,8 +108,10 @@ public class CrawlerThread implements Runnable {
 		return null;
 	}
 
-	public static String findSubscribedUsers(String keyword) { //change to arraylist of users later and send email for each user found - have to change db to make it work
+	public static ArrayList<String> findSubscribedUsers(String keyword) { //change to arraylist of users later and send email for each user found - have to change db to make it work
 
+		ArrayList<String> subscribedUsers = new ArrayList<String>();
+		
 		Connection connection = null;
 		ResultSet resultSet = null;
 		Statement statement = null;
@@ -120,8 +123,13 @@ public class CrawlerThread implements Runnable {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			System.out.println("Connection successful");
-
-			return resultSet.getString("Email");
+			
+			//iterate over multiple results
+			subscribedUsers.add(resultSet.getString("Email"));
+			if(resultSet.next()){
+				subscribedUsers.add(resultSet.getString("Email"));
+			}
+			return subscribedUsers;
 
 		} catch (SQLException e){
 			System.out.println(e.getMessage());
@@ -140,29 +148,29 @@ public class CrawlerThread implements Runnable {
 		return null;
 	}
 
-	public static void sendEmail(String link, String keyword, String emailAddress) {
+	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddress) {
 
-
-		Email from = new Email(""); //censor this
-		String subject = "PMR Highlight Found - " + keyword;
-		//Email to = new Email(email);
-		Email to = new Email(emailAddress);
-		Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").");
-		Mail mail = new Mail(from, subject, to, content);
-		SendGrid sg = new SendGrid(""); //censor this
-		Request request = new Request();
-
-
-		try {
-			request.method = Method.POST;
-			request.endpoint = "mail/send";
-			request.body = mail.build();
-			Response response = sg.api(request);
-			System.out.println(response.statusCode);
-			System.out.println(response.body);
-			System.out.println(response.headers);
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		for (String em : emailAddress) {
+			Email from = new Email(""); //censor this
+			String subject = "PMR Highlight Found - " + keyword;
+			//Email to = new Email(email);
+			Email to = new Email(em);
+			Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").");
+			Mail mail = new Mail(from, subject, to, content);
+			SendGrid sg = new SendGrid(""); //censor this
+			Request request = new Request();
+	
+			try {
+				request.method = Method.POST;
+				request.endpoint = "mail/send";
+				request.body = mail.build();
+				Response response = sg.api(request);
+				System.out.println(response.statusCode);
+				System.out.println(response.body);
+				System.out.println(response.headers);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 
