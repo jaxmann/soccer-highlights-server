@@ -14,15 +14,4 @@ public class main {
 		t.run();
 	}
 
-
-	public static int[] regexBuildScore(String text, String regex) {
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(text);
-		String matchingString = text.substring(matcher.start(), matcher.end());
-		Scanner s = new Scanner(matchingString);
-		int[] scoreArr = {s.nextInt(), s.nextInt()};
-		return scoreArr;
-
-	}
-
 }

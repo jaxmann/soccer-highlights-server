@@ -26,11 +26,10 @@ public class CrawlerThread implements Runnable {
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.1 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
 
 	public CrawlerThread() {
-
+		
 	}
 
 	public void run() {
-
 
 		String redditURL = "http://www.reddit.com/r/soccer/new";
 		Document document = null;
@@ -39,8 +38,6 @@ public class CrawlerThread implements Runnable {
 		Date mostRecentPostTime = cal.getTime();
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-
 
 		while (true) { //run forever unless stopped
 
