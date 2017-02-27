@@ -59,8 +59,8 @@ public class CrawlerThread implements Runnable {
 					try {
 						Date dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
-							//does the link text have something like (2-0) displaying the score of a game
-							if (link.select("p.title").select("a.title").text().matches(".*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*")) {
+							//does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
+							if (link.select("p.title").select("a.title").text().matches("^[0-9]+(-[0-9]+)")) { // old .*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*
 								System.out.println("new post found");
 								String time = link.select("p.tagline").select("time").attr("title");
 								System.out.println(time); //time
