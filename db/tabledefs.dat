@@ -21,5 +21,7 @@ PhoneNumber varchar(10),
 Keywords varchar(100000),
 ResetToken varchar(40),
 ResetExpiration varchar(40),
+ReceiveEmails integer,
+LoginKey varchar(100),
 UNIQUE(Username, Email, PhoneNumber) ON CONFLICT ABORT
 );
