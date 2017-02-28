@@ -155,7 +155,7 @@ public class CrawlerThread implements Runnable {
 			String subject = "PMR Highlight Found - " + keyword;
 			//Email to = new Email(email);
 			Email to = new Email(em);
-			Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").\n\n\n If this wasn't the correct player you select, it's easiest just to uncheck that player"
+			Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
 					+ "within the website - we're working on a solution to improve our app's cognitive ability.");
 			Mail mail = new Mail(from, subject, to, content);
 			SendGrid sg = new SendGrid(""); //censor this
