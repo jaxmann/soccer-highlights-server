@@ -108,7 +108,7 @@ public class CrawlerThread implements Runnable {
 		return null;
 	}
 
-	public static ArrayList<String> findSubscribedUsers(String keyword) { //change to arraylist of users later and send email for each user found - have to change db to make it work
+	public static ArrayList<String> findSubscribedUsers(String keyword) { 
 
 		ArrayList<String> subscribedUsers = new ArrayList<String>();
 		
