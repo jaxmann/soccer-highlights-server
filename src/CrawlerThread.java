@@ -93,7 +93,7 @@ public class CrawlerThread implements Runnable {
 			System.out.println("File found, trying to find player in play snippet");
 			String line;
 			while ((line = reader.readLine()) != null) {
-				if (postDescription.contains(line)) {
+				if (postDescription.contains(line) || postDescription.contains(simplify.simplifyName(line))) { //either ascii > 127 name or simplified name in play description? if yes...
 					System.out.println(line);
 					return line; //found a keyword - we're done
 				}
