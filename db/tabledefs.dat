@@ -24,5 +24,6 @@ ResetExpiration varchar(40),
 ReceiveTexts integer,
 ReceiveEmails integer,
 LoginKey varchar(100),
+LoginKeyExpiration integer,
 UNIQUE(Username, Email, PhoneNumber) ON CONFLICT ABORT
 );
