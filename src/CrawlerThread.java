@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,7 +41,10 @@ public class CrawlerThread implements Runnable {
 		Date mostRecentPostTime = cal.getTime();
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
+		
+		Pattern p = Pattern.compile("[0-9]+(-[0-9]+)");
+		
+		
 		while (true) { //run forever unless stopped
 
 			try {
@@ -59,8 +64,9 @@ public class CrawlerThread implements Runnable {
 					try {
 						Date dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
+							Matcher m = p.matcher(link.select("p.title").select("a.title").text());
 							//does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
-							if (link.select("p.title").select("a.title").text().matches("^[0-9]+(-[0-9]+)")) { // old .*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*
+							if (m.find()) { // old .*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*
 								System.out.println("new post found");
 								String time = link.select("p.tagline").select("time").attr("title");
 								System.out.println(time); //time
@@ -118,7 +124,7 @@ public class CrawlerThread implements Runnable {
 		try{
 			String url = "jdbc:sqlite:../server/db/pmr.db";
 			connection = DriverManager.getConnection(url);
-			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails=1;";
+			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails>1;";
 			System.out.println(sql);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
