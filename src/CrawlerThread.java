@@ -124,7 +124,8 @@ public class CrawlerThread implements Runnable {
 		try{
 			String url = "jdbc:sqlite:../server/db/pmr.db";
 			connection = DriverManager.getConnection(url);
-			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails>1;";
+			long currentTime = System.nanoTime();
+			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails<" + currentTime + ";";
 			System.out.println(sql);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
