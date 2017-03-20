@@ -25,5 +25,6 @@ ReceiveTexts integer,
 ReceiveEmails integer,
 LoginKey varchar(100),
 LoginKeyExpiration integer,
+ServerPasswordSalt varchar(80),
 UNIQUE(Username, Email, PhoneNumber) ON CONFLICT ABORT
 );
