@@ -98,16 +98,28 @@ public class CrawlerThread implements Runnable {
 
 	public static String parseKeywords(String postDescription) { //should return ArrayList<String> edit: only if we find multiple keywords in a single play? not worth changing for now
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("list-of-players.csv"));
+			BufferedReader reader = new BufferedReader (new FileReader("list-of-players2.csv"));
 			System.out.println("File found, trying to find player in play snippet");
 			String line;
 			while ((line = reader.readLine()) != null) {
 				byte ptext[] = line.getBytes(ISO_8859_1);
 				String newline = new String(ptext, UTF_8);
-				if (postDescription.contains(newline) || postDescription.contains(simplify.simplifyName(newline))) { //either ascii > 127 name or simplified name in play description? if yes...
-					System.out.println(newline);
-					return newline; //found a keyword - we're done
+				if (Character.valueOf(newline.charAt(newline.length())) == ',') {
+					newline = newline.substring(0, newline.length()-1);
+					if (postDescription.contains(newline) || postDescription.contains(simplify.simplifyName(newline))) { //either ascii > 127 name or simplified name in play description? if yes...
+						System.out.println(newline);
+						return newline; //found a keyword - we're done
+					}
+				} else {
+					String[] s = newline.split(",");
+					for (String a : s) {
+						if (postDescription.contains(a) || postDescription.contains(simplify.simplifyName(a))) { //either ascii > 127 name or simplified name in play description? if yes...
+							System.out.println(s[0]);
+							return s[0]; //found a keyword - we're done
+						}
+					}
 				}
+				
 			}
 			reader.close();
 			System.out.println("Done parsing for keywords.");
