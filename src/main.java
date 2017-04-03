@@ -11,7 +11,46 @@ public class main {
 
 	public static void main(String[] args) {
 		
-	
+//		String postDescription = "Fabio Quagliarella (Sampdoria) penalty goal against Inter (1-2) - Marcelo Brozovic stupid foul";
+//		try {
+//			BufferedReader reader = new BufferedReader (new FileReader("list-of-players2.csv"));
+//			System.out.println("File found, trying to find player in play snippet");
+//			String line;
+//			while ((line = reader.readLine()) != null) {
+//				byte ptext[] = line.getBytes(ISO_8859_1);
+//				String newline = new String(ptext, UTF_8);
+//				if (newline.contains("Quag")) {
+//					System.out.println(newline);
+//				}
+//				
+////				if (a.contains("Quag")) {
+////					System.out.println(a);
+////				}
+//				/*if (Character.valueOf(newline.charAt(newline.length()-1)) == ',') {
+//					
+//					newline = newline.substring(0, newline.length()-1);
+//					if (postDescription.contains(newline) || postDescription.contains(simplify.simplifyName(newline))) { //either ascii > 127 name or simplified name in play description? if yes...
+//						System.out.println(newline);
+//					}
+//				} else {*/
+//				String[] s = newline.split(",");
+//				for (String a : s) {
+//					
+//					if (postDescription.contains(a) || postDescription.contains(simplify.simplifyName(a))) { //either ascii > 127 name or simplified name in play description? if yes...
+//						System.out.println(s[0]);
+//					}
+//				}
+//				
+//				
+//			}
+//			reader.close();
+//			System.out.println("Done parsing for keywords.");
+//		} catch (Exception e) {
+//			System.err.println("Error trying to read player file");
+//			e.printStackTrace();
+//		}
+//		
+		
 		CrawlerThread t = new CrawlerThread();
 		t.run();
 	}

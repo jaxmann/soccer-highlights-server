@@ -32,7 +32,7 @@ public class CrawlerThread implements Runnable {
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.1 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
 
 	public CrawlerThread() {
-		
+
 	}
 
 	public void run() {
@@ -44,10 +44,10 @@ public class CrawlerThread implements Runnable {
 		Date mostRecentPostTime = cal.getTime();
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		
+
 		Pattern p = Pattern.compile("[0-9]+(-[0-9]+)");
-		
-		
+
+
 		while (true) { //run forever unless stopped
 
 			try {
@@ -104,22 +104,16 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 				byte ptext[] = line.getBytes(ISO_8859_1);
 				String newline = new String(ptext, UTF_8);
-				if (Character.valueOf(newline.charAt(newline.length())) == ',') {
-					newline = newline.substring(0, newline.length()-1);
-					if (postDescription.contains(newline) || postDescription.contains(simplify.simplifyName(newline))) { //either ascii > 127 name or simplified name in play description? if yes...
-						System.out.println(newline);
-						return newline; //found a keyword - we're done
-					}
-				} else {
-					String[] s = newline.split(",");
-					for (String a : s) {
-						if (postDescription.contains(a) || postDescription.contains(simplify.simplifyName(a))) { //either ascii > 127 name or simplified name in play description? if yes...
-							System.out.println(s[0]);
-							return s[0]; //found a keyword - we're done
-						}
+
+				String[] s = newline.split(",");
+				for (String a : s) {
+					if (postDescription.contains(a) || postDescription.contains(simplify.simplifyName(a))) { //either ascii > 127 name or simplified name in play description? if yes...
+						System.out.println(s[0]);
+						return s[0]; //found a keyword - we're done - technically should probably return the one that occurs first? idk
 					}
 				}
-				
+
+
 			}
 			reader.close();
 			System.out.println("Done parsing for keywords.");
@@ -128,13 +122,13 @@ public class CrawlerThread implements Runnable {
 			e.printStackTrace();
 		}
 
-		return null;
+		return null; //i.e no player found in the csv
 	}
 
 	public static ArrayList<String> findSubscribedUsers(String keyword) { 
 
 		ArrayList<String> subscribedUsers = new ArrayList<String>();
-		
+
 		Connection connection = null;
 		ResultSet resultSet = null;
 		Statement statement = null;
@@ -147,7 +141,7 @@ public class CrawlerThread implements Runnable {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			System.out.println("Connection successful");
-			
+
 			//iterate over multiple results
 			subscribedUsers.add(resultSet.getString("Email"));
 			if(resultSet.next()){
@@ -184,7 +178,7 @@ public class CrawlerThread implements Runnable {
 			Mail mail = new Mail(from, subject, to, content);
 			SendGrid sg = new SendGrid(""); //censor this
 			Request request = new Request();
-	
+
 			try {
 				request.method = Method.POST;
 				request.endpoint = "mail/send";
@@ -198,6 +192,6 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 	}
-	
+
 
 }
