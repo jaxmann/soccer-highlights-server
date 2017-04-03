@@ -109,6 +109,15 @@ public class CrawlerThread implements Runnable {
 				for (String a : s) {
 					if (postDescription.contains(a) || postDescription.contains(simplify.simplifyName(a))) { //either ascii > 127 name or simplified name in play description? if yes...
 						System.out.println(s[0]);
+//						String firstHalf;
+//						if (postDescription.contains(a)) {
+//							firstHalf = postDescription.substring(0, postDescription.indexOf(a));
+//							while (parseKeywords(firstHalf) != null) {
+//								firstHalf = parseKeywords(firstHalf);
+//							}
+//						} else {
+//							firstHalf = postDescription.substring(0, postDescription.indexOf(simplify.simplifyName(a)));
+//						}
 						return s[0]; //found a keyword - we're done - technically should probably return the one that occurs first? idk
 					}
 				}
