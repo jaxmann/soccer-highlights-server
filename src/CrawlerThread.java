@@ -1,3 +1,6 @@
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedReader;
 
 import java.io.FileReader;
@@ -99,9 +102,11 @@ public class CrawlerThread implements Runnable {
 			System.out.println("File found, trying to find player in play snippet");
 			String line;
 			while ((line = reader.readLine()) != null) {
-				if (postDescription.contains(line) || postDescription.contains(simplify.simplifyName(line))) { //either ascii > 127 name or simplified name in play description? if yes...
-					System.out.println(line);
-					return line; //found a keyword - we're done
+				byte ptext[] = line.getBytes(ISO_8859_1);
+				String newline = new String(ptext, UTF_8);
+				if (postDescription.contains(newline) || postDescription.contains(simplify.simplifyName(newline))) { //either ascii > 127 name or simplified name in play description? if yes...
+					System.out.println(newline);
+					return newline; //found a keyword - we're done
 				}
 			}
 			reader.close();
@@ -181,5 +186,6 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 	}
+	
 
 }
