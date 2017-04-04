@@ -11,7 +11,7 @@ public class main {
 
 	public static void main(String[] args) {
 		
-//		String postDescription = "Fabio Quagliarella (Sampdoria) penalty goal against Inter (1-2) - Marcelo Brozovic stupid foul";
+//		String postDescription = "Ronaldo (Sampdoria) penalty goal against Inter (1-2) - Marcelo Brozovic stupid foul";
 //		try {
 //			BufferedReader reader = new BufferedReader (new FileReader("list-of-players2.csv"));
 //			System.out.println("File found, trying to find player in play snippet");

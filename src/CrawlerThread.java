@@ -5,6 +5,10 @@ import java.io.BufferedReader;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -177,15 +181,48 @@ public class CrawlerThread implements Runnable {
 
 	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddress) {
 
+		//add sendgrid key a file
+		String home = System.getProperty("user.home");
+		byte[] encoded = null;
+		String pwd = "";
+		try {
+			encoded = Files.readAllBytes(Paths.get(home + "\\SG.txt"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			pwd =  new String(encoded, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		byte[] encoded2 = null;
+		String pmremail = "";
+		try {
+			encoded = Files.readAllBytes(Paths.get(home + "\\SGEmail.txt"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			pmremail =  new String(encoded, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		for (String em : emailAddress) {
-			Email from = new Email(""); //censor this
+			Email from = new Email(pmremail); 
 			String subject = "PMR Highlight Found - " + keyword;
 			//Email to = new Email(email);
 			Email to = new Email(em);
 			Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
-					+ "within the website - we're working on a solution to improve our app's cognitive ability.");
+					+ " within the website - we're working on a solution to improve our app's cognitive ability.");
 			Mail mail = new Mail(from, subject, to, content);
-			SendGrid sg = new SendGrid(""); //censor this
+			
+			
+			SendGrid sg = new SendGrid(pwd); 
 			Request request = new Request();
 
 			try {
