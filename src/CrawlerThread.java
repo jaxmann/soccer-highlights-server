@@ -83,8 +83,9 @@ public class CrawlerThread implements Runnable {
 								System.out.println(url); //url
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post
 								String keyword = parseKeywords(title); //identify player keywords within play description
-								if (findSubscribedUsers(keyword) != null) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
-									sendEmail(url, keyword, findSubscribedUsers(keyword)); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
+								ArrayList<String> subbedUsers = findSubscribedUsers(keyword);
+								if (subbedUsers != null) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
+									sendEmail(url, keyword, subbedUsers); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
 								}
 
 							}
@@ -149,6 +150,7 @@ public class CrawlerThread implements Runnable {
 			String url = "jdbc:sqlite:../server/db/pmr.db";
 			connection = DriverManager.getConnection(url);
 			long currentTime = System.nanoTime();
+			//note - this will get printed twice because i check it against null above
 			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails<" + currentTime + ";";
 			System.out.println(sql);
 			statement = connection.createStatement();
@@ -158,7 +160,7 @@ public class CrawlerThread implements Runnable {
 			//iterate over multiple results
 			
 			
-			subscribedUsers.add(resultSet.getString("Email"));
+			//subscribedUsers.add(resultSet.getString("Email"));
 			if(resultSet.next()){
 				subscribedUsers.add(resultSet.getString("Email"));
 			}
