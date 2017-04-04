@@ -156,10 +156,14 @@ public class CrawlerThread implements Runnable {
 			System.out.println("Connection successful");
 
 			//iterate over multiple results
+			
+			
 			subscribedUsers.add(resultSet.getString("Email"));
 			if(resultSet.next()){
 				subscribedUsers.add(resultSet.getString("Email"));
 			}
+			
+			
 			return subscribedUsers;
 
 		} catch (SQLException e){
@@ -179,7 +183,7 @@ public class CrawlerThread implements Runnable {
 		return null;
 	}
 
-	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddress) {
+	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddresses) {
 
 		//add sendgrid key a file
 		String home = System.getProperty("user.home");
@@ -212,7 +216,10 @@ public class CrawlerThread implements Runnable {
 			e.printStackTrace();
 		}
 		
-		for (String em : emailAddress) {
+		for (String em : emailAddresses) {
+			
+			System.out.println("email to send to " + em);
+			
 			Email from = new Email(pmremail); 
 			String subject = "PMR Highlight Found - " + keyword;
 			//Email to = new Email(email);
