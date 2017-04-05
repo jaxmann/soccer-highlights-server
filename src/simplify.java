@@ -3,9 +3,28 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class simplify {
 	
-	public static String simplifyName(String name) {
+	public static String simplifyUTF8Name(String name) {
 		byte ptext[] = name.getBytes(ISO_8859_1);
 		String newline = new String(ptext, UTF_8);
+		
+		char[] a = new char[newline.length()];
+		for (int c = 0; c<newline.length(); c++) {
+			int charVal = (int)newline.charAt(c);
+			if (charVal < 128) {
+				a[c] = newline.charAt(c);
+			} else if (charVal > 127) {
+				char newChar = (char)simplifyChar(charVal);
+				a[c] = newChar;
+			}
+		}
+		String synName = new String(a);
+		
+		return synName;
+	}
+	
+	
+	public static String simplifyName(String name) {
+		String newline = name;
 		
 		char[] a = new char[newline.length()];
 		for (int c = 0; c<newline.length(); c++) {

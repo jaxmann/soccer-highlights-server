@@ -151,6 +151,7 @@ public class CrawlerThread implements Runnable {
 			connection = DriverManager.getConnection(url);
 			long currentTime = System.nanoTime();
 			//note - this will get printed twice because i check it against null above
+			keyword = keyword.replace("'", "''");
 			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails<" + currentTime + ";";
 			System.out.println(sql);
 			statement = connection.createStatement();

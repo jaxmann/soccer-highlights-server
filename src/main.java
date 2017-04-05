@@ -11,7 +11,13 @@ public class main {
 
 	public static void main(String[] args) {
 		
-//		String postDescription = "Ronaldo (Sampdoria) penalty goal against Inter (1-2) - Marcelo Brozovic stupid foul";
+//		String line = "Luis Suárez";
+//		char c = 'á';
+//		System.out.println(line);
+//		
+//		System.out.println(simplify.simplifyName(line));
+		
+//		String postDescription = "Younousse Sankharé";
 //		try {
 //			BufferedReader reader = new BufferedReader (new FileReader("list-of-players2.csv"));
 //			System.out.println("File found, trying to find player in play snippet");
@@ -19,9 +25,7 @@ public class main {
 //			while ((line = reader.readLine()) != null) {
 //				byte ptext[] = line.getBytes(ISO_8859_1);
 //				String newline = new String(ptext, UTF_8);
-//				if (newline.contains("Quag")) {
-//					System.out.println(newline);
-//				}
+//				
 //				
 ////				if (a.contains("Quag")) {
 ////					System.out.println(a);
@@ -49,10 +53,10 @@ public class main {
 //			System.err.println("Error trying to read player file");
 //			e.printStackTrace();
 //		}
-//		
 		
-		CrawlerThread t = new CrawlerThread();
-		t.run();
+		
+//		CrawlerThread t = new CrawlerThread();
+//		t.run();
 	}
 
 }
