@@ -55,8 +55,8 @@ public class main {
 //		}
 		
 		
-//		CrawlerThread t = new CrawlerThread();
-//		t.run();
+		CrawlerThread t = new CrawlerThread();
+		t.run();
 	}
 
 }
