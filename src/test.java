@@ -82,6 +82,12 @@ public class test {
 								fullLine += ",";
 							}
 							System.out.println(fullLine);
+						} else {
+							int commaCount = firstChunk.length() - firstChunk.replace(",", "").length();
+							for (int i=commaCount; i<=5; i++) {
+								firstChunk += ",";
+							}
+							System.out.println(firstChunk);
 						}
 					}
 					
