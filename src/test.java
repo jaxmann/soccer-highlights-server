@@ -47,7 +47,7 @@ public class test {
 		}
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		try {
-			BufferedReader reader2 = new BufferedReader (new FileReader("list-of-players2.csv"));
+			BufferedReader reader2 = new BufferedReader (new FileReader("output.csv")); //backup list-of-players2
 			String line;
 
 			while ((line = reader2.readLine()) != null) {
@@ -86,7 +86,11 @@ public class test {
 					}
 					
 				} else {
-					
+					int commaCount = firstChunk.length() - firstChunk.replace(",", "").length();
+					for (int i=commaCount; i<=5; i++) {
+						firstChunk += ",";
+					}
+					System.out.println(firstChunk);
 				}
 			}
 		} catch (FileNotFoundException e) {
