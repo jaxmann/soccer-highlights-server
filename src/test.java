@@ -47,7 +47,7 @@ public class test {
 		}
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		try {
-			BufferedReader reader2 = new BufferedReader (new FileReader("output.csv")); //backup list-of-players2
+			BufferedReader reader2 = new BufferedReader (new FileReader("list-of-players2.csv")); 
 			String line;
 
 			while ((line = reader2.readLine()) != null) {

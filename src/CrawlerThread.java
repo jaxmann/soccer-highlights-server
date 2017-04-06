@@ -103,7 +103,7 @@ public class CrawlerThread implements Runnable {
 
 	public static String parseKeywords(String postDescription) { //should return ArrayList<String> edit: only if we find multiple keywords in a single play? not worth changing for now
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("list-of-players2.csv"));
+			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup list-of-players2
 			System.out.println("File found, trying to find player in play snippet");
 			String line;
 			while ((line = reader.readLine()) != null) {
