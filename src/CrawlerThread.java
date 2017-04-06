@@ -84,7 +84,7 @@ public class CrawlerThread implements Runnable {
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post
 								String keyword = parseKeywords(title); //identify player keywords within play description
 								ArrayList<String> subbedUsers = findSubscribedUsers(keyword);
-								if (subbedUsers != null) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
+								if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
 									sendEmail(url, keyword, subbedUsers); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
 								}
 
@@ -112,7 +112,8 @@ public class CrawlerThread implements Runnable {
 
 				String[] s = newline.split(",");
 				for (String a : s) {
-					if (postDescription.contains(a) || postDescription.contains(simplify.simplifyName(a))) { //either ascii > 127 name or simplified name in play description? if yes...
+					//spaces are so that we actually find "Can" (on a word boundary) instead of Lezcano, for instance - not tested yet
+					if (postDescription.contains(" " + a + " ") || postDescription.contains(" " + simplify.simplifyName(a) + " ")) { //either ascii > 127 name or simplified name in play description? if yes...
 						System.out.println(s[0]);
 //						String firstHalf;
 //						if (postDescription.contains(a)) {
@@ -136,7 +137,7 @@ public class CrawlerThread implements Runnable {
 			e.printStackTrace();
 		}
 
-		return null; //i.e no player found in the csv
+		return "poop"; //i.e no player found in the csv
 	}
 
 	public static ArrayList<String> findSubscribedUsers(String keyword) { 
@@ -183,7 +184,7 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 
-		return null;
+		return subscribedUsers;
 	}
 
 	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddresses) {
