@@ -38,7 +38,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class CrawlerThread implements Runnable {
 
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.1 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
-	static Logger logger = Logger.getLogger(CrawlerThread.class);
+	private static Logger logger = Logger.getLogger(CrawlerThread.class);
 
 	public CrawlerThread() {
 
@@ -46,7 +46,9 @@ public class CrawlerThread implements Runnable {
 
 	public void run() {
 		
-		PropertyConfigurator.configure("log4j-configuration.txt");
+		PropertyConfigurator.configure("log4j-configuration.txt"); //configure log4j binding with properties from log4j-configuration file
+	
+		
 
 		String redditURL = "http://www.reddit.com/r/soccer/new";
 		Document document = null;
@@ -62,6 +64,8 @@ public class CrawlerThread implements Runnable {
 		while (true) { //run forever unless stopped
 
 			try {
+				//modify this number to change based on time of the day/week/year potentially
+				//put a logger to print the refresh rate here
 				Thread.sleep(60000); //refresh page every n/1k seconds 
 			} catch (InterruptedException e2) {
 				e2.printStackTrace();
@@ -70,7 +74,8 @@ public class CrawlerThread implements Runnable {
 			try {
 				document = Jsoup.connect(redditURL).userAgent(USER_AGENT).timeout(0).get(); //Get the url - Reddit only accepts 2 requests a minute. edit: 60/min i think? -jonathan
 				Elements links = document.select("div.thing"); //Get the entire posts from the doc
-				System.out.println("Total Links: " + links.size());
+				//System.out.println("Total Links: " + links.size());
+				logger.info("Most recent post time: " + mostRecentPostTime);
 				System.out.println(mostRecentPostTime);
 
 				for (Element link: links) {
