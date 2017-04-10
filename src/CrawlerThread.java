@@ -65,6 +65,7 @@ public class CrawlerThread implements Runnable {
 
 			try {
 				int refreshTime = getSleepTime();
+				logger.info("Current refresh rate: " + refreshTime / 1000 + " min");
 				Thread.sleep(refreshTime); //refresh page every n/1k seconds 
 				//modify this number to change based on time of the day/week/year potentially
 				//put a logger to print the refresh rate here
