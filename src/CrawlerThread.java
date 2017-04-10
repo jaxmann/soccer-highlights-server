@@ -62,7 +62,8 @@ public class CrawlerThread implements Runnable {
 		while (true) { //run forever unless stopped
 
 			try {
-				Thread.sleep(60000); //refresh page every n/1k seconds 
+				int refreshTime = getSleepTime();
+				Thread.sleep(refreshTime); //refresh page every n/1k seconds 
 			} catch (InterruptedException e2) {
 				e2.printStackTrace();
 			}
@@ -254,6 +255,17 @@ public class CrawlerThread implements Runnable {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
+		}
+	}
+	
+	public static int getSleepTime(){
+		Calendar calendar = Calendar.getInstance();
+		int hours = calendar.get(Calendar.HOUR_OF_DAY);
+		System.out.println(hours);
+		if(hours >= 19 && hours <= 6){ //7pm to 7am
+			return 600000; //10 minutes
+		} else{
+			return 60000; //1 minute
 		}
 	}
 
