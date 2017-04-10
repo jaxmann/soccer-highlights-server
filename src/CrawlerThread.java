@@ -1,4 +1,5 @@
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedReader;
@@ -31,15 +32,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 public class CrawlerThread implements Runnable {
 
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.1 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
+	static Logger logger = Logger.getLogger(CrawlerThread.class);
 
 	public CrawlerThread() {
 
 	}
 
 	public void run() {
+		
+		PropertyConfigurator.configure("log4j-configuration.txt");
 
 		String redditURL = "http://www.reddit.com/r/soccer/new";
 		Document document = null;
