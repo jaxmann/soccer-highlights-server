@@ -5,12 +5,6 @@ Team varchar(50),
 Player varchar(50)
 );
 
-CREATE TABLE Team
-(
-TeamName varchar(50),
-LeagueName varchar(50)
-);
-
 CREATE TABLE User
 (
 Username varchar(30),
