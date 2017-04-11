@@ -81,7 +81,7 @@ public class CrawlerThread implements Runnable {
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
 							Matcher m = p.matcher(link.select("p.title").select("a.title").text());
 							
-							if (m.find()) { // old .*(\\(|\\[)\\s?\\d{1}\\s?\\-\\s?\\d{1}\\s?(\\)|\\]).*
+							if (m.find()) { 
 								String time = link.select("p.tagline").select("time").attr("title");
 								String title = link.select("p.title").select("a.title").text();
 								String url = link.select("p.title").select("a.title").attr("href");
