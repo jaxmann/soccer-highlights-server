@@ -14,7 +14,7 @@ import java.sql.SQLException;
 //delete database records older than 2 mins - run this job every 1 min
 public class Delete {
 
-	
+	//MAKE THIS FILE INTO A JAR
 	public static void main(String[] args) {
 		
 		delete(); //delete older than 2 mins
