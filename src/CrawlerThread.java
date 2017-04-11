@@ -228,7 +228,7 @@ public class CrawlerThread implements Runnable {
 
 		for (String em : emailAddresses) {
 
-			logger.info("Attempting to email: " + em + "...");
+			logger.info("Attempting to email: [" + em + "]...");
 
 			Email from = new Email(pmremail); 
 			String subject = "PMR Highlight Found - " + keyword;
@@ -249,7 +249,7 @@ public class CrawlerThread implements Runnable {
 				/*System.out.println(response.statusCode);
 				System.out.println(response.body);
 				System.out.println(response.headers);*/
-				logger.info("Email sent successfully");
+				logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
 				logger.info(response);
 				
 				//if email sends, do an insert into the time queue
