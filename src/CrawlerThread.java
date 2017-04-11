@@ -62,7 +62,7 @@ public class CrawlerThread implements Runnable {
 
 			try {
 				int refreshTime = getSleepTime();
-				logger.info("Current refresh rate: " + refreshTime / 60000 + " min");
+				//logger.info("Current refresh rate: " + refreshTime / 60000 + " min");
 				Thread.sleep(refreshTime); //refresh page every n/1k seconds 
 			} catch (InterruptedException e2) {
 				logger.error(e2.getMessage());
@@ -88,7 +88,7 @@ public class CrawlerThread implements Runnable {
 
 								logger.info("New post found at " + time + " TITLE: " + title);
 								
-								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post
+								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
 								String keyword = parseKeywords(title); //identify player keywords within play description
 								logger.info("Keyword is: " + keyword);
 								ArrayList<String> subbedUsers = findSubscribedUsers(keyword);
@@ -104,7 +104,9 @@ public class CrawlerThread implements Runnable {
 					}	
 				}
 			} catch (IOException e) {
+				//exceptions involving connecting to reddit (i.e 503/502 http errors)
 				logger.error(e.getMessage());
+				logger.error(e.toString());
 			}
 		}
 	}
@@ -167,8 +169,8 @@ public class CrawlerThread implements Runnable {
 		} catch (SQLException e){
 			logger.error(e.getMessage());
 		} finally {
-			try{
-				if (connection != null){
+			try {
+				if (connection != null) {
 					resultSet.close();
 					statement.close();
 					connection.close();

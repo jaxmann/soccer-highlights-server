@@ -28,3 +28,10 @@ LoginKeyExpiration integer,
 ServerPasswordSalt varchar(80),
 UNIQUE(Username, Email, PhoneNumber) ON CONFLICT ABORT
 );
+
+CREATE TABLE Timeq
+(
+Email varchar(50),
+Player varchar(50),
+Timestamp integer
+);
