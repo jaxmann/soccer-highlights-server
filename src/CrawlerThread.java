@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -28,6 +27,7 @@ import com.sendgrid.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,9 +45,9 @@ public class CrawlerThread implements Runnable {
 	}
 
 	public void run() {
-		
+
 		PropertyConfigurator.configure("log4j-configuration.txt"); //configure log4j binding with properties from log4j-configuration file
-	
+
 		String redditURL = "http://www.reddit.com/r/soccer/new";
 		Document document = null;
 
@@ -57,7 +57,7 @@ public class CrawlerThread implements Runnable {
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		Pattern p = Pattern.compile("[0-9]+(-[0-9]+)"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
-		
+
 		while (true) { //run forever unless stopped
 
 			try {
@@ -80,14 +80,14 @@ public class CrawlerThread implements Runnable {
 						Date dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
 							Matcher m = p.matcher(link.select("p.title").select("a.title").text());
-							
+
 							if (m.find()) { 
 								String time = link.select("p.tagline").select("time").attr("title");
 								String title = link.select("p.title").select("a.title").text();
 								String url = link.select("p.title").select("a.title").attr("href");
 
 								logger.info("New post found at " + time + " TITLE: " + title);
-								
+
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
 								String keyword = parseKeywords(title); //identify player keywords within play description
 								logger.info("Keyword is: " + keyword);
@@ -116,7 +116,7 @@ public class CrawlerThread implements Runnable {
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
-			
+
 			while ((line = reader.readLine()) != null) {
 				byte ptext[] = line.getBytes(ISO_8859_1);
 				String newline = new String(ptext, UTF_8);
@@ -130,13 +130,13 @@ public class CrawlerThread implements Runnable {
 					}
 				}
 			}
-			
+
 			reader.close();
-			
+
 		} catch (Exception e) {
 			logger.error("Error trying to read player file");
 		}
-		
+
 		return "no-player-found"; //i.e no player found in the csv
 	}
 
@@ -146,7 +146,9 @@ public class CrawlerThread implements Runnable {
 
 		Connection connection = null;
 		ResultSet resultSet = null;
+		ResultSet tqResultSet = null;
 		Statement statement = null;
+		Statement tqStatement = null;
 		try{
 			String url = "jdbc:sqlite:../server/db/pmr.db";
 			connection = DriverManager.getConnection(url);
@@ -160,10 +162,20 @@ public class CrawlerThread implements Runnable {
 
 			//iterate over multiple results
 			if(resultSet.next()){
-				subscribedUsers.add(resultSet.getString("Email"));
+				String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
+				logger.info("SQL time queue: " + sqlTQ);
+				tqStatement = connection.createStatement();
+				tqResultSet = tqStatement.executeQuery(sqlTQ);
+
+				logger.info("TQ SQL Size is: " + tqResultSet.getFetchSize());
+
+				if (tqResultSet.getFetchSize() != 0) {
+					subscribedUsers.add(resultSet.getString("Email"));
+				}
+
 			}
-			
-			
+
+
 			return subscribedUsers;
 
 		} catch (SQLException e){
@@ -187,7 +199,7 @@ public class CrawlerThread implements Runnable {
 
 		//SG.txt and SGEmail.txt both need to be in home directory
 		String home = System.getProperty("user.home");
-		
+
 		byte[] encoded = null;
 		String pwd = "";
 		try {
@@ -200,32 +212,32 @@ public class CrawlerThread implements Runnable {
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
 		}
-		
+
 		byte[] encoded2 = null;
 		String pmremail = "";
 		try {
-			encoded = Files.readAllBytes(Paths.get(home + "\\SGEmail.txt"));
+			encoded2 = Files.readAllBytes(Paths.get(home + "\\SGEmail.txt"));
 		} catch (IOException e1) {
 			logger.error(e1.getMessage());
 		}
 		try {
-			pmremail =  new String(encoded, "UTF-8");
+			pmremail =  new String(encoded2, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
 		}
-		
+
 		for (String em : emailAddresses) {
-			
+
 			logger.info("Attempting to email: " + em + "...");
-			
+
 			Email from = new Email(pmremail); 
 			String subject = "PMR Highlight Found - " + keyword;
 			Email to = new Email(em);
 			Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
 					+ " within the website - we're working on a solution to improve our app's cognitive ability. If you notice any other bugs feel free to send me an email personally at jonathan.axmann09@gmail.com");
 			Mail mail = new Mail(from, subject, to, content);
-			
-			
+
+
 			SendGrid sg = new SendGrid(pwd); 
 			Request request = new Request();
 
@@ -239,12 +251,50 @@ public class CrawlerThread implements Runnable {
 				System.out.println(response.headers);*/
 				logger.info("Email sent successfully");
 				logger.info(response);
+				
+				//if email sends, do an insert into the time queue
+
+				Connection connection = null;
+				ResultSet resultSet = null;
+				Statement statement = null;
+
+				try {
+					String url = "jdbc:sqlite:../server/db/pmr.db";
+					connection = DriverManager.getConnection(url);
+					long currentTime = System.nanoTime();
+					keyword = keyword.replace("'", "''");
+					String sql = "INSERT INTO User(Email, Player, Timestamp)"
+							+ " VALUES(?,?,?)";
+					PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setString(1, em);
+					preparedStatement.setString(2, keyword);
+					preparedStatement.setLong(3, currentTime);
+
+					preparedStatement.executeUpdate(); 
+					logger.info("SQL Insert into TQ: " + sql);
+					statement = connection.createStatement();
+					resultSet = statement.executeQuery(sql);
+
+				} catch (SQLException e){
+					logger.error(e.getMessage());
+				} finally {
+					try {
+						if (connection != null) {
+							resultSet.close();
+							statement.close();
+							connection.close();
+						}
+					} catch (SQLException ex) {
+						logger.error(ex.getMessage());
+					}
+				}
+
 			} catch (IOException ex) {
 				logger.error(ex.getMessage());
 			}
 		}
 	}
-	
+
 	public static int getSleepTime() {
 		Calendar calendar = Calendar.getInstance();
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
