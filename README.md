@@ -1,3 +1,16 @@
 # PMR &lt; 20
-serving up sick highlights since the year 19
-just the server though
+serving up sick highlights since the year 19 just the server though
+
+[pmr-server](https://github.com/jaxmann/pmr-server)
+
+[pmr-rest](https://github.com/kevinchesser/pmr-rest)
+
+[pmr-web](https://github.com/jaxmann/pmr-web)
+
+## Usage
+
+To run, just run main.java. Settings are configured through pmr-web and http requests are handled through pmr-rest 
+
+ - Logs are output daily into /logs. 
+ - delete-timeq.jar needs to be run every 60 seconds on a cronjob.
+ - db is Sqlite3
