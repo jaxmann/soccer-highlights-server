@@ -7,7 +7,8 @@ log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) - %m%n
 
 
-
+log4j.logger.org.apache.http=WARN
+log4j.logger.org.apache.http.wire=WARN
 
 
 # Direct log messages to a log file
