@@ -118,10 +118,10 @@ public class CrawlerThread implements Runnable {
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-				byte ptext[] = line.getBytes(ISO_8859_1);
-				String newline = new String(ptext, UTF_8);
+//				byte ptext[] = line.getBytes(ISO_8859_1);
+//				String newline = new String(ptext, UTF_8);
 
-				String[] s = newline.split(",");
+				String[] s = line.split(",");
 				for (String a : s) {
 					//spaces are so that we actually find "Can" (on a word boundary) instead of Lezcano, for instance
 					if (postDescription.contains(" " + a + " ") || postDescription.contains(" " + simplify.simplifyName(a) + " ")) { //either ascii > 127 name or simplified name in play description? if yes...
