@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,21 +15,21 @@ public class main {
 
 	public static void main(String[] args) {
 		
-		String postDescription = "Mickael Le Bihan's 2nd goal vs. Sporting Gijon (2-3)";
+		String postDescription = "Marco Reus Mickael Le Bihan's 2nd goal vs. Ronaldo Sporting Gijon (2-3) against Cristiano Ronaldo Ronaldinho Ronaldo";
 		
-		String player = "Mickaël Le Bihan";
+		//String player = "Mickaël Le Bihan";
 		
 		
-		String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
-		Pattern p = Pattern.compile(reg);
-		Matcher m = p.matcher(postDescription);
-
-		
-		if (m.find()) {
-			System.out.println(postDescription.substring(m.start(), m.end()));
-		} else {
-			System.out.println("not found");
-		}
+//		String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
+//		Pattern p = Pattern.compile(reg);
+//		Matcher m = p.matcher(postDescription);
+//
+//		
+//		if (m.find()) {
+//			System.out.println(postDescription.substring(m.start(), m.end()));
+//		} else {
+//			System.out.println("not found");
+//		}
 
 		
 //		System.out.println(simplify.simplifyName("Mickaël Le Bihan"));
@@ -39,9 +40,13 @@ public class main {
 
 		//System.out.println(simplify.simplifyName(line2));
 
+		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
+		
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
+			
+			
 
 			while ((line = reader.readLine()) != null) {
 				
@@ -52,14 +57,29 @@ public class main {
 				//System.out.println(newline);
 
 				String[] s = line.split(",");
-				for (String a : s) {
-					//spaces are so that we actually find "Can" (on a word boundary) instead of Lezcano, for instance
-					if (postDescription.contains(" " + a + " ") || postDescription.contains(" " + simplify.simplifyName(a) + " ")) { //either ascii > 127 name or simplified name in play description? if yes...
-						//logger.info("Player found inside csv: " + s[0]);
-						//return s[0]; 
-						//System.out.println(s[0]);
+				for (String player : s) {
+					String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
+					Pattern p = Pattern.compile(reg);
+					Matcher m = p.matcher(postDescription);
+
+					if (m.find()) {
+						System.out.println("regex found " + postDescription.substring(m.start(), m.end()));
+						System.out.println("player found " + s[0]);
+						
+						if (playersFound.containsKey(s[0])) {
+							if (playersFound.get(s[0]) > m.end()) {
+								playersFound.put(s[0], m.end());
+							}
+						} else {
+							playersFound.put(s[0], m.end());
+						}
+						
+//						logger.info("Player found inside csv: " + s[0]);
+//						return s[0]; 
 					}
 				}
+				
+				
 			}
 
 			reader.close();
@@ -67,6 +87,20 @@ public class main {
 		} catch (Exception e) {
 			//logger.error("Error trying to read player file");
 		}
+		
+		System.out.println(playersFound.size());
+		String minName = "no-player-found";
+		Integer minNum = 500;
+		for (HashMap.Entry<String, Integer> entry : playersFound.entrySet()) {
+		    String key = entry.getKey();
+		    Integer value = entry.getValue();
+		   
+		    if (value < minNum) {
+		    	minNum = value;
+		    	minName = key;
+		    }
+		}
+		System.out.println(minName);
 
 		//		CrawlerThread t = new CrawlerThread();
 		//		t.run();

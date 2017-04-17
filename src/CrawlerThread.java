@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -113,8 +114,11 @@ public class CrawlerThread implements Runnable {
 		}
 	}
 
-
+	//keep going until all instances of any name are found - then select the first one and return it
 	public static String parseKeywords(String postDescription) { 
+		
+		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
+
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
@@ -132,10 +136,18 @@ public class CrawlerThread implements Runnable {
 					Matcher m = p.matcher(postDescription);
 
 					if (m.find()) {
-						System.out.println(postDescription.substring(m.start(), m.end()));
-						logger.info("Player found inside csv: " + s[0]);
-						return s[0]; 
-					} 
+						logger.info("regex found " + postDescription.substring(m.start(), m.end()));
+						logger.info("player found " + s[0]);
+						
+						if (playersFound.containsKey(s[0])) {
+							if (playersFound.get(s[0]) > m.end()) {
+								playersFound.put(s[0], m.end());
+							}
+						} else {
+							playersFound.put(s[0], m.end());
+						}
+						
+					}
 					
 				}
 			}
@@ -145,8 +157,24 @@ public class CrawlerThread implements Runnable {
 		} catch (Exception e) {
 			logger.error("Error trying to read player file");
 		}
+		
+		logger.info(playersFound.size() + " matching players found in snippet");
 
-		return "no-player-found"; //i.e no player found in the csv
+		String minName = "no-player-found"; //fallback
+		Integer minNum = 500; //should never be this high
+		for (HashMap.Entry<String, Integer> entry : playersFound.entrySet()) {
+		    String key = entry.getKey();
+		    Integer value = entry.getValue();
+		   
+		    if (value < minNum) {
+		    	minNum = value;
+		    	minName = key;
+		    }
+		}
+		
+		logger.info("min name found is " + minName);
+
+		return minName; //i.e no player found in the csv
 	}
 
 	public static ArrayList<String> findSubscribedUsers(String keyword) { 
