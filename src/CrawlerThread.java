@@ -122,12 +122,19 @@ public class CrawlerThread implements Runnable {
 //				String newline = new String(ptext, UTF_8);
 
 				String[] s = line.split(",");
-				for (String a : s) {
-					//spaces are so that we actually find "Can" (on a word boundary) instead of Lezcano, for instance
-					if (postDescription.contains(" " + a + " ") || postDescription.contains(" " + simplify.simplifyName(a) + " ")) { //either ascii > 127 name or simplified name in play description? if yes...
+				for (String player : s) {
+					
+					// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
+					String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
+					Pattern p = Pattern.compile(reg);
+					Matcher m = p.matcher(postDescription);
+
+					if (m.find()) {
+						System.out.println(postDescription.substring(m.start(), m.end()));
 						logger.info("Player found inside csv: " + s[0]);
 						return s[0]; 
-					}
+					} 
+					
 				}
 			}
 
