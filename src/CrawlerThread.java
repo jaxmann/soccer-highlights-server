@@ -59,7 +59,7 @@ public class CrawlerThread implements Runnable {
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-		Pattern p = Pattern.compile("[0-9]+(-[0-9]+)"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
+		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[0-9]"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
 
 		while (true) { //run forever unless stopped
 
@@ -191,7 +191,7 @@ public class CrawlerThread implements Runnable {
 			connection = DriverManager.getConnection(url);
 			long currentTime = System.nanoTime();
 			keyword = keyword.replace("'", "''");
-			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails<" + currentTime + ";";
+			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails<" + currentTime + " and ReceiveEmails>0;";
 			logger.info("SQL: " + sql);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);

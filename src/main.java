@@ -15,6 +15,18 @@ public class main {
 
 	public static void main(String[] args) {
 		
+		String score = "Reus goal 5-4 against Bayern";
+		
+		String regex = "[\\[|(]?[0-9][\\]|)]?-[0-9]";
+		
+		Pattern p = Pattern.compile(regex);
+		
+		Matcher m = p.matcher(score);
+		
+		if (m.find()) {
+			System.out.println(score.substring(m.start(), m.end()));
+		}
+		
 		/*String postDescription = "Marco Reus Mickael Le Bihan's 2nd goal vs. Ronaldo Sporting Gijon (2-3) against Cristiano Ronaldo Ronaldinho Ronaldo";
 		
 		//String player = "Mickaël Le Bihan";
@@ -90,8 +102,8 @@ public class main {
 		
 		
 
-				CrawlerThread t = new CrawlerThread();
-				t.run();
+//				CrawlerThread t = new CrawlerThread();
+//				t.run();
 
 	}
 }
