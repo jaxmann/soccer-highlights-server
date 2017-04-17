@@ -15,7 +15,7 @@ public class main {
 
 	public static void main(String[] args) {
 		
-		String postDescription = "Marco Reus Mickael Le Bihan's 2nd goal vs. Ronaldo Sporting Gijon (2-3) against Cristiano Ronaldo Ronaldinho Ronaldo";
+		/*String postDescription = "Marco Reus Mickael Le Bihan's 2nd goal vs. Ronaldo Sporting Gijon (2-3) against Cristiano Ronaldo Ronaldinho Ronaldo";
 		
 		//String player = "Mickaël Le Bihan";
 		
@@ -86,24 +86,12 @@ public class main {
 
 		} catch (Exception e) {
 			//logger.error("Error trying to read player file");
-		}
+		}*/
 		
-		System.out.println(playersFound.size());
-		String minName = "no-player-found";
-		Integer minNum = 500;
-		for (HashMap.Entry<String, Integer> entry : playersFound.entrySet()) {
-		    String key = entry.getKey();
-		    Integer value = entry.getValue();
-		   
-		    if (value < minNum) {
-		    	minNum = value;
-		    	minName = key;
-		    }
-		}
-		System.out.println(minName);
+		
 
-		//		CrawlerThread t = new CrawlerThread();
-		//		t.run();
+				CrawlerThread t = new CrawlerThread();
+				t.run();
 
 	}
 }
