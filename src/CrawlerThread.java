@@ -39,6 +39,8 @@ public class CrawlerThread implements Runnable {
 
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.1 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
 	private static Logger logger = Logger.getLogger(CrawlerThread.class);
+	
+	
 
 	public CrawlerThread() {
 
@@ -86,7 +88,7 @@ public class CrawlerThread implements Runnable {
 								String title = link.select("p.title").select("a.title").text();
 								String url = link.select("p.title").select("a.title").attr("href");
 
-								logger.info("New post found at " + time + " TITLE: " + title);
+								logger.info("New post found: '" + title + "' at " + time);
 
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
 								String keyword = parseKeywords(title); //identify player keywords within play description
@@ -176,7 +178,7 @@ public class CrawlerThread implements Runnable {
 
 				logger.info("TQ SQL Size is: " + tqResultSet.getFetchSize());
 
-				if (tqResultSet.getFetchSize() != 0) {
+				if (tqResultSet.getFetchSize() == 0) { //if no player exists, add to list and send email
 					subscribedUsers.add(resultSet.getString("Email"));
 				}
 
@@ -212,7 +214,9 @@ public class CrawlerThread implements Runnable {
 		try {
 			encoded = Files.readAllBytes(Paths.get(home + "\\SG.txt"));
 		} catch (IOException e1) {
-			logger.error(e1.getMessage());
+			logger.error(e1.getMessage() + " unable to read file - make sure SG.txt is in ~");
+			//i guess it's fine if it crashes here - no point in continuing to run if it cant find this file
+
 		}
 		try {
 			pwd =  new String(encoded, "UTF-8");
@@ -225,7 +229,8 @@ public class CrawlerThread implements Runnable {
 		try {
 			encoded2 = Files.readAllBytes(Paths.get(home + "\\SGEmail.txt"));
 		} catch (IOException e1) {
-			logger.error(e1.getMessage());
+			logger.error(e1.getMessage() + " unable to read file - make sure SG.txt is in ~");
+			//i guess it's fine if it crashes here - no point in continuing to run if it cant find this file
 		}
 		try {
 			pmremail =  new String(encoded2, "UTF-8");
@@ -257,38 +262,37 @@ public class CrawlerThread implements Runnable {
 				System.out.println(response.body);
 				System.out.println(response.headers);*/
 				logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
-				logger.info(response);
+				//logger.info(response);
 				
 				//if email sends, do an insert into the time queue
 
 				Connection connection = null;
 				ResultSet resultSet = null;
-				Statement statement = null;
+				PreparedStatement preparedStatement = null;
 
 				try {
 					String url = "jdbc:sqlite:../server/db/pmr.db";
 					connection = DriverManager.getConnection(url);
 					long currentTime = System.nanoTime();
 					keyword = keyword.replace("'", "''");
-					String sql = "INSERT INTO User(Email, Player, Timestamp)"
+					String sql = "INSERT INTO Timeq(Email, Player, Timestamp)"
 							+ " VALUES(?,?,?)";
-					PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					preparedStatement = connection.prepareStatement(sql);
 					preparedStatement.setString(1, em);
 					preparedStatement.setString(2, keyword);
 					preparedStatement.setLong(3, currentTime);
 
 					preparedStatement.executeUpdate(); 
 					logger.info("SQL Insert into TQ: " + sql);
-					statement = connection.createStatement();
-					resultSet = statement.executeQuery(sql);
+//					statement = connection.createStatement();
+//					resultSet = statement.executeQuery(sql);
 
 				} catch (SQLException e){
 					logger.error(e.getMessage());
 				} finally {
 					try {
 						if (connection != null) {
-							resultSet.close();
-							statement.close();
+							preparedStatement.close();
 							connection.close();
 						}
 					} catch (SQLException ex) {
