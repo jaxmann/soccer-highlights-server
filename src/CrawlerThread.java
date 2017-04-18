@@ -202,7 +202,7 @@ public class CrawlerThread implements Runnable {
 				tqStatement = connection.createStatement();
 				tqResultSet = tqStatement.executeQuery(sqlTQ);
 
-				logger.info("TQ SQL Size is (i.e. num emails already sent): [" + tqResultSet.getFetchSize() + "]");
+				logger.info("TQ SQL Size is (i.e. num emails already sent to this user/email in last 2 mins): [" + tqResultSet.getFetchSize() + "]");
 
 				if (tqResultSet.getFetchSize() == 0) { //if no player exists, add to list and send email
 					subscribedUsers.add(resultSet.getString("Email"));
