@@ -75,7 +75,7 @@ public class CrawlerThread implements Runnable {
 				document = Jsoup.connect(redditURL).userAgent(USER_AGENT).timeout(0).get(); //Get the url - Reddit only accepts 2 requests a minute. edit: 60/min i think? -jonathan
 				Elements links = document.select("div.thing"); //Get the entire posts from the doc
 
-				logger.info("Most recent post time: " + mostRecentPostTime);
+				logger.info("Most recent post time: [" + mostRecentPostTime + "]");
 
 				for (Element link: links) {
 					String inputTime = link.select("p.tagline").select("time").attr("title");
@@ -89,13 +89,13 @@ public class CrawlerThread implements Runnable {
 								String title = link.select("p.title").select("a.title").text();
 								String url = link.select("p.title").select("a.title").attr("href");
 
-								logger.info("New post found: '" + title + "' at " + time);
+								logger.info("New post found: [" + title + "] at [" + time + "]");
 
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
 								String keyword = parseKeywords(title); //identify player keywords within play description
-								logger.info("Keyword is: " + keyword);
+								logger.info("Keyword is: [" + keyword + "]");
 								ArrayList<String> subbedUsers = findSubscribedUsers(keyword);
-								logger.info("Number of subbed users: " + subbedUsers.size());
+								logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
 								if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
 									sendEmail(url, keyword, subbedUsers); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
 								}
@@ -135,7 +135,7 @@ public class CrawlerThread implements Runnable {
 					Matcher m = p.matcher(postDescription);
 
 					if (m.find()) {
-						logger.info("regex found " + postDescription.substring(m.start(), m.end()) + " treated as " + s[0]);
+						logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
 						
 						if (playersFound.containsKey(s[0])) {
 							if (playersFound.get(s[0]) > m.end()) {
@@ -156,7 +156,7 @@ public class CrawlerThread implements Runnable {
 			logger.error("Error trying to read player file");
 		}
 		
-		logger.info(playersFound.size() + " matching players found in snippet");
+		logger.info("[" + playersFound.size() + "] matching players found in snippet");
 
 		String minName = "no-player-found"; //fallback
 		Integer minNum = 500; //should never be this high
@@ -170,7 +170,7 @@ public class CrawlerThread implements Runnable {
 		    }
 		}
 		
-		logger.info("first name found is " + minName);
+		logger.info("first name found was [" + minName + "]");
 
 		return minName; //i.e no player found in the csv
 	}
@@ -202,7 +202,7 @@ public class CrawlerThread implements Runnable {
 				tqStatement = connection.createStatement();
 				tqResultSet = tqStatement.executeQuery(sqlTQ);
 
-				logger.info("TQ SQL Size is: " + tqResultSet.getFetchSize());
+				logger.info("TQ SQL Size is (i.e. num emails already sent): [" + tqResultSet.getFetchSize() + "]");
 
 				if (tqResultSet.getFetchSize() == 0) { //if no player exists, add to list and send email
 					subscribedUsers.add(resultSet.getString("Email"));
@@ -240,7 +240,7 @@ public class CrawlerThread implements Runnable {
 		try {
 			encoded = Files.readAllBytes(Paths.get(home + "\\SG.txt"));
 		} catch (IOException e1) {
-			logger.error(e1.toString() + " unable to read file - make sure SG.txt is in ~");
+			logger.error(e1.toString() + ": unable to read file - make sure SG.txt is in ~");
 			//i guess it's fine if it crashes here - no point in continuing to run if it cant find this file
 
 		}
@@ -255,7 +255,7 @@ public class CrawlerThread implements Runnable {
 		try {
 			encoded2 = Files.readAllBytes(Paths.get(home + "\\SGEmail.txt"));
 		} catch (IOException e1) {
-			logger.error(e1.toString() + " unable to read file - make sure SG.txt is in ~");
+			logger.error(e1.toString() + ": unable to read file - make sure SG.txt is in ~");
 			//i guess it's fine if it crashes here - no point in continuing to run if it cant find this file
 		}
 		try {
@@ -309,9 +309,8 @@ public class CrawlerThread implements Runnable {
 					preparedStatement.setLong(3, currentTime);
 
 					preparedStatement.executeUpdate(); 
-					logger.info("SQL Insert into TQ: " + sql);
-//					statement = connection.createStatement();
-//					resultSet = statement.executeQuery(sql);
+					logger.info("TQ insertion: [" + em + "], [" + keyword + "] , inserted at [" + currentTime + "]");
+
 
 				} catch (SQLException e){
 					logger.error(e.toString());
