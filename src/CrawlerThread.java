@@ -38,7 +38,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 public class CrawlerThread implements Runnable {
 
-	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.1 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
+	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.5 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
 	private static Logger logger = Logger.getLogger(CrawlerThread.class);
 	
 	
@@ -51,7 +51,7 @@ public class CrawlerThread implements Runnable {
 
 		PropertyConfigurator.configure("log4j-configuration.txt"); //configure log4j binding with properties from log4j-configuration file
 
-		String redditURL = "http://www.reddit.com/r/soccer/new";
+		String redditURL = "http://www.reddit.com/r/soccerpmr/new";
 		Document document = null;
 
 		Calendar cal = Calendar.getInstance();
@@ -68,7 +68,7 @@ public class CrawlerThread implements Runnable {
 				//logger.info("Current refresh rate: " + refreshTime / 60000 + " min");
 				Thread.sleep(refreshTime); //refresh page every n/1k seconds 
 			} catch (InterruptedException e2) {
-				logger.error(e2.getMessage());
+				logger.error(e2.toString());
 			}
 
 			try {
@@ -103,12 +103,11 @@ public class CrawlerThread implements Runnable {
 							}
 						}
 					} catch (ParseException e1) {
-						logger.error(e1.getMessage());
+						logger.error(e1.toString());
 					}	
 				}
 			} catch (IOException e) {
 				//exceptions involving connecting to reddit (i.e 503/502 http errors)
-				logger.error(e.getMessage());
 				logger.error(e.toString());
 			}
 		}
@@ -132,12 +131,11 @@ public class CrawlerThread implements Runnable {
 					
 					// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
 					String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
-					Pattern p = Pattern.compile(reg);
+					Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
 					Matcher m = p.matcher(postDescription);
 
 					if (m.find()) {
-						logger.info("regex found " + postDescription.substring(m.start(), m.end()));
-						logger.info("player found " + s[0]);
+						logger.info("regex found " + postDescription.substring(m.start(), m.end()) + " treated as " + s[0]);
 						
 						if (playersFound.containsKey(s[0])) {
 							if (playersFound.get(s[0]) > m.end()) {
@@ -172,7 +170,7 @@ public class CrawlerThread implements Runnable {
 		    }
 		}
 		
-		logger.info("min name found is " + minName);
+		logger.info("first name found is " + minName);
 
 		return minName; //i.e no player found in the csv
 	}
@@ -216,7 +214,7 @@ public class CrawlerThread implements Runnable {
 			return subscribedUsers;
 
 		} catch (SQLException e){
-			logger.error(e.getMessage());
+			logger.error(e.toString());
 		} finally {
 			try {
 				if (connection != null) {
@@ -225,7 +223,7 @@ public class CrawlerThread implements Runnable {
 					connection.close();
 				}
 			} catch (SQLException ex) {
-				logger.error(ex.getMessage());
+				logger.error(ex.toString());
 			}
 		}
 
@@ -242,14 +240,14 @@ public class CrawlerThread implements Runnable {
 		try {
 			encoded = Files.readAllBytes(Paths.get(home + "\\SG.txt"));
 		} catch (IOException e1) {
-			logger.error(e1.getMessage() + " unable to read file - make sure SG.txt is in ~");
+			logger.error(e1.toString() + " unable to read file - make sure SG.txt is in ~");
 			//i guess it's fine if it crashes here - no point in continuing to run if it cant find this file
 
 		}
 		try {
 			pwd =  new String(encoded, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage());
+			logger.error(e.toString());
 		}
 
 		byte[] encoded2 = null;
@@ -257,13 +255,13 @@ public class CrawlerThread implements Runnable {
 		try {
 			encoded2 = Files.readAllBytes(Paths.get(home + "\\SGEmail.txt"));
 		} catch (IOException e1) {
-			logger.error(e1.getMessage() + " unable to read file - make sure SG.txt is in ~");
+			logger.error(e1.toString() + " unable to read file - make sure SG.txt is in ~");
 			//i guess it's fine if it crashes here - no point in continuing to run if it cant find this file
 		}
 		try {
 			pmremail =  new String(encoded2, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage());
+			logger.error(e.toString());
 		}
 
 		for (String em : emailAddresses) {
@@ -316,7 +314,7 @@ public class CrawlerThread implements Runnable {
 //					resultSet = statement.executeQuery(sql);
 
 				} catch (SQLException e){
-					logger.error(e.getMessage());
+					logger.error(e.toString());
 				} finally {
 					try {
 						if (connection != null) {
@@ -324,12 +322,12 @@ public class CrawlerThread implements Runnable {
 							connection.close();
 						}
 					} catch (SQLException ex) {
-						logger.error(ex.getMessage());
+						logger.error(ex.toString());
 					}
 				}
 
 			} catch (IOException ex) {
-				logger.error(ex.getMessage());
+				logger.error(ex.toString());
 			}
 		}
 	}
