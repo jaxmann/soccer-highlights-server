@@ -175,18 +175,20 @@ public class CrawlerThread implements Runnable {
 		    }
 		}
 		
-		logger.info("first name found was [" + minName + "]. Posting it to twitter...");
+		logger.info("first name found was [" + minName + "]");
 		
-		
-		 // The factory instance is re-usable and thread safe.
-	    Twitter twitter = TwitterFactory.getSingleton();
-	    Status status = null;
-		try {
-			status = twitter.updateStatus(postDescription + " | " + url + " #" + minName.replace(" ",""));
-		} catch (TwitterException e) {
-			//logger.error(e.toString());
+		if (!minName.equals("no-player-found")) {
+			 // The factory instance is re-usable and thread safe.
+		    Twitter twitter = TwitterFactory.getSingleton();
+		    Status status = null;
+			try {
+				status = twitter.updateStatus(postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]",""));
+			} catch (TwitterException e) {
+				logger.error(e.toString());
+			}
+		    logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
 		}
-	    logger.info("Successfully updated the status to [" + status.getText() + "].");
+		
 	    
 
 		return minName; //i.e no player found in the csv
