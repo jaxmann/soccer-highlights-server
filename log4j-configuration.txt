@@ -11,6 +11,7 @@ log4j.logger.org.apache.http=WARN
 log4j.logger.org.apache.http.wire=WARN
 
 
+
 # Direct log messages to a log file
 log4j.appender.file=org.apache.log4j.DailyRollingFileAppender
 

@@ -3,3 +3,5 @@
 
 /bin/
 /logs/*
+/twitter4j.properties
+

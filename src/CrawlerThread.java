@@ -36,6 +36,11 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;;
+
 public class CrawlerThread implements Runnable {
 
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.5 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
@@ -92,7 +97,7 @@ public class CrawlerThread implements Runnable {
 								logger.info("New post found: [" + title + "] at [" + time + "]");
 
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
-								String keyword = parseKeywords(title); //identify player keywords within play description
+								String keyword = parseKeywords(title, url); //identify player keywords within play description
 								logger.info("Keyword is: [" + keyword + "]");
 								ArrayList<String> subbedUsers = findSubscribedUsers(keyword);
 								logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
@@ -114,7 +119,7 @@ public class CrawlerThread implements Runnable {
 	}
 
 	//keep going until all instances of any name are found - then select the first one and return it
-	public static String parseKeywords(String postDescription) { 
+	public static String parseKeywords(String postDescription, String url) { 
 		
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 
@@ -170,7 +175,19 @@ public class CrawlerThread implements Runnable {
 		    }
 		}
 		
-		logger.info("first name found was [" + minName + "]");
+		logger.info("first name found was [" + minName + "]. Posting it to twitter...");
+		
+		
+		 // The factory instance is re-usable and thread safe.
+	    Twitter twitter = TwitterFactory.getSingleton();
+	    Status status = null;
+		try {
+			status = twitter.updateStatus(postDescription + " | " + url + " #" + minName.replace(" ",""));
+		} catch (TwitterException e) {
+			//logger.error(e.toString());
+		}
+	    logger.info("Successfully updated the status to [" + status.getText() + "].");
+	    
 
 		return minName; //i.e no player found in the csv
 	}
@@ -309,10 +326,12 @@ public class CrawlerThread implements Runnable {
 					preparedStatement.setLong(3, currentTime);
 
 					preparedStatement.executeUpdate(); 
-					logger.info("TQ insertion: [" + em + "], [" + keyword + "] , inserted at [" + currentTime + "]");
+					logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
+					
+					
 
 
-				} catch (SQLException e){
+				} catch (SQLException e) {
 					logger.error(e.toString());
 				} finally {
 					try {
