@@ -4,4 +4,5 @@
 /bin/
 /logs/*
 /twitter4j.properties
-
+/client_secret.json
+/build

@@ -1,3 +1,6 @@
+package serv;
+
+
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -24,7 +27,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.sendgrid.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,7 +41,7 @@ import org.apache.log4j.PropertyConfigurator;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;;
+import twitter4j.TwitterFactory;
 
 public class CrawlerThread implements Runnable {
 
@@ -49,7 +51,7 @@ public class CrawlerThread implements Runnable {
 	
 
 	public CrawlerThread() {
-
+		GmailService service = new GmailService();
 	}
 
 	public void run() {
@@ -287,7 +289,7 @@ public class CrawlerThread implements Runnable {
 
 			logger.info("Attempting to email: [" + em + "]...");
 
-			Email from = new Email(pmremail); 
+			/*Email from = new Email(pmremail); 
 			String subject = "PMR Highlight Found - " + keyword;
 			Email to = new Email(em);
 			Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
@@ -296,13 +298,13 @@ public class CrawlerThread implements Runnable {
 
 
 			SendGrid sg = new SendGrid(pwd); 
-			Request request = new Request();
+			Request request = new Request();*/
 
 			try {
-				request.method = Method.POST;
+				/*request.method = Method.POST;
 				request.endpoint = "mail/send";
 				request.body = mail.build();
-				Response response = sg.api(request);
+				Response response = sg.api(request);*/
 				/*System.out.println(response.statusCode);
 				System.out.println(response.body);
 				System.out.println(response.headers);*/
@@ -346,7 +348,7 @@ public class CrawlerThread implements Runnable {
 					}
 				}
 
-			} catch (IOException ex) {
+			} catch (Exception ex) {
 				logger.error(ex.toString());
 			}
 		}
