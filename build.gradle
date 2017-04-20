@@ -3,12 +3,21 @@ buildscript {
         mavenCentral()
     }
 }
+apply plugin: 'application'
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
 
-jar {
+mainClassName = "serv.main"
+
+
+jar { 
+	manifest {
+		attributes (
+			'Main-Class': 'serv.main'
+		)
+	}
     baseName = 'PMR-server'
     version =  '0.1.0'
 }

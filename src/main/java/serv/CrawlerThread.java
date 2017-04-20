@@ -47,11 +47,12 @@ public class CrawlerThread implements Runnable {
 
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.5 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
 	private static Logger logger = Logger.getLogger(CrawlerThread.class);
+	private static GmailService service;
 	
 	
 
 	public CrawlerThread() {
-		GmailService service = new GmailService();
+		service = new GmailService();
 	}
 
 	public void run() {
@@ -253,7 +254,7 @@ public class CrawlerThread implements Runnable {
 
 	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddresses) {
 
-		//SG.txt and SGEmail.txt both need to be in home directory
+		/*//SG.txt and SGEmail.txt both need to be in home directory
 		String home = System.getProperty("user.home");
 
 		byte[] encoded = null;
@@ -283,12 +284,19 @@ public class CrawlerThread implements Runnable {
 			pmremail =  new String(encoded2, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.toString());
-		}
+		}*/
 
 		for (String em : emailAddresses) {
-
+			
+			String subject = "PMR Highlight Found - " + keyword;
+			
+			String content = "Goal by " + keyword + "!" + " View (" + link + ").\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
+					+ " within the website - we're working on a solution to improve our app's cognitive ability. If you notice any other bugs feel free to send me an email personally at jonathan.axmann09@gmail.com";
+			
 			logger.info("Attempting to email: [" + em + "]...");
 
+			GmailService.send(service.getService(), em, "pmridontcareifyourespond@gmail.com", subject, content); 
+			
 			/*Email from = new Email(pmremail); 
 			String subject = "PMR Highlight Found - " + keyword;
 			Email to = new Email(em);
