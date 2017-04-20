@@ -46,7 +46,7 @@ import twitter4j.TwitterFactory;
 public class CrawlerThread implements Runnable {
 
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.5 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
-	private static Logger logger = Logger.getLogger(CrawlerThread.class);
+	public static Logger logger = Logger.getLogger(CrawlerThread.class);
 	private static GmailService service;
 	
 	

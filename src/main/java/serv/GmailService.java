@@ -194,9 +194,9 @@ public class GmailService {
             throws MessagingException, IOException {
         Message message = createMessageWithEmail(emailContent);
         message = service.users().messages().send(userId, message).execute();
-
-        System.out.println("Message id: " + message.getId());
-        System.out.println(message.toPrettyString());
+        
+        CrawlerThread.logger.info("GmailService send status is: [" + message.getLabelIds().get(0) + "]");
+        
         return message;
     }
     
