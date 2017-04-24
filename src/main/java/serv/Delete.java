@@ -30,7 +30,7 @@ public class Delete {
 		long twoMinsAgo = System.nanoTime() - 120000000000L; //2 mins in nanoseconds
 		
 		try{
-			String url = "jdbc:sqlite:../server/db/pmr.db";
+			String url = "jdbc:sqlite:/home/pi/server/db/pmr.db";
 			connection = DriverManager.getConnection(url);
 			System.nanoTime();
 

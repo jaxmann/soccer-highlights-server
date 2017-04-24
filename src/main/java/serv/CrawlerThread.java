@@ -59,7 +59,7 @@ public class CrawlerThread implements Runnable {
 
 		PropertyConfigurator.configure("log4j-configuration.txt"); //configure log4j binding with properties from log4j-configuration file
 
-		String redditURL = "http://www.reddit.com/r/soccerpmr/new";
+		String redditURL = "http://www.reddit.com/r/soccer/new";
 		Document document = null;
 
 		Calendar cal = Calendar.getInstance();
