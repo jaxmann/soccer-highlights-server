@@ -21,6 +21,8 @@ serving up sick highlights since the year 19 just the server though
 
 ## Usage
 
+https://github.com/jaxmann/insert-delete-sqlite-jar - make this into a jar 
+
 To run, just run main.java. Settings are configured through pmr-web and http requests are handled through pmr-rest 
 
  - Logs are output daily into /logs. 
