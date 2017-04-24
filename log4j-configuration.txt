@@ -10,6 +10,12 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] %d{yyyy-MM-dd HH:mm:ss} 
 log4j.logger.org.apache.http=WARN
 log4j.logger.org.apache.http.wire=WARN
 
+# One of these prevents twitter logging...
+
+log4j.logger.twitter4j.loggerFactory=OFF
+log4j.logger.twitter4j=OFF
+twitter4j.loggerFactory=OFF
+log4j.twitter4j.loggerFactory=OFF
 
 # Direct log messages to a log file
 log4j.appender.file=org.apache.log4j.DailyRollingFileAppender
