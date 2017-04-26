@@ -188,12 +188,13 @@ public class CrawlerThread implements Runnable {
 				String stat = postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
 				if (stat.length() < 140) {
 					status = twitter.updateStatus(stat);
+					logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
 				} //else do nothing
 				
 			} catch (TwitterException e) {
 				logger.error(e.toString());
 			}
-		    logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
+		    
 		}
 		
 	    
