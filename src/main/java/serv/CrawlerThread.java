@@ -185,7 +185,11 @@ public class CrawlerThread implements Runnable {
 		    Twitter twitter = TwitterFactory.getSingleton();
 		    Status status = null;
 			try {
-				status = twitter.updateStatus(postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]",""));
+				String stat = postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
+				if (stat.length() < 140) {
+					status = twitter.updateStatus(stat);
+				} //else do nothing
+				
 			} catch (TwitterException e) {
 				logger.error(e.toString());
 			}
