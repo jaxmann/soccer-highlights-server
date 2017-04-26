@@ -1,1 +1,1 @@
-./gradlew build && ./gradlew run
+chmod 755 * && ./gradlew build && ./gradlew run
