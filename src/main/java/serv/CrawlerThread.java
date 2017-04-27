@@ -370,10 +370,19 @@ public class CrawlerThread implements Runnable {
 	public static int getSleepTime() {
 		Calendar calendar = Calendar.getInstance();
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
-		if (hours >= 19 || hours <= 6) { //7pm to 7am
-			return 600000; //10 minutes
+		int msWait = 60000;
+		if (hours >= 19 || hours <= 6) { //7pm to 6am
+			if (hours >= 19) {
+				msWait = 3600000*( (24-hours) + 6 );
+				return msWait;
+			} else {
+				msWait = 3600000 * (6 - hours);
+				return msWait;
+			}
+			// print milliseconds remaining until 6 am
+			
 		} else {
-			return 60000; //1 minute
+			return msWait;
 		}
 	}
 
