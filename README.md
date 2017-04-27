@@ -9,6 +9,9 @@
 # PMR &lt; 20
 serving up sick highlights since the year 19 just the server though
 
+[![Build Status](https://travis-ci.org/jaxmann/pmr-server.svg?branch=master)](https://travis-ci.org/jaxmann/pmr-server)
+
+
 &nbsp;
 
 ### PMR Services
