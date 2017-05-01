@@ -212,7 +212,7 @@ public class CrawlerThread implements Runnable {
 		Statement statement = null;
 		Statement tqStatement = null;
 		try{
-			String url = "jdbc:sqlite:../server/db/pmr.db";
+			String url = "jdbc:sqlite:../server/db/user.db";
 			connection = DriverManager.getConnection(url);
 			long currentTime = System.nanoTime();
 			keyword = keyword.replace("'", "''");
@@ -331,7 +331,7 @@ public class CrawlerThread implements Runnable {
 				PreparedStatement preparedStatement = null;
 
 				try {
-					String url = "jdbc:sqlite:../server/db/pmr.db";
+					String url = "jdbc:sqlite:../server/db/timeq.db";
 					connection = DriverManager.getConnection(url);
 					long currentTime = System.nanoTime();
 					keyword = keyword.replace("'", "''");
