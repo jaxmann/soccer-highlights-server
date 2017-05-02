@@ -10,7 +10,9 @@ apply plugin: 'eclipse'
 
 
 mainClassName = "serv.main"
-
+run {
+    args System.getProperty("exec.args").split()
+}
 
 jar { 
 	manifest {
