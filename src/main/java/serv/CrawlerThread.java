@@ -48,18 +48,30 @@ public class CrawlerThread implements Runnable {
 	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.5 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
 	public static Logger logger = Logger.getLogger(CrawlerThread.class);
 	private static GmailService service;
+	private static String redditenv;
 	
 	
 
-	public CrawlerThread() {
+	public CrawlerThread(String env) {
 		service = new GmailService();
+		redditenv = env;
 	}
 
 	public void run() {
 
 		PropertyConfigurator.configure("log4j-configuration.txt"); //configure log4j binding with properties from log4j-configuration file
-
-		String redditURL = "http://www.reddit.com/r/soccer/new";
+		
+		
+		String redditURL = "";
+		if (redditenv.equals("test")) {
+			redditURL = "http://www.reddit.com/r/soccerpmr/new";
+			logger.info("Running in the test environment...");
+		} else {
+			redditURL = "http://www.reddit.com/r/soccer/new";
+			logger.info("Running in the live environment...");
+		}
+		
+		
 		Document document = null;
 
 		Calendar cal = Calendar.getInstance();

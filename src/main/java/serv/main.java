@@ -108,7 +108,7 @@ public class main {
 		
 		
 
-				CrawlerThread t = new CrawlerThread();
+				CrawlerThread t = new CrawlerThread(args[0]);
 				t.run();
 		
 
