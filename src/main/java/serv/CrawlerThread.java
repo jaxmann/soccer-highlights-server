@@ -251,7 +251,7 @@ public class CrawlerThread implements Runnable {
 				try {
 					
 					String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
-					tqConnection = DriverManager.getConnection(url);
+					tqConnection = DriverManager.getConnection(tqUrl);
 					String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
 					logger.info("SQL time queue: " + sqlTQ);
 					tqStatement = tqConnection.createStatement();
