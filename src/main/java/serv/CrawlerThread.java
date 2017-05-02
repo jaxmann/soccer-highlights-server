@@ -229,6 +229,7 @@ public class CrawlerThread implements Runnable {
 		ArrayList<String> subscribedUsers = new ArrayList<String>();
 
 		Connection connection = null;
+		Connection tqConnection = null;
 		ResultSet resultSet = null;
 		ResultSet tqResultSet = null;
 		Statement statement = null;
@@ -248,10 +249,12 @@ public class CrawlerThread implements Runnable {
 			if(resultSet.next()) {
 
 				try {
-
+					
+					String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
+					tqConnection = DriverManager.getConnection(url);
 					String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
 					logger.info("SQL time queue: " + sqlTQ);
-					tqStatement = connection.createStatement();
+					tqStatement = tqConnection.createStatement();
 					tqResultSet = tqStatement.executeQuery(sqlTQ);
 
 					logger.info("TQ SQL Size is (i.e. num emails already sent to this user/email in last 2 mins): [" + tqResultSet.getFetchSize() + "]");
@@ -265,10 +268,10 @@ public class CrawlerThread implements Runnable {
 					logger.error(e.toString());
 				} finally {
 					try {
-						if (connection != null) {
+						if (tqConnection != null) {
 							tqResultSet.close();
 							tqStatement.close();
-							connection.close();
+							tqConnection.close();
 						}
 					} catch (SQLException ex) {
 						logger.error(ex.toString());
