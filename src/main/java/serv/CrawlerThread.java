@@ -73,6 +73,13 @@ public class CrawlerThread implements Runnable {
 		
 		
 		Document document = null;
+		Elements links = null;
+		int refreshTime = 60000;
+		String inputTime = "";
+		String time = "";
+		String title = "";
+		String url = "";
+		Matcher m = null;
 
 		Calendar cal = Calendar.getInstance();
 		Date mostRecentPostTime = cal.getTime();
@@ -84,7 +91,7 @@ public class CrawlerThread implements Runnable {
 		while (true) { //run forever unless stopped
 
 			try {
-				int refreshTime = getSleepTime();
+				refreshTime = getSleepTime();
 				//logger.info("Current refresh rate: " + refreshTime / 60000 + " min");
 				Thread.sleep(refreshTime); //refresh page every n/1k seconds 
 			} catch (InterruptedException e2) {
@@ -93,21 +100,21 @@ public class CrawlerThread implements Runnable {
 
 			try {
 				document = Jsoup.connect(redditURL).userAgent(USER_AGENT).timeout(0).get(); //Get the url - Reddit only accepts 2 requests a minute. edit: 60/min i think? -jonathan
-				Elements links = document.select("div.thing"); //Get the entire posts from the doc
+				links = document.select("div.thing"); //Get the entire posts from the doc
 
 				logger.info("Most recent post time: [" + mostRecentPostTime + "]");
 
 				for (Element link: links) {
-					String inputTime = link.select("p.tagline").select("time").attr("title");
+					inputTime = link.select("p.tagline").select("time").attr("title");
 					try {
 						Date dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
-							Matcher m = p.matcher(link.select("p.title").select("a.title").text());
+							m = p.matcher(link.select("p.title").select("a.title").text());
 
 							if (m.find()) { 
-								String time = link.select("p.tagline").select("time").attr("title");
-								String title = link.select("p.title").select("a.title").text();
-								String url = link.select("p.title").select("a.title").attr("href");
+								time = link.select("p.tagline").select("time").attr("title");
+								title = link.select("p.title").select("a.title").text();
+								url = link.select("p.title").select("a.title").attr("href");
 
 								logger.info("New post found: [" + title + "] at [" + time + "]");
 
