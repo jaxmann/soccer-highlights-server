@@ -49,8 +49,8 @@ public class CrawlerThread implements Runnable {
 	public static Logger logger = Logger.getLogger(CrawlerThread.class);
 	private static GmailService service;
 	private static String redditenv;
-	
-	
+
+
 
 	public CrawlerThread(String env) {
 		service = new GmailService();
@@ -60,8 +60,8 @@ public class CrawlerThread implements Runnable {
 	public void run() {
 
 		PropertyConfigurator.configure("log4j-configuration.txt"); //configure log4j binding with properties from log4j-configuration file
-		
-		
+
+
 		String redditURL = "";
 		if (redditenv.equals("test")) {
 			redditURL = "http://www.reddit.com/r/soccerpmr/new";
@@ -70,8 +70,8 @@ public class CrawlerThread implements Runnable {
 			redditURL = "http://www.reddit.com/r/soccer/new";
 			logger.info("Running in the live environment...");
 		}
-		
-		
+
+
 		Document document = null;
 		Elements links = null;
 		int refreshTime = 60000;
@@ -81,6 +81,8 @@ public class CrawlerThread implements Runnable {
 		String url = "";
 		Matcher m = null;
 		Date dateReddit = null;
+		String keyword = "";
+		ArrayList<String> subbedUsers = null;
 
 		Calendar cal = Calendar.getInstance();
 		Date mostRecentPostTime = cal.getTime();
@@ -120,9 +122,9 @@ public class CrawlerThread implements Runnable {
 								logger.info("New post found: [" + title + "] at [" + time + "]");
 
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
-								String keyword = parseKeywords(title, url); //identify player keywords within play description
+								keyword = parseKeywords(title, url); //identify player keywords within play description
 								logger.info("Keyword is: [" + keyword + "]");
-								ArrayList<String> subbedUsers = findSubscribedUsers(keyword);
+								subbedUsers = findSubscribedUsers(keyword);
 								logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
 								if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
 									sendEmail(url, keyword, subbedUsers); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
@@ -143,7 +145,7 @@ public class CrawlerThread implements Runnable {
 
 	//keep going until all instances of any name are found - then select the first one and return it
 	public static String parseKeywords(String postDescription, String url) { 
-		
+
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 
 		try {
@@ -151,12 +153,12 @@ public class CrawlerThread implements Runnable {
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-//				byte ptext[] = line.getBytes(ISO_8859_1);
-//				String newline = new String(ptext, UTF_8);
+				//				byte ptext[] = line.getBytes(ISO_8859_1);
+				//				String newline = new String(ptext, UTF_8);
 
 				String[] s = line.split(",");
 				for (String player : s) {
-					
+
 					// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
 					String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
 					Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
@@ -164,7 +166,7 @@ public class CrawlerThread implements Runnable {
 
 					if (m.find()) {
 						logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
-						
+
 						if (playersFound.containsKey(s[0])) {
 							if (playersFound.get(s[0]) > m.end()) {
 								playersFound.put(s[0], m.end());
@@ -172,9 +174,9 @@ public class CrawlerThread implements Runnable {
 						} else {
 							playersFound.put(s[0], m.end());
 						}
-						
+
 					}
-					
+
 				}
 			}
 
@@ -183,41 +185,41 @@ public class CrawlerThread implements Runnable {
 		} catch (Exception e) {
 			logger.error("Error trying to read player file");
 		}
-		
+
 		logger.info("[" + playersFound.size() + "] matching players found in snippet");
 
 		String minName = "no-player-found"; //fallback
 		Integer minNum = 500; //should never be this high
 		for (HashMap.Entry<String, Integer> entry : playersFound.entrySet()) {
-		    String key = entry.getKey();
-		    Integer value = entry.getValue();
-		   
-		    if (value < minNum) {
-		    	minNum = value;
-		    	minName = key;
-		    }
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			if (value < minNum) {
+				minNum = value;
+				minName = key;
+			}
 		}
-		
+
 		logger.info("first name found was [" + minName + "]");
-		
+
 		if (!minName.equals("no-player-found")) {
-			 // The factory instance is re-usable and thread safe.
-		    Twitter twitter = TwitterFactory.getSingleton();
-		    Status status = null;
+			// The factory instance is re-usable and thread safe.
+			Twitter twitter = TwitterFactory.getSingleton();
+			Status status = null;
 			try {
 				String stat = postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
 				if (stat.length() < 140) {
 					status = twitter.updateStatus(stat);
 					logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
 				} //else do nothing
-				
+
 			} catch (TwitterException e) {
 				logger.error(e.toString());
 			}
-		    
+
 		}
-		
-	    
+
+
 
 		return minName; //i.e no player found in the csv
 	}
@@ -231,7 +233,7 @@ public class CrawlerThread implements Runnable {
 		ResultSet tqResultSet = null;
 		Statement statement = null;
 		Statement tqStatement = null;
-		try{
+		try {
 			String url = "jdbc:sqlite:../server/db/user.db";
 			connection = DriverManager.getConnection(url);
 			long currentTime = System.nanoTime();
@@ -243,16 +245,34 @@ public class CrawlerThread implements Runnable {
 			//connection successful if error not caught below
 
 			//iterate over multiple results
-			if(resultSet.next()){
-				String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
-				logger.info("SQL time queue: " + sqlTQ);
-				tqStatement = connection.createStatement();
-				tqResultSet = tqStatement.executeQuery(sqlTQ);
+			if(resultSet.next()) {
 
-				logger.info("TQ SQL Size is (i.e. num emails already sent to this user/email in last 2 mins): [" + tqResultSet.getFetchSize() + "]");
+				try {
 
-				if (tqResultSet.getFetchSize() == 0) { //if no player exists, add to list and send email
-					subscribedUsers.add(resultSet.getString("Email"));
+					String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
+					logger.info("SQL time queue: " + sqlTQ);
+					tqStatement = connection.createStatement();
+					tqResultSet = tqStatement.executeQuery(sqlTQ);
+
+					logger.info("TQ SQL Size is (i.e. num emails already sent to this user/email in last 2 mins): [" + tqResultSet.getFetchSize() + "]");
+
+					if (tqResultSet.getFetchSize() == 0) { //if no player exists, add to list and send email
+						subscribedUsers.add(resultSet.getString("Email"));
+					}
+
+
+				} catch (SQLException e) {
+					logger.error(e.toString());
+				} finally {
+					try {
+						if (connection != null) {
+							tqResultSet.close();
+							tqStatement.close();
+							connection.close();
+						}
+					} catch (SQLException ex) {
+						logger.error(ex.toString());
+					}
 				}
 
 			}
@@ -260,7 +280,7 @@ public class CrawlerThread implements Runnable {
 
 			return subscribedUsers;
 
-		} catch (SQLException e){
+		} catch (SQLException e) {
 			logger.error(e.toString());
 		} finally {
 			try {
@@ -312,16 +332,16 @@ public class CrawlerThread implements Runnable {
 		}*/
 
 		for (String em : emailAddresses) {
-			
+
 			String subject = "PMR Highlight Found - " + keyword;
-			
+
 			String content = "Goal by " + keyword + "!" + " View " + link + ".\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
 					+ " within the website - we're working on a solution to improve our app's cognitive ability. If you notice any other bugs feel free to send me an email personally at jonathan.axmann09@gmail.com";
-			
+
 			logger.info("Attempting to email: [" + em + "]...");
 
 			GmailService.send(service.getService(), em, "pmridontcareifyourespond@gmail.com", subject, content); 
-			
+
 			/*Email from = new Email(pmremail); 
 			String subject = "PMR Highlight Found - " + keyword;
 			Email to = new Email(em);
@@ -343,7 +363,7 @@ public class CrawlerThread implements Runnable {
 				System.out.println(response.headers);*/
 				logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
 				//logger.info(response);
-				
+
 				//if email sends, do an insert into the time queue
 
 				Connection connection = null;
@@ -364,8 +384,8 @@ public class CrawlerThread implements Runnable {
 
 					preparedStatement.executeUpdate(); 
 					logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
-					
-					
+
+
 
 
 				} catch (SQLException e) {
@@ -400,7 +420,7 @@ public class CrawlerThread implements Runnable {
 				return msWait;
 			}
 			// print milliseconds remaining until 6 am
-			
+
 		} else {
 			return msWait;
 		}
