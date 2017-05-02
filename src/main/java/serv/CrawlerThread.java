@@ -249,7 +249,7 @@ public class CrawlerThread implements Runnable {
 			if(resultSet.next()) {
 
 				try {
-					
+
 					String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
 					tqConnection = DriverManager.getConnection(tqUrl);
 					String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
@@ -333,19 +333,20 @@ public class CrawlerThread implements Runnable {
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.toString());
 		}*/
+		
+		if (!redditenv.equals("test")) {
+			for (String em : emailAddresses) {
 
-		for (String em : emailAddresses) {
+				String subject = "PMR Highlight Found - " + keyword;
 
-			String subject = "PMR Highlight Found - " + keyword;
+				String content = "Goal by " + keyword + "!" + " View " + link + ".\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
+						+ " within the website - we're working on a solution to improve our app's cognitive ability. If you notice any other bugs feel free to send me an email personally at jonathan.axmann09@gmail.com";
 
-			String content = "Goal by " + keyword + "!" + " View " + link + ".\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
-					+ " within the website - we're working on a solution to improve our app's cognitive ability. If you notice any other bugs feel free to send me an email personally at jonathan.axmann09@gmail.com";
+				logger.info("Attempting to email: [" + em + "]...");
 
-			logger.info("Attempting to email: [" + em + "]...");
+				GmailService.send(service.getService(), em, "pmridontcareifyourespond@gmail.com", subject, content); 
 
-			GmailService.send(service.getService(), em, "pmridontcareifyourespond@gmail.com", subject, content); 
-
-			/*Email from = new Email(pmremail); 
+				/*Email from = new Email(pmremail); 
 			String subject = "PMR Highlight Found - " + keyword;
 			Email to = new Email(em);
 			Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
@@ -356,56 +357,57 @@ public class CrawlerThread implements Runnable {
 			SendGrid sg = new SendGrid(pwd); 
 			Request request = new Request();*/
 
-			try {
-				/*request.method = Method.POST;
+				try {
+					/*request.method = Method.POST;
 				request.endpoint = "mail/send";
 				request.body = mail.build();
 				Response response = sg.api(request);*/
-				/*System.out.println(response.statusCode);
+					/*System.out.println(response.statusCode);
 				System.out.println(response.body);
 				System.out.println(response.headers);*/
-				logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
-				//logger.info(response);
+					logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
+					//logger.info(response);
 
-				//if email sends, do an insert into the time queue
+					//if email sends, do an insert into the time queue
 
-				Connection connection = null;
-				ResultSet resultSet = null;
-				PreparedStatement preparedStatement = null;
+					Connection connection = null;
+					ResultSet resultSet = null;
+					PreparedStatement preparedStatement = null;
 
-				try {
-					String url = "jdbc:sqlite:../server/db/timeq.db";
-					connection = DriverManager.getConnection(url);
-					long currentTime = System.nanoTime();
-					keyword = keyword.replace("'", "''");
-					String sql = "INSERT INTO Timeq(Email, Player, Timestamp)"
-							+ " VALUES(?,?,?)";
-					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setString(1, em);
-					preparedStatement.setString(2, keyword);
-					preparedStatement.setLong(3, currentTime);
-
-					preparedStatement.executeUpdate(); 
-					logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
-
-
-
-
-				} catch (SQLException e) {
-					logger.error(e.toString());
-				} finally {
 					try {
-						if (connection != null) {
-							preparedStatement.close();
-							connection.close();
-						}
-					} catch (SQLException ex) {
-						logger.error(ex.toString());
-					}
-				}
+						String url = "jdbc:sqlite:../server/db/timeq.db";
+						connection = DriverManager.getConnection(url);
+						long currentTime = System.nanoTime();
+						keyword = keyword.replace("'", "''");
+						String sql = "INSERT INTO Timeq(Email, Player, Timestamp)"
+								+ " VALUES(?,?,?)";
+						preparedStatement = connection.prepareStatement(sql);
+						preparedStatement.setString(1, em);
+						preparedStatement.setString(2, keyword);
+						preparedStatement.setLong(3, currentTime);
 
-			} catch (Exception ex) {
-				logger.error(ex.toString());
+						preparedStatement.executeUpdate(); 
+						logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
+
+
+
+
+					} catch (SQLException e) {
+						logger.error(e.toString());
+					} finally {
+						try {
+							if (connection != null) {
+								preparedStatement.close();
+								connection.close();
+							}
+						} catch (SQLException ex) {
+							logger.error(ex.toString());
+						}
+					}
+
+				} catch (Exception ex) {
+					logger.error(ex.toString());
+				}
 			}
 		}
 	}
