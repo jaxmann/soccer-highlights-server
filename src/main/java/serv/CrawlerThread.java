@@ -80,6 +80,7 @@ public class CrawlerThread implements Runnable {
 		String title = "";
 		String url = "";
 		Matcher m = null;
+		Date dateReddit = null;
 
 		Calendar cal = Calendar.getInstance();
 		Date mostRecentPostTime = cal.getTime();
@@ -104,10 +105,10 @@ public class CrawlerThread implements Runnable {
 
 				logger.info("Most recent post time: [" + mostRecentPostTime + "]");
 
-				for (Element link: links) {
+				for (Element link: links) { //doesn't allocate any new memory 
 					inputTime = link.select("p.tagline").select("time").attr("title");
 					try {
-						Date dateReddit = formatter.parse(inputTime);
+						dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
 							m = p.matcher(link.select("p.title").select("a.title").text());
 
