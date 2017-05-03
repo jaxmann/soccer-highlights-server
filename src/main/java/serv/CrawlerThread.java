@@ -202,21 +202,23 @@ public class CrawlerThread implements Runnable {
 
 		logger.info("first name found was [" + minName + "]");
 
-		if (!minName.equals("no-player-found")) {
-			// The factory instance is re-usable and thread safe.
-			Twitter twitter = TwitterFactory.getSingleton();
-			Status status = null;
-			try {
-				String stat = postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
-				if (stat.length() < 140) {
-					status = twitter.updateStatus(stat);
-					logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
-				} //else do nothing
+		if (!redditenv.equals("test")) {
+			if (!minName.equals("no-player-found")) {
+				// The factory instance is re-usable and thread safe.
+				Twitter twitter = TwitterFactory.getSingleton();
+				Status status = null;
+				try {
+					String stat = postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
+					if (stat.length() < 140) {
+						status = twitter.updateStatus(stat);
+						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
+					} //else do nothing
 
-			} catch (TwitterException e) {
-				logger.error(e.toString());
+				} catch (TwitterException e) {
+					logger.error(e.toString());
+				}
+
 			}
-
 		}
 
 
@@ -256,9 +258,9 @@ public class CrawlerThread implements Runnable {
 					logger.info("SQL time queue: " + sqlTQ);
 					tqStatement = tqConnection.createStatement();
 					tqResultSet = tqStatement.executeQuery(sqlTQ);
-					
+
 					boolean tqFilled = tqResultSet.next();
-					
+
 					logger.info("Already in TQ? (i.e. email already sent to this user/email in last 2 mins): [" + tqFilled + "]");
 
 					if (tqFilled == false) { //if no player exists, add to list and send email
@@ -335,8 +337,9 @@ public class CrawlerThread implements Runnable {
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.toString());
 		}*/
-		
+
 		if (!redditenv.equals("test")) {
+
 			for (String em : emailAddresses) {
 
 				String subject = "PMR Highlight Found - " + keyword;
