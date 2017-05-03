@@ -256,10 +256,12 @@ public class CrawlerThread implements Runnable {
 					logger.info("SQL time queue: " + sqlTQ);
 					tqStatement = tqConnection.createStatement();
 					tqResultSet = tqStatement.executeQuery(sqlTQ);
+					
+					boolean tqFilled = tqResultSet.next();
+					
+					logger.info("Already in TQ? (i.e. email already sent to this user/email in last 2 mins): [" + tqFilled + "]");
 
-					logger.info("TQ SQL Size is (i.e. num emails already sent to this user/email in last 2 mins): [" + tqResultSet.getFetchSize() + "]");
-
-					if (tqResultSet.getFetchSize() == 0) { //if no player exists, add to list and send email
+					if (tqFilled == false) { //if no player exists, add to list and send email
 						subscribedUsers.add(resultSet.getString("Email"));
 					}
 
