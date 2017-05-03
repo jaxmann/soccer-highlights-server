@@ -119,16 +119,24 @@ public class CrawlerThread implements Runnable {
 								title = link.select("p.title").select("a.title").text();
 								url = link.select("p.title").select("a.title").attr("href");
 
-								logger.info("New post found: [" + title + "] at [" + time + "]");
+								if (url.contains(".mp4") || url.contains("streamable")) { //only trigger if it's a video link
+									
+									logger.info("New post found: [" + title + "] at [" + time + "]");
 
-								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
-								keyword = parseKeywords(title, url); //identify player keywords within play description
-								logger.info("Keyword is: [" + keyword + "]");
-								subbedUsers = findSubscribedUsers(keyword);
-								logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
-								if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
-									sendEmail(url, keyword, subbedUsers); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
+									mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
+									keyword = parseKeywords(title, url); //identify player keywords within play description
+									logger.info("Keyword is: [" + keyword + "]");
+									subbedUsers = findSubscribedUsers(keyword);
+									logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
+									if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
+										sendEmail(url, keyword, subbedUsers); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
+									}
+									
+								} else {
+									logger.info("Non-video post found: [" + title + "] at [" + time + "]");
 								}
+
+
 
 							}
 						}
