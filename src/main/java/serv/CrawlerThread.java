@@ -197,7 +197,7 @@ public class CrawlerThread implements Runnable {
 		logger.info("[" + playersFound.size() + "] matching players found in snippet");
 
 		String minName = "no-player-found"; //fallback
-		Integer minNum = 500; //should never be this high
+		Integer minNum = 500; //should never be this high (position at which name is found inside string)
 		for (HashMap.Entry<String, Integer> entry : playersFound.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
