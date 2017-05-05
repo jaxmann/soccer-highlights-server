@@ -119,11 +119,13 @@ public class CrawlerThread implements Runnable {
 								title = link.select("p.title").select("a.title").text();
 								url = link.select("p.title").select("a.title").attr("href");
 
+								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
+								
 								if (url.contains(".mp4") || url.contains("streamable")) { //only trigger if it's a video link
 									
 									logger.info("New post found: [" + title + "] at [" + time + "]");
 
-									mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
+									
 									keyword = parseKeywords(title, url); //identify player keywords within play description
 									logger.info("Keyword is: [" + keyword + "]");
 									subbedUsers = findSubscribedUsers(keyword);
