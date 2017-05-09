@@ -435,6 +435,11 @@ public class CrawlerThread implements Runnable {
 		Calendar calendar = Calendar.getInstance();
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
 		int msWait = 60000;
+		
+		if (calendar.get(Calendar.DAY_OF_WEEK) == 6 || calendar.get(Calendar.DAY_OF_WEEK) == 7) {
+			msWait = msWait/2;
+		}
+		
 		if (hours >= 22 || hours <= 9) { //7pm to 6am
 			if (hours >= 22) {
 				msWait = 3600000*( (24-hours) + 9 );
