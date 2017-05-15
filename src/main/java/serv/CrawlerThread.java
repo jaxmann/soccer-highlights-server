@@ -83,6 +83,8 @@ public class CrawlerThread implements Runnable {
 		Date dateReddit = null;
 		String keyword = "";
 		ArrayList<String> subbedUsers = null;
+		Element link = null;
+		int i = 0;
 
 		Calendar cal = Calendar.getInstance();
 		Date mostRecentPostTime = cal.getTime();
@@ -104,16 +106,16 @@ public class CrawlerThread implements Runnable {
 			try {
 				document = Jsoup.connect(redditURL).userAgent(USER_AGENT).timeout(0).get(); //Get the url - Reddit only accepts 2 requests a minute. edit: 60/min i think? -jonathan
 				links = document.select("div.thing"); //Get the entire posts from the doc
-
+				
 				logger.info("Most recent post time: [" + mostRecentPostTime + "]");
 
-				for (Element link: links) { //doesn't allocate any new memory 
+				for (i=links.size() - 1; i>=0; i--) { //doesn't allocate any new memory 
+					link = links.get(i);
 					inputTime = link.select("p.tagline").select("time").attr("title");
 					try {
 						dateReddit = formatter.parse(inputTime);
 						if (mostRecentPostTime.compareTo(dateReddit) < 0) {
 							m = p.matcher(link.select("p.title").select("a.title").text());
-
 							if (m.find()) { 
 								time = link.select("p.tagline").select("time").attr("title");
 								title = link.select("p.title").select("a.title").text();
