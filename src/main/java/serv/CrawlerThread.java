@@ -240,76 +240,81 @@ public class CrawlerThread implements Runnable {
 
 		ArrayList<String> subscribedUsers = new ArrayList<String>();
 
-		Connection connection = null;
-		Connection tqConnection = null;
-		ResultSet resultSet = null;
-		ResultSet tqResultSet = null;
-		Statement statement = null;
-		Statement tqStatement = null;
-		try {
-			String url = "jdbc:sqlite:../server/db/user.db";
-			connection = DriverManager.getConnection(url);
-			long currentTime = System.nanoTime();
-			keyword = keyword.replace("'", "''");
-			String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails<" + currentTime + " and ReceiveEmails>0;";
-			logger.info("SQL: " + sql);
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
-			//connection successful if error not caught below
-
-			//iterate over results
-			if(resultSet.next()) {
-
-				try {
-
-					String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
-					tqConnection = DriverManager.getConnection(tqUrl);
-					String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
-					logger.info("SQL time queue: " + sqlTQ);
-					tqStatement = tqConnection.createStatement();
-					tqResultSet = tqStatement.executeQuery(sqlTQ);
-
-					boolean tqFilled = tqResultSet.next();
-
-					logger.info("Already in TQ? (i.e. email already sent to this user/email in last 2 mins): [" + tqFilled + "]");
-
-					if (tqFilled == false) { //if no player exists, add to list and send email
-						subscribedUsers.add(resultSet.getString("Email"));
-					}
-
-
-				} catch (SQLException e) {
-					logger.error(e.toString());
-				} finally {
-					try {
-						if (tqConnection != null) {
-							tqResultSet.close();
-							tqStatement.close();
-							tqConnection.close();
-						}
-					} catch (SQLException ex) {
-						logger.error(ex.toString());
-					}
-				}
-
-			}
-
-
-			return subscribedUsers;
-
-		} catch (SQLException e) {
-			logger.error(e.toString());
-		} finally {
+		if (!keyword.equals("no-player-found")) {
+			
+			
+			Connection connection = null;
+			Connection tqConnection = null;
+			ResultSet resultSet = null;
+			ResultSet tqResultSet = null;
+			Statement statement = null;
+			Statement tqStatement = null;
 			try {
-				if (connection != null) {
-					resultSet.close();
-					statement.close();
-					connection.close();
+				String url = "jdbc:sqlite:../server/db/user.db";
+				connection = DriverManager.getConnection(url);
+				long currentTime = System.nanoTime();
+				keyword = keyword.replace("'", "''");
+				String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails<" + currentTime + " and ReceiveEmails>0;";
+				logger.info("SQL: " + sql);
+				statement = connection.createStatement();
+				resultSet = statement.executeQuery(sql);
+				//connection successful if error not caught below
+
+				//iterate over results
+				if(resultSet.next()) {
+
+					try {
+
+						String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
+						tqConnection = DriverManager.getConnection(tqUrl);
+						String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
+						logger.info("SQL time queue: " + sqlTQ);
+						tqStatement = tqConnection.createStatement();
+						tqResultSet = tqStatement.executeQuery(sqlTQ);
+
+						boolean tqFilled = tqResultSet.next();
+
+						logger.info("Already in TQ? (i.e. email already sent to this user/email in last 2 mins): [" + tqFilled + "]");
+
+						if (tqFilled == false) { //if no player exists, add to list and send email
+							subscribedUsers.add(resultSet.getString("Email"));
+						}
+
+
+					} catch (SQLException e) {
+						logger.error(e.toString());
+					} finally {
+						try {
+							if (tqConnection != null) {
+								tqResultSet.close();
+								tqStatement.close();
+								tqConnection.close();
+							}
+						} catch (SQLException ex) {
+							logger.error(ex.toString());
+						}
+					}
+
 				}
-			} catch (SQLException ex) {
-				logger.error(ex.toString());
+
+
+				return subscribedUsers;
+
+			} catch (SQLException e) {
+				logger.error(e.toString());
+			} finally {
+				try {
+					if (connection != null) {
+						resultSet.close();
+						statement.close();
+						connection.close();
+					}
+				} catch (SQLException ex) {
+					logger.error(ex.toString());
+				}
 			}
 		}
+
 
 		return subscribedUsers;
 	}
@@ -435,11 +440,11 @@ public class CrawlerThread implements Runnable {
 		Calendar calendar = Calendar.getInstance();
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
 		int msWait = 60000;
-		
-		if (calendar.get(Calendar.DAY_OF_WEEK) == 6 || calendar.get(Calendar.DAY_OF_WEEK) == 7) {
-			msWait = msWait/2;
-		}
-		
+
+		//		if (calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 7) { //sat is 7, sun is 1
+		//			msWait = msWait/2;
+		//		}
+
 		if (hours >= 22 || hours <= 9) { //7pm to 6am
 			if (hours >= 22) {
 				msWait = 3600000*( (24-hours) + 9 );
