@@ -211,7 +211,7 @@ public class CrawlerThread implements Runnable {
 					}
 
 					if (mf.find()) {
-						logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
+						//logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
 
 						if (playersFound.containsKey(s[0])) {
 							if (playersFound.get(s[0]) > m.end()) {
