@@ -92,6 +92,8 @@ public class CrawlerThread implements Runnable {
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[0-9]"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
+		
+		HashMap<String, String> playerTeams = populatePlayerTeams();
 
 		while (true) { //run forever unless stopped
 
@@ -106,7 +108,7 @@ public class CrawlerThread implements Runnable {
 			try {
 				document = Jsoup.connect(redditURL).userAgent(USER_AGENT).timeout(0).get(); //Get the url - Reddit only accepts 2 requests a minute. edit: 60/min i think? -jonathan
 				links = document.select("div.thing"); //Get the entire posts from the doc
-				
+
 				logger.info("Most recent post time: [" + mostRecentPostTime + "]");
 
 				for (i=links.size() - 1; i>=0; i--) { //doesn't allocate any new memory 
@@ -154,7 +156,35 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 	}
-	
+
+
+	public static HashMap<String, String> populatePlayerTeams() {
+		HashMap<String, String> playerTeams = new HashMap<String, String>();
+
+		try {
+			BufferedReader reader = new BufferedReader (new FileReader("playerTeams.csv")); 
+			String line;
+			
+			logger.info("Loading playerTeam HashMap...");
+
+			while ((line = reader.readLine()) != null) {
+
+				String[] s = line.split(",");
+				playerTeams.put(s[2], s[1]);
+
+			}
+			
+			logger.info("playerTeam loaded.");
+			reader.close();
+
+		} catch (Exception e) {
+			logger.error("Error trying to read playerTeams file");
+		}
+
+		return playerTeams;
+	}
+
+
 	public static String findKeyword(String postDescription) {
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 
@@ -209,22 +239,25 @@ public class CrawlerThread implements Runnable {
 				minName = key;
 			}
 		}
-		
+
 		return minName;
 	}
-	
+
 	//keep going until all instances of any name are found - then select the first one and return it
 	public static String parseKeywords(String postDescription, String url) { 
 
 		String minName = findKeyword(postDescription);
 
 		logger.info("first name found was [" + minName + "]");
-		
+
 		tweetTweet(minName, postDescription, url);
 
 		return minName; //i.e no player found in the csv
 	}
-	
+
+
+
+
 	public static void tweetTweet(String minName, String postDescription, String url) {
 		if (!redditenv.equals("test")) {
 			if (!minName.equals("no-player-found")) {
@@ -251,8 +284,8 @@ public class CrawlerThread implements Runnable {
 		ArrayList<String> subscribedUsers = new ArrayList<String>();
 
 		if (!keyword.equals("no-player-found")) {
-			
-			
+
+
 			Connection connection = null;
 			Connection tqConnection = null;
 			ResultSet resultSet = null;
