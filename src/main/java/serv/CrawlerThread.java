@@ -211,7 +211,7 @@ public class CrawlerThread implements Runnable {
 					}
 
 					if (mf.find()) {
-						//logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
+						logger.info("regex found [" + postDescription.substring(mf.start(), mf.end()) + "] treated as [" + s[0] + "]");
 
 						if (playersFound.containsKey(s[0])) {
 							if (playersFound.get(s[0]) > mf.end()) {
@@ -258,11 +258,9 @@ public class CrawlerThread implements Runnable {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
 
-			System.out.println(key);
-
 			if (!key.equals(minName)) {
 				maybes.put(key, 80);
-			} else {
+			} else if (!maybes.containsKey(key)) {
 				maybes.put(minName, 100);
 			}
 		}
