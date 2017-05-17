@@ -271,15 +271,22 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 		/////////////////////////
+		int maxPoints = 0;
+		String maxPlayer = "no-player-found";
+		// do a "join" here with the team name for the respective player
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
 
 			System.out.println(key);
 			System.out.println(value);
+			if (value > maxPoints) {
+				maxPlayer = key;
+				maxPoints = value;
+			}
 
 		}
-
+		
 
 		return minName;
 	}
