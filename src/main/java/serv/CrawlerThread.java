@@ -177,7 +177,7 @@ public class CrawlerThread implements Runnable {
 
 				String[] s = line.split(",");
 				for (String player : s) {
-					
+
 					String reg = null;
 					Pattern p = null;
 					Matcher m = null;
@@ -205,7 +205,7 @@ public class CrawlerThread implements Runnable {
 						}
 
 					}
-					
+
 					if (mf.find()) {
 						logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
 
@@ -216,7 +216,7 @@ public class CrawlerThread implements Runnable {
 						} else {
 							playersFound.put(s[0], m.end());
 						}
-						
+
 						if (!maybes.containsKey(s[0])) {
 							maybes.put(s[0], 130); //
 						}
@@ -262,7 +262,14 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 		/////////////////////////
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
 
+			System.out.println(key);
+			System.out.println(value);
+
+		}
 
 
 		return minName;
