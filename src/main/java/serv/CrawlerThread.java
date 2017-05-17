@@ -219,7 +219,13 @@ public class CrawlerThread implements Runnable {
 		String minName = findKeyword(postDescription);
 
 		logger.info("first name found was [" + minName + "]");
+		
+		tweetTweet(minName, postDescription, url);
 
+		return minName; //i.e no player found in the csv
+	}
+	
+	public static void tweetTweet(String minName, String postDescription, String url) {
 		if (!redditenv.equals("test")) {
 			if (!minName.equals("no-player-found")) {
 				// The factory instance is re-usable and thread safe.
@@ -238,10 +244,6 @@ public class CrawlerThread implements Runnable {
 
 			}
 		}
-
-
-
-		return minName; //i.e no player found in the csv
 	}
 
 	public static ArrayList<String> findSubscribedUsers(String keyword) { 
