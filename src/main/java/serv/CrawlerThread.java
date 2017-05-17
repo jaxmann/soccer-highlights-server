@@ -49,6 +49,7 @@ public class CrawlerThread implements Runnable {
 	public static Logger logger = Logger.getLogger(CrawlerThread.class);
 	private static GmailService service;
 	private static String redditenv;
+	public static HashMap<String, String> playerTeams;
 
 
 
@@ -93,7 +94,7 @@ public class CrawlerThread implements Runnable {
 
 		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[0-9]"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
 
-		HashMap<String, String> playerTeams = populatePlayerTeams();
+		playerTeams = populatePlayerTeams();
 
 
 		while (true) { //run forever unless stopped
@@ -274,6 +275,23 @@ public class CrawlerThread implements Runnable {
 		int maxPoints = 0;
 		String maxPlayer = "no-player-found";
 		// do a "join" here with the team name for the respective player
+		////////////////////////////////////////////////////////////////
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+			
+			String tm = playerTeams.get(key); //'Manchester City'
+			String[] tmSplit = tm.split(" ");
+			for (int i=0; i<tmSplit.length; i++) {
+				if (postDescription.contains(tm)) {
+					maybes.put(key, value + 50); //if entire team is contained in snippet
+				} else if (postDescription.contains(tmSplit[i])) {
+					maybes.put(key, value + 15); //add 25 points for each part of a team that is contained
+				}
+			}
+
+		}
+		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
