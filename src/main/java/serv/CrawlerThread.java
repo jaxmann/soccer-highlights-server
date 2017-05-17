@@ -205,7 +205,7 @@ public class CrawlerThread implements Runnable {
 						}
 
 						if (!maybes.containsKey(s[0])) {
-							maybes.put(s[0], 130); //
+							maybes.put(s[0], 130); //full name found at start of play
 						}
 						
 						break;
@@ -265,9 +265,9 @@ public class CrawlerThread implements Runnable {
 			Integer value = entry.getValue();
 
 			if (!key.equals(minName) && (!maybes.containsKey(key))) {
-				maybes.put(key, 80);
+				maybes.put(key, 80); //partial/syn name found inside snippet
 			} else if (!maybes.containsKey(key)) {
-				maybes.put(minName, 100);
+				maybes.put(key, 100); //full name found, but not at start of snippet
 			}
 		}
 		/////////////////////////
