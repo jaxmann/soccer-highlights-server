@@ -154,10 +154,8 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 	}
-
-	//keep going until all instances of any name are found - then select the first one and return it
-	public static String parseKeywords(String postDescription, String url) { 
-
+	
+	public static String findKeyword(String postDescription) {
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 
 		try {
@@ -211,6 +209,14 @@ public class CrawlerThread implements Runnable {
 				minName = key;
 			}
 		}
+		
+		return minName;
+	}
+	
+	//keep going until all instances of any name are found - then select the first one and return it
+	public static String parseKeywords(String postDescription, String url) { 
+
+		String minName = findKeyword(postDescription);
 
 		logger.info("first name found was [" + minName + "]");
 
