@@ -92,8 +92,9 @@ public class CrawlerThread implements Runnable {
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[0-9]"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
-		
+
 		HashMap<String, String> playerTeams = populatePlayerTeams();
+
 
 		while (true) { //run forever unless stopped
 
@@ -158,51 +159,39 @@ public class CrawlerThread implements Runnable {
 	}
 
 
-	public static HashMap<String, String> populatePlayerTeams() {
-		HashMap<String, String> playerTeams = new HashMap<String, String>();
 
-		try {
-			BufferedReader reader = new BufferedReader (new FileReader("playerTeams.csv")); 
-			String line;
-			
-			logger.info("Loading playerTeam HashMap...");
-
-			while ((line = reader.readLine()) != null) {
-
-				String[] s = line.split(",");
-				playerTeams.put(s[2], s[1]);
-
-			}
-			
-			logger.info("playerTeam loaded.");
-			reader.close();
-
-		} catch (Exception e) {
-			logger.error("Error trying to read playerTeams file");
-		}
-
-		return playerTeams;
-	}
 
 
 	public static String findKeyword(String postDescription) {
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
+		HashMap<String, Integer> maybes = new HashMap<String, Integer>();
+
 
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-				//				byte ptext[] = line.getBytes(ISO_8859_1);
-				//				String newline = new String(ptext, UTF_8);
+				//byte ptext[] = line.getBytes(ISO_8859_1);
+				//String newline = new String(ptext, UTF_8);
 
 				String[] s = line.split(",");
 				for (String player : s) {
+					
+					String reg = null;
+					Pattern p = null;
+					Matcher m = null;
+					if (!player.equals(s[0])) { //only if not full name
+						// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
+						reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
+						p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+						m = p.matcher(postDescription);
+					}
 
-					// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
-					String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
-					Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
-					Matcher m = p.matcher(postDescription);
+					//full name found
+					String regFull = "((^|\\s)" + s[0] + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(s[0]) + "('|\\s|$))";
+					Pattern pf = Pattern.compile(regFull, Pattern.CASE_INSENSITIVE);
+					Matcher mf = p.matcher(postDescription);
 
 					if (m.find()) {
 						logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
@@ -213,6 +202,23 @@ public class CrawlerThread implements Runnable {
 							}
 						} else {
 							playersFound.put(s[0], m.end());
+						}
+
+					}
+					
+					if (mf.find()) {
+						logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
+
+						if (playersFound.containsKey(s[0])) {
+							if (playersFound.get(s[0]) > m.end()) {
+								playersFound.put(s[0], m.end());
+							}
+						} else {
+							playersFound.put(s[0], m.end());
+						}
+						
+						if (!maybes.containsKey(s[0])) {
+							maybes.put(s[0], 130); //
 						}
 
 					}
@@ -238,7 +244,26 @@ public class CrawlerThread implements Runnable {
 				minNum = value;
 				minName = key;
 			}
+
 		}
+
+		//if outright first choice from above, assign 100 points, if it wasn't the first name found or a snippet was found, assign 80
+		///////////////////////////
+		for (HashMap.Entry<String, Integer> entry : playersFound.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			System.out.println(key);
+
+			if (!key.equals(minName)) {
+				maybes.put(key, 80);
+			} else {
+				maybes.put(minName, 100);
+			}
+		}
+		/////////////////////////
+
+
 
 		return minName;
 	}
@@ -502,6 +527,35 @@ public class CrawlerThread implements Runnable {
 			return msWait;
 		}
 	}
+
+
+	public static HashMap<String, String> populatePlayerTeams() {
+		HashMap<String, String> playerTeams = new HashMap<String, String>();
+
+		try {
+			BufferedReader reader = new BufferedReader (new FileReader("playerTeams.csv")); 
+			String line;
+
+			logger.info("Loading playerTeam HashMap...");
+
+			while ((line = reader.readLine()) != null) {
+
+				String[] s = line.split(",");
+				playerTeams.put(s[2], s[1]);
+
+			}
+
+			logger.info("playerTeam loaded.");
+			reader.close();
+
+		} catch (Exception e) {
+			logger.error("Error trying to read playerTeams file");
+		}
+
+		return playerTeams;
+
+	}
+
 
 
 }
