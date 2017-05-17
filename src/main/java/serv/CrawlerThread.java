@@ -194,7 +194,7 @@ public class CrawlerThread implements Runnable {
 					Matcher mf = pf.matcher(postDescription);
 
 					if (mf.find()) {
-						logger.info("regex found [" + postDescription.substring(mf.start(), mf.end()) + "] treated as [" + s[0] + "]");
+						logger.info("regex found [" + postDescription.substring(mf.start(), mf.end()).trim() + "] treated as [" + s[0] + "]");
 
 						if (playersFound.containsKey(s[0])) {
 							if (playersFound.get(s[0]) > mf.end()) {
@@ -216,7 +216,7 @@ public class CrawlerThread implements Runnable {
 
 
 						if (m.find()) {
-							logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
+							logger.info("regex found [" + postDescription.substring(m.start(), m.end()).trim() + "] treated as [" + s[0] + "]");
 
 							if (playersFound.containsKey(s[0])) {
 								if (playersFound.get(s[0]) > m.end()) {
@@ -264,7 +264,7 @@ public class CrawlerThread implements Runnable {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
 
-			if (!key.equals(minName)) {
+			if (!key.equals(minName) && (!maybes.containsKey(key))) {
 				maybes.put(key, 80);
 			} else if (!maybes.containsKey(key)) {
 				maybes.put(minName, 100);
