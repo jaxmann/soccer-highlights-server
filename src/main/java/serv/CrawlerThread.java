@@ -207,6 +207,8 @@ public class CrawlerThread implements Runnable {
 						if (!maybes.containsKey(s[0])) {
 							maybes.put(s[0], 130); //
 						}
+						
+						break;
 
 					}
 
@@ -225,6 +227,8 @@ public class CrawlerThread implements Runnable {
 							}
 
 						}
+						
+						break;
 					}
 
 
