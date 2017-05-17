@@ -193,17 +193,21 @@ public class CrawlerThread implements Runnable {
 					Pattern pf = Pattern.compile(regFull, Pattern.CASE_INSENSITIVE);
 					Matcher mf = pf.matcher(postDescription);
 
-					if (m.find()) {
-						logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
+					if (m != null) {
 
-						if (playersFound.containsKey(s[0])) {
-							if (playersFound.get(s[0]) > m.end()) {
+
+						if (m.find()) {
+							logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
+
+							if (playersFound.containsKey(s[0])) {
+								if (playersFound.get(s[0]) > m.end()) {
+									playersFound.put(s[0], m.end());
+								}
+							} else {
 								playersFound.put(s[0], m.end());
 							}
-						} else {
-							playersFound.put(s[0], m.end());
-						}
 
+						}
 					}
 
 					if (mf.find()) {
