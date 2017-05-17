@@ -193,6 +193,23 @@ public class CrawlerThread implements Runnable {
 					Pattern pf = Pattern.compile(regFull, Pattern.CASE_INSENSITIVE);
 					Matcher mf = pf.matcher(postDescription);
 
+					if (mf.find()) {
+						logger.info("regex found [" + postDescription.substring(mf.start(), mf.end()) + "] treated as [" + s[0] + "]");
+
+						if (playersFound.containsKey(s[0])) {
+							if (playersFound.get(s[0]) > mf.end()) {
+								playersFound.put(s[0], mf.end());
+							}
+						} else {
+							playersFound.put(s[0], mf.end());
+						}
+
+						if (!maybes.containsKey(s[0])) {
+							maybes.put(s[0], 130); //
+						}
+
+					}
+
 					if (m != null) {
 
 
@@ -210,22 +227,7 @@ public class CrawlerThread implements Runnable {
 						}
 					}
 
-					if (mf.find()) {
-						logger.info("regex found [" + postDescription.substring(mf.start(), mf.end()) + "] treated as [" + s[0] + "]");
 
-						if (playersFound.containsKey(s[0])) {
-							if (playersFound.get(s[0]) > mf.end()) {
-								playersFound.put(s[0], mf.end());
-							}
-						} else {
-							playersFound.put(s[0], mf.end());
-						}
-
-						if (!maybes.containsKey(s[0])) {
-							maybes.put(s[0], 130); //
-						}
-
-					}
 
 				}
 			}
