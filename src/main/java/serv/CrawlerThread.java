@@ -191,7 +191,7 @@ public class CrawlerThread implements Runnable {
 					//full name found
 					String regFull = "((^|\\s)" + s[0] + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(s[0]) + "('|\\s|$))";
 					Pattern pf = Pattern.compile(regFull, Pattern.CASE_INSENSITIVE);
-					Matcher mf = p.matcher(postDescription);
+					Matcher mf = pf.matcher(postDescription);
 
 					if (m.find()) {
 						logger.info("regex found [" + postDescription.substring(m.start(), m.end()) + "] treated as [" + s[0] + "]");
@@ -230,6 +230,7 @@ public class CrawlerThread implements Runnable {
 
 		} catch (Exception e) {
 			logger.error("Error trying to read player file");
+			e.printStackTrace();
 		}
 
 		logger.info("[" + playersFound.size() + "] matching players found in snippet");
