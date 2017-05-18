@@ -1,17 +1,8 @@
 package serv;
 
-
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.io.BufferedReader;
-
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +18,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -54,8 +43,6 @@ public class CrawlerThread implements Runnable {
 	public static HashMap<String, String> playerTeams;
 	public static HashSet<String> playerMatches;
 
-
-
 	public CrawlerThread(String env) {
 		service = new GmailService();
 		redditenv = env;
@@ -65,7 +52,6 @@ public class CrawlerThread implements Runnable {
 
 		PropertyConfigurator.configure("log4j-configuration.txt"); //configure log4j binding with properties from log4j-configuration file
 
-
 		String redditURL = "";
 		if (redditenv.equals("test")) {
 			redditURL = "http://www.reddit.com/r/soccerpmr/new";
@@ -74,7 +60,6 @@ public class CrawlerThread implements Runnable {
 			redditURL = "http://www.reddit.com/r/soccer/new";
 			logger.info("Running in the live environment...");
 		}
-
 
 		Document document = null;
 		Elements links = null;
@@ -100,7 +85,6 @@ public class CrawlerThread implements Runnable {
 		playerTeams = populatePlayerTeams(); //list of players with team names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
 
-
 		while (true) { //run forever unless stopped
 
 			try {
@@ -110,7 +94,6 @@ public class CrawlerThread implements Runnable {
 			} catch (InterruptedException e2) {
 				logger.error(e2.toString());
 			}
-
 			try {
 				document = Jsoup.connect(redditURL).userAgent(USER_AGENT).timeout(0).get(); //Get the url - Reddit only accepts 2 requests a minute. edit: 60/min i think? -jonathan
 				links = document.select("div.thing"); //Get the entire posts from the doc
@@ -135,7 +118,6 @@ public class CrawlerThread implements Runnable {
 
 									logger.info("New post found: [" + title + "] at [" + time + "]");
 
-
 									keyword = parseKeywords(title, url); //identify player keywords within play description
 									logger.info("Keyword is: [" + keyword + "]");
 									subbedUsers = findSubscribedUsers(keyword);
@@ -147,8 +129,6 @@ public class CrawlerThread implements Runnable {
 								} else {
 									logger.info("Non-video post found: [" + title + "] at [" + time + "]");
 								}
-
-
 							}
 						}
 					} catch (ParseException e1) {
@@ -161,7 +141,6 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 	}
-
 
 	public static String findKeyword(String postDescription) {
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
@@ -212,14 +191,12 @@ public class CrawlerThread implements Runnable {
 				minNum = value;
 				minName = key;
 			}
-
 		}
 
 		//if outright first choice from above, assign 100 points, if it wasn't the first name found or a snippet was found, assign 80
 		///////////////////////////
 		for (HashMap.Entry<String, Integer> entry : playersFound.entrySet()) {
 			String key = entry.getKey();
-			Integer value = entry.getValue();
 
 			if (!key.equals(minName) && (!maybes.containsKey(key))) {
 				maybes.put(key, 80); //partial/syn name found inside snippet
@@ -235,7 +212,6 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-
 
 			String tm = playerTeams.get(key.trim()); //'Manchester City'
 			String[] tmSplit = tm.split(" "); //if not "FC" etc
@@ -253,15 +229,12 @@ public class CrawlerThread implements Runnable {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
 
-			System.out.println(key);
-			System.out.println(value);
+			logger.info("["+key+"] : ["+value+"]");
 			if (value > maxPoints) {
 				maxPlayer = key;
 				maxPoints = value;
 			}
-
 		}
-
 
 		return maxPlayer;
 	}
@@ -278,9 +251,6 @@ public class CrawlerThread implements Runnable {
 		return minName; //i.e no player found in the csv
 	}
 
-
-
-
 	public static void tweetTweet(String minName, String postDescription, String url) {
 		if (!redditenv.equals("test")) {
 			if (!minName.equals("no-player-found")) {
@@ -293,11 +263,9 @@ public class CrawlerThread implements Runnable {
 						status = twitter.updateStatus(stat);
 						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
 					} //else do nothing
-
 				} catch (TwitterException e) {
 					logger.error(e.toString());
 				}
-
 			}
 		}
 	}
@@ -307,7 +275,6 @@ public class CrawlerThread implements Runnable {
 		ArrayList<String> subscribedUsers = new ArrayList<String>();
 
 		if (!keyword.equals("no-player-found")) {
-
 
 			Connection connection = null;
 			Connection tqConnection = null;
@@ -346,7 +313,6 @@ public class CrawlerThread implements Runnable {
 							subscribedUsers.add(resultSet.getString("Email"));
 						}
 
-
 					} catch (SQLException e) {
 						logger.error(e.toString());
 					} finally {
@@ -362,7 +328,6 @@ public class CrawlerThread implements Runnable {
 					}
 
 				}
-
 
 				return subscribedUsers;
 
@@ -380,7 +345,6 @@ public class CrawlerThread implements Runnable {
 				}
 			}
 		}
-
 
 		return subscribedUsers;
 	}
@@ -420,20 +384,15 @@ public class CrawlerThread implements Runnable {
 		}*/
 
 
-
 		for (String em : emailAddresses) {
 
 			if (!redditenv.equals("test")) {
 
 				String subject = "PMR Highlight Found - " + keyword;
-
 				String content = "Goal by " + keyword + "!" + " View " + link + ".\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
 						+ " within the website - we're working on a solution to improve our app's cognitive ability. If you notice any other bugs feel free to send me an email personally at jonathan.axmann09@gmail.com";
-
 				logger.info("Attempting to email: [" + em + "]...");
-
 				GmailService.send(service.getService(), em, "pmridontcareifyourespond@gmail.com", subject, content); 
-
 				logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
 
 			}
@@ -463,7 +422,6 @@ public class CrawlerThread implements Runnable {
 				//if email sends, do an insert into the time queue
 
 				Connection connection = null;
-				ResultSet resultSet = null;
 				PreparedStatement preparedStatement = null;
 
 				try {
@@ -509,19 +467,15 @@ public class CrawlerThread implements Runnable {
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
 		int msWait = 60000;
 
-		//		if (calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 7) { //sat is 7, sun is 1
-		//			msWait = msWait/2;
-		//		}
-
 		if (hours >= 22 || hours <= 9) { //7pm to 6am
 			if (hours >= 22) {
 				msWait = 3600000*( (24-hours) + 9 );
-				return msWait;
+				return msWait; 
 			} else {
 				msWait = 3600000 * (9 - hours);
 				return msWait;
 			}
-			// print milliseconds remaining until 6 am
+			// milliseconds remaining until 6 am
 
 		} else {
 			return msWait;
@@ -545,11 +499,11 @@ public class CrawlerThread implements Runnable {
 
 			}
 
-			logger.info("playerTeam loaded.");
+			logger.info("playerTeam HashMap loaded.");
 			reader.close();
 
 		} catch (Exception e) {
-			logger.error("Error trying to read playerTeams file");
+			logger.error("Error trying to read playerTeams.csv file");
 		}
 
 		return playerTeams;
@@ -560,6 +514,8 @@ public class CrawlerThread implements Runnable {
 
 		HashSet<String> playerMatches = new HashSet<String>();
 
+		logger.info("Loading player HashSet...");
+
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
@@ -568,8 +524,12 @@ public class CrawlerThread implements Runnable {
 				playerMatches.add(line);
 
 			}
+
+			logger.info("player HashSet loaded.");
+			reader.close();
+
 		} catch (Exception e) {
-			logger.error("Error trying to read player file");
+			logger.error("Error trying to read output.csv");
 			e.printStackTrace();
 		}
 
