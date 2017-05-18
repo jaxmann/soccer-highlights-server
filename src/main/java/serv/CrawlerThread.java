@@ -281,15 +281,14 @@ public class CrawlerThread implements Runnable {
 			Integer value = entry.getValue();
 			
 			String tm = playerTeams.get(key); //'Manchester City'
-			String[] tmSplit = tm.split(" ");
+			String[] tmSplit = tm.split(" "); //if not "FC" etc
 			for (int i=0; i<tmSplit.length; i++) {
-				if (postDescription.contains(tm)) {
+				if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
 					maybes.put(key, value + 50); //if entire team is contained in snippet
-				} else if (postDescription.contains(tmSplit[i])) {
-					maybes.put(key, value + 15); //add 25 points for each part of a team that is contained
+				} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
+					maybes.put(key, value + 15); //add 15 points for each part of a team that is contained
 				}
 			}
-
 		}
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
@@ -306,7 +305,7 @@ public class CrawlerThread implements Runnable {
 		}
 		
 
-		return minName;
+		return maxPlayer;
 	}
 
 	//keep going until all instances of any name are found - then select the first one and return it
