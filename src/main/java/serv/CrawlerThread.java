@@ -280,7 +280,8 @@ public class CrawlerThread implements Runnable {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
 			
-			String tm = playerTeams.get(key); //'Manchester City'
+			
+			String tm = playerTeams.get(key.trim()); //'Manchester City'
 			String[] tmSplit = tm.split(" "); //if not "FC" etc
 			for (int i=0; i<tmSplit.length; i++) {
 				if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
@@ -581,7 +582,7 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 
 				String[] s = line.split(",");
-				playerTeams.put(s[2], s[1]);
+				playerTeams.put(s[2].trim(), s[1].trim());
 
 			}
 
