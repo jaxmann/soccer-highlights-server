@@ -201,7 +201,7 @@ public class CrawlerThread implements Runnable {
 							}
 						}
 						
-						//break;
+						break;
 
 					}
 
