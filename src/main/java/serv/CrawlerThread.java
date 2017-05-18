@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +52,7 @@ public class CrawlerThread implements Runnable {
 	private static GmailService service;
 	private static String redditenv;
 	public static HashMap<String, String> playerTeams;
+	public static HashSet<String> playerMatches;
 
 
 
@@ -94,7 +97,8 @@ public class CrawlerThread implements Runnable {
 
 		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[0-9]"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
 
-		playerTeams = populatePlayerTeams();
+		playerTeams = populatePlayerTeams(); //list of players with team names associated
+		playerMatches = loadPlayers(); //list of players with player syns associated
 
 
 		while (true) { //run forever unless stopped
@@ -145,7 +149,6 @@ public class CrawlerThread implements Runnable {
 								}
 
 
-
 							}
 						}
 					} catch (ParseException e1) {
@@ -160,62 +163,42 @@ public class CrawlerThread implements Runnable {
 	}
 
 
-
-
-
 	public static String findKeyword(String postDescription) {
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 		HashMap<String, Integer> maybes = new HashMap<String, Integer>();
 
+		for (String line : playerMatches) {
 
-		try {
-			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup version of this is "list-of-players2.csv"
-			String line;
+			//byte ptext[] = line.getBytes(ISO_8859_1);
+			//String newline = new String(ptext, UTF_8);
 
-			while ((line = reader.readLine()) != null) {
-				//byte ptext[] = line.getBytes(ISO_8859_1);
-				//String newline = new String(ptext, UTF_8);
+			String[] s = line.split(",");
+			for (String player : s) {
 
-				String[] s = line.split(",");
-				for (String player : s) {
+				// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
+				String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
+				Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+				Matcher m = p.matcher(postDescription);
 
-					// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
-					String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
-					Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
-					Matcher m = p.matcher(postDescription);
+				if (m.find()) {
+					logger.info("regex found [" + postDescription.substring(m.start(), m.end()).trim() + "] treated as [" + s[0] + "]");
 
-					if (m.find()) {
-						logger.info("regex found [" + postDescription.substring(m.start(), m.end()).trim() + "] treated as [" + s[0] + "]");
-
-						if (playersFound.containsKey(s[0])) {
-							if (playersFound.get(s[0]) > m.end()) {
-								playersFound.put(s[0], m.end());
-							}
-						} else {
+					if (playersFound.containsKey(s[0])) {
+						if (playersFound.get(s[0]) > m.end()) {
 							playersFound.put(s[0], m.end());
 						}
-						
-						if (player.equals(s[0])) {
-							if (!maybes.containsKey(player)) {
-								maybes.put(player, 100); //full name found
-							}
-						}
-						
-						break;
-
+					} else {
+						playersFound.put(s[0], m.end());
 					}
-
-					
-
+					if (player.equals(s[0])) {
+						if (!maybes.containsKey(player)) {
+							maybes.put(player, 100); //full name found
+						}
+					}
+					break;
 				}
 			}
-
-			reader.close();
-
-		} catch (Exception e) {
-			logger.error("Error trying to read player file");
-			e.printStackTrace();
-		}
+		} 
 
 		logger.info("[" + playersFound.size() + "] matching players found in snippet");
 
@@ -450,7 +433,7 @@ public class CrawlerThread implements Runnable {
 				logger.info("Attempting to email: [" + em + "]...");
 
 				GmailService.send(service.getService(), em, "pmridontcareifyourespond@gmail.com", subject, content); 
-				
+
 				logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
 
 			}
@@ -474,7 +457,7 @@ public class CrawlerThread implements Runnable {
 				/*System.out.println(response.statusCode);
 				System.out.println(response.body);
 				System.out.println(response.headers);*/
-				
+
 				//logger.info(response);
 
 				//if email sends, do an insert into the time queue
@@ -573,6 +556,30 @@ public class CrawlerThread implements Runnable {
 
 	}
 
+	public static HashSet<String> loadPlayers() {
+
+		HashSet<String> playerMatches = new HashSet<String>();
+
+		try {
+			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup version of this is "list-of-players2.csv"
+			String line;
+
+			while ((line = reader.readLine()) != null) {
+				playerMatches.add(line);
+
+			}
+		} catch (Exception e) {
+			logger.error("Error trying to read player file");
+			e.printStackTrace();
+		}
+
+		return playerMatches;
+
+	}
 
 
 }
+
+
+
+
