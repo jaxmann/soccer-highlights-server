@@ -179,60 +179,33 @@ public class CrawlerThread implements Runnable {
 				String[] s = line.split(",");
 				for (String player : s) {
 
-					String reg = null;
-					Pattern p = null;
-					Matcher m = null;
-					if (!player.equals(s[0])) { //only if not full name
-						// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
-						reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
-						p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
-						m = p.matcher(postDescription);
-					}
+					// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
+					String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
+					Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+					Matcher m = p.matcher(postDescription);
 
-					//full name found
-					String regFull = "((^|\\s)" + s[0] + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(s[0]) + "('|\\s|$))";
-					Pattern pf = Pattern.compile(regFull, Pattern.CASE_INSENSITIVE);
-					Matcher mf = pf.matcher(postDescription);
-
-					if (mf.find()) {
-						logger.info("regex found [" + postDescription.substring(mf.start(), mf.end()).trim() + "] treated as [" + s[0] + "]");
+					if (m.find()) {
+						logger.info("regex found [" + postDescription.substring(m.start(), m.end()).trim() + "] treated as [" + s[0] + "]");
 
 						if (playersFound.containsKey(s[0])) {
-							if (playersFound.get(s[0]) > mf.end()) {
-								playersFound.put(s[0], mf.end());
-							}
-						} else {
-							playersFound.put(s[0], mf.end());
-						}
-
-						if (!maybes.containsKey(s[0])) {
-							maybes.put(s[0], 100); //full name found
-						}
-						
-						break;
-
-					}
-
-					if (m != null) {
-
-
-						if (m.find()) {
-							logger.info("regex found [" + postDescription.substring(m.start(), m.end()).trim() + "] treated as [" + s[0] + "]");
-
-							if (playersFound.containsKey(s[0])) {
-								if (playersFound.get(s[0]) > m.end()) {
-									playersFound.put(s[0], m.end());
-								}
-							} else {
+							if (playersFound.get(s[0]) > m.end()) {
 								playersFound.put(s[0], m.end());
 							}
-
+						} else {
+							playersFound.put(s[0], m.end());
+						}
+						
+						if (player.equals(s[0])) {
+							if (!maybes.containsKey(player)) {
+								maybes.put(player, 100); //full name found
+							}
 						}
 						
 						break;
+
 					}
 
-
+					
 
 				}
 			}
@@ -279,13 +252,14 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			
-			
+
+
 			String tm = playerTeams.get(key.trim()); //'Manchester City'
 			String[] tmSplit = tm.split(" "); //if not "FC" etc
 			for (int i=0; i<tmSplit.length; i++) {
 				if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
 					maybes.put(key, value + 50); //if entire team is contained in snippet
+					logger.info("Team treated as [" + tm + "] for player [" + key + "]");
 				} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
 					maybes.put(key, value + 15); //add 15 points for each part of a team that is contained
 				}
@@ -304,7 +278,7 @@ public class CrawlerThread implements Runnable {
 			}
 
 		}
-		
+
 
 		return maxPlayer;
 	}
