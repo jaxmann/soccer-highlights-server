@@ -60,7 +60,8 @@ public class CrawlerThread implements Runnable {
 			redditURL = "http://www.reddit.com/r/soccer/new";
 			logger.info("Running in the live environment...");
 		}
-
+		
+		//declare variables outside so they are not re-declared and use more memory each time
 		Document document = null;
 		Elements links = null;
 		int refreshTime = 60000;
@@ -243,9 +244,7 @@ public class CrawlerThread implements Runnable {
 	public static String parseKeywords(String postDescription, String url) { 
 
 		String minName = findKeyword(postDescription);
-
 		logger.info("first name found was [" + minName + "]");
-
 		tweetTweet(minName, postDescription, url);
 
 		return minName; //i.e no player found in the csv
@@ -304,7 +303,6 @@ public class CrawlerThread implements Runnable {
 						logger.info("SQL time queue: " + sqlTQ);
 						tqStatement = tqConnection.createStatement();
 						tqResultSet = tqStatement.executeQuery(sqlTQ);
-
 						boolean tqFilled = tqResultSet.next();
 
 						logger.info("Already in TQ? (i.e. email already sent to this user/email in last 2 mins): [" + tqFilled + "]");
@@ -326,7 +324,6 @@ public class CrawlerThread implements Runnable {
 							logger.error(ex.toString());
 						}
 					}
-
 				}
 
 				return subscribedUsers;
@@ -351,39 +348,6 @@ public class CrawlerThread implements Runnable {
 
 	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddresses) {
 
-		/*//SG.txt and SGEmail.txt both need to be in home directory
-		String home = System.getProperty("user.home");
-
-		byte[] encoded = null;
-		String pwd = "";
-		try {
-			encoded = Files.readAllBytes(Paths.get(home + "\\SG.txt"));
-		} catch (IOException e1) {
-			logger.error(e1.toString() + ": unable to read file - make sure SG.txt is in ~");
-			//i guess it's fine if it crashes here - no point in continuing to run if it cant find this file
-
-		}
-		try {
-			pwd =  new String(encoded, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.toString());
-		}
-
-		byte[] encoded2 = null;
-		String pmremail = "";
-		try {
-			encoded2 = Files.readAllBytes(Paths.get(home + "\\SGEmail.txt"));
-		} catch (IOException e1) {
-			logger.error(e1.toString() + ": unable to read file - make sure SG.txt is in ~");
-			//i guess it's fine if it crashes here - no point in continuing to run if it cant find this file
-		}
-		try {
-			pmremail =  new String(encoded2, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.toString());
-		}*/
-
-
 		for (String em : emailAddresses) {
 
 			if (!redditenv.equals("test")) {
@@ -397,29 +361,7 @@ public class CrawlerThread implements Runnable {
 
 			}
 
-			/*Email from = new Email(pmremail); 
-			String subject = "PMR Highlight Found - " + keyword;
-			Email to = new Email(em);
-			Content content = new Content("text/plain", "Goal by " + keyword + "!" + " View (" + link + ").\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
-					+ " within the website - we're working on a solution to improve our app's cognitive ability. If you notice any other bugs feel free to send me an email personally at jonathan.axmann09@gmail.com");
-			Mail mail = new Mail(from, subject, to, content);
-
-
-			SendGrid sg = new SendGrid(pwd); 
-			Request request = new Request();*/
-
 			try {
-				/*request.method = Method.POST;
-				request.endpoint = "mail/send";
-				request.body = mail.build();
-				Response response = sg.api(request);*/
-				/*System.out.println(response.statusCode);
-				System.out.println(response.body);
-				System.out.println(response.headers);*/
-
-				//logger.info(response);
-
-				//if email sends, do an insert into the time queue
 
 				Connection connection = null;
 				PreparedStatement preparedStatement = null;
@@ -435,12 +377,8 @@ public class CrawlerThread implements Runnable {
 					preparedStatement.setString(1, em);
 					preparedStatement.setString(2, keyword);
 					preparedStatement.setLong(3, currentTime);
-
 					preparedStatement.executeUpdate(); 
 					logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
-
-
-
 
 				} catch (SQLException e) {
 					logger.error(e.toString());
@@ -454,12 +392,10 @@ public class CrawlerThread implements Runnable {
 						logger.error(ex.toString());
 					}
 				}
-
 			} catch (Exception ex) {
 				logger.error(ex.toString());
 			}
 		}
-
 	}
 
 	public static int getSleepTime() {
@@ -489,7 +425,6 @@ public class CrawlerThread implements Runnable {
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("playerTeams.csv")); 
 			String line;
-
 			logger.info("Loading playerTeam HashMap...");
 
 			while ((line = reader.readLine()) != null) {
@@ -505,15 +440,12 @@ public class CrawlerThread implements Runnable {
 		} catch (Exception e) {
 			logger.error("Error trying to read playerTeams.csv file");
 		}
-
 		return playerTeams;
-
 	}
 
 	public static HashSet<String> loadPlayers() {
 
 		HashSet<String> playerMatches = new HashSet<String>();
-
 		logger.info("Loading player HashSet...");
 
 		try {
@@ -532,14 +464,6 @@ public class CrawlerThread implements Runnable {
 			logger.error("Error trying to read output.csv");
 			e.printStackTrace();
 		}
-
 		return playerMatches;
-
 	}
-
-
 }
-
-
-
-
