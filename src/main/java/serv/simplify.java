@@ -45,73 +45,79 @@ public class simplify {
 	
 
 	public static int simplifyChar(int n) {
-
-		switch (n) {
-		case 224: 
-			n = 97; //a
-			break;
-		case 225: 
-			n = 97; //a
-			break;
-		case 226: 
-			n = 97; //a
-			break;
-		case 227: 
-			n = 97; //a
-			break;
-		case 228: 
-			n = 97; //a
-			break;
-		case 353: 
-			n = 115; //s
-			break;
-		case 231: 
-			n = 99; //c
-			break;
-		case 232: 
-			n = 101; //e
-			break;
-		case 233: 
-			n = 101; //e
-			break;
-		case 234: 
-			n = 101; //e
-			break;
-		case 235: 
-			n = 101; //e
-			break;
-		case 237: 
-			n = 105; //i
-			break;
-		case 238: 
-			n = 105; //i
-			break;
-		case 239: 
-			n = 105; //i
-			break;
-		case 241: 
-			n = 110; //n
-			break;
-		case 242: 
-			n = 111; //o
-			break;
-		case 243: 
-			n = 111; //o
-			break;
-		case 244: 
-			n = 111; //o
-			break;
-		case 246: 
-			n = 111; //o
-			break;
-		case 250: 
-			n = 117; //u
-			break;
-		case 252: 
-			n = 117; //u
-			break;
+		
+		if (n >= 192 && n <=197) {
+			return 65; //A
+		} else if (n == 199) {
+			return 67; //C
+		} else if (n >=200 && n<=203) {
+			return 69; //E
+		} else if (n>=204 && n<=207) {
+			return 73; //I
+		} else if (n == 208) {
+			return 68; //D
+		} else if (n == 209) {
+			return 78; //N
+		} else if (n>= 210 && n<= 214) {
+			return 79; //O
+		} else if (n == 215) {
+			return 88; //X
+		} else if (n == 216) {
+			return 79; //O
+		} else if (n>= 218 && n<=220) {
+			return 85; //U
+		} else if (n == 221) {
+			return 85; //U
+		} else if (n == 223) {
+			return 115; //s
+		} else if (n>= 224 && n<229) {
+			return 97; //a
+		} else if (n == 231) {
+			return 99; //c
+		} else if (n>=232 && n<= 235) {
+			return 101;
+		} else if (n>= 236 && n<= 239) {
+			return 105; //i
+		} else if (n == 241) {
+			return 110; //n
+		} else if (n>=242 && n<=246) {
+			return 111; //o
+		} else if (n == 248) {
+			return 111; //o
+		} else if (n>= 249 && n<=252) {
+			return 117; //u
+		} else if (n == 253 || n == 255) {
+			return 121; //y
+		} else if (n == 256 || n == 258 || n == 260) {
+			return 65; //A
+		} else if (n == 257 || n == 259 || n == 261) {
+			return 97; //a
+		} else if (n == 262 || n == 264 || n == 266 | n == 268) {
+			return 67; //C
+		} else if (n == 263 || n == 265 || n == 267 || n == 269) {
+			return 99; //c
+		} else if (n == 270 || n == 272) {
+			return 68; //D
+		} else if (n == 271 || n == 273) {
+			return 100; //d
+		} else if (n == 274 || n == 276 || n == 278 || n == 280 || n == 282) {
+			return 69; //E
+		} else if (n == 275 || n == 277 || n == 279 || n == 281 || n == 281) {
+			return 101; //e
+		} else if (n == 285 || n == 287 || n == 289 || n == 291) {
+			return 103; //g
+		} else if (n == 284 || n == 286 || n == 288 || n == 290) {
+			return 71; //G
+		} else if (n == 292) {
+			return 72; //H
+		} else if (n >= 293 && n <= 295) {
+			return 104; //h
+		} else if (n>= 296 && n<= 299) {
+			return 73; //I
+		} else {
+			return 63; //?
 		}
-		return n;
+
 	}
 
 
