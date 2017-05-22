@@ -14,6 +14,15 @@ public class test {
 
 	public static void main(String[] args) {
 		
+		String a = "Josip Ilicic";
+		System.out.println(simplify.simplifyName(a));
+		
+
+
+	}
+	
+	public static void createFile() {
+		
 		HashMap<String, Integer> myLastNames = new HashMap<String, Integer>();
 		///set run configuration to output this file where needed - equivalent of doing redirect for output
 		try {
@@ -108,8 +117,7 @@ public class test {
 			e.printStackTrace();
 		}
 		
-
-
+		
 	}
 
 }
