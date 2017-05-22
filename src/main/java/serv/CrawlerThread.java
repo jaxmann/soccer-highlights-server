@@ -255,6 +255,7 @@ public class CrawlerThread implements Runnable {
 				// The factory instance is re-usable and thread safe.
 				Twitter twitter = TwitterFactory.getSingleton();
 				Status status = null;
+				postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2");
 				try {
 					String stat = postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
 					if (stat.length() < 140) {
