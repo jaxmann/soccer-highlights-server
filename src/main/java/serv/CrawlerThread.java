@@ -19,6 +19,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import fileReadTest.simplify;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -60,7 +62,7 @@ public class CrawlerThread implements Runnable {
 			redditURL = "http://www.reddit.com/r/soccer/new";
 			logger.info("Running in the live environment...");
 		}
-		
+
 		//declare variables outside so they are not re-declared and use more memory each time
 		Document document = null;
 		Elements links = null;
@@ -156,7 +158,7 @@ public class CrawlerThread implements Runnable {
 			for (String player : s) {
 
 				// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
-				String reg = "((^|\\s)" + player + "('|\\s|$))|((^|\\s)" + simplify.simplifyName(player) + "('|\\s|$))";
+				String reg = "((^|\\s|\\()" + player + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(player) + "(\\)|'|\\s|$))";
 				Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(postDescription);
 
@@ -236,7 +238,6 @@ public class CrawlerThread implements Runnable {
 				maxPoints = value;
 			}
 		}
-
 		return maxPlayer;
 	}
 
