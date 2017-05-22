@@ -15,20 +15,20 @@ public class test {
 
 	public static void main(String[] args) {
 		
-		String a = "Josip Iličić";
-		System.out.println(simplify.simplifyName(a));
-		byte ptext[] = a.getBytes(ISO_8859_1);
-		String newline = new String(ptext, UTF_8);
+//		String a = "Josip Iličić";
+//		System.out.println(simplify.simplifyName(a));
+//		byte ptext[] = a.getBytes(ISO_8859_1);
+//		String newline = new String(ptext, UTF_8);
+//		
+//		for (int i=0; i<a.length(); i++) {
+//			if ((int)a.charAt(i) > 127) {
+//				System.out.println((int)a.charAt(i) + " is [" + a.charAt(i) + "]");
+//			}
+//		}
 		
-		for (int i=0; i<a.length(); i++) {
-			if ((int)a.charAt(i) > 127) {
-				System.out.println((int)a.charAt(i) + " is [" + a.charAt(i) + "]");
-			}
-		}
-		
-		/*for (int i=0; i<300;i++) {
+		for (int i=0; i<300;i++) {
 			System.out.println((char)i + " | " + i);
-		*/
+		}
 		
 		
 
