@@ -26,9 +26,17 @@ public class test {
 //			}
 //		}
 		
-		for (int i=0; i<300;i++) {
-			System.out.println((char)i + " | " + i);
+//		for (int i=0; i<300;i++) {
+//			System.out.println((char)i + " | " + i);
+//		}
+		
+		String postDescription = "M Reus asdfasdfasdf";
+		
+		if (postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') {
+			postDescription = postDescription.substring(2);
 		}
+		
+		System.out.println(postDescription);
 		
 		
 

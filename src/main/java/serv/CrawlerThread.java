@@ -257,7 +257,7 @@ public class CrawlerThread implements Runnable {
 				Status status = null;
 				postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2"); //M. Reus -> M Reus
 				if (postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') {
-					postDescription = postDescription.substring(2);
+					postDescription = postDescription.substring(2); //M Reus - > Reus
 				}
 				try {
 					String stat = postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");

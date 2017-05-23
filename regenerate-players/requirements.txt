@@ -1,0 +1,14 @@
+httplib2
+apiclient
+errors
+base64
+sys
+os
+re
+StringIO
+email
+mimetypes
+csv
+sys #maybe used in the future
+requests
+time
