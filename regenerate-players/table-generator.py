@@ -17,9 +17,10 @@ import sys #maybe used in the future
 import time
 
 
-g2=open("2.csv","w")
+g2=open("fullTable.csv","w")
 w2=csv.writer(g2, lineterminator='\n')
-w2.writerow(('League','Team', 'Player'))
+g3=open("synsTable.csv","w")
+w3=csv.writer(g3, lineterminator='\n')
 
 headers = {'X-Auth-Token': 'd801fd51be9f4b74bfbb868c65b44043'}
 
@@ -33,16 +34,24 @@ except URLError, e:
 
 allReadResponse = allResponse.read()
 
+obj = {}
+obj['league'] = []
 
 for league in json.loads(allReadResponse):
     leagueCaption = league['caption'] #"Premier League 16/17'
+
+    leagueCaption = re.sub('[0-9]+/[0-9|\s]+', '', leagueCaption.rstrip())
+
+    leagueCaption = leagueCaption.replace("Primera Division", "La Liga").replace("Liga Adelante", "Segunda Division")
+
     leagueLink = league['_links']['teams']['href']
 
     print("league link is " + leagueLink)
 
     id = league['id']
 
-    if (id == 426 or id == 427 or id == 430 or id == 433 or id == 434 or (id >=436 and id <=439)):
+
+    if (id == 426 or id == 427 or id == 430 or id == 431 or id == 433 or id == 434 or (id >=436 and id <=439) or id == 441):
 
         leagueRequest = Request(leagueLink, headers = headers)
 
@@ -52,6 +61,11 @@ for league in json.loads(allReadResponse):
             print('Failed to connect to a team', e)
 
         leagueReadResponse = leagueResponse.read()
+
+        leagueJSON = {}
+        leagueJSON[leagueCaption] = []
+        obj['league'].append(leagueJSON) # populate this object before appending it
+
 
         print("sleeping")
         time.sleep(60) #api limit is 50 calls/min - each league has roughly 30 teams so do 1 per min (too many for 2/min)
@@ -68,18 +82,63 @@ for league in json.loads(allReadResponse):
                 teamResponse = urlopen(teamRequest)
             except URLError, e:
                 print('Failed to connect to a team', e)
+                time.sleep(10)
+                try:
+                    teamResponse = urlopen(teamRequest)
+                except URLError, e:
+                    print('Failed to connect to a team twice', e)
+
 
             teamReadResponse = teamResponse.read()
+
+            teamJSON = {}
+            teamJSON[teamName] = []
+            obj['league'][len(obj['league'])-1][leagueCaption].append(teamJSON)
+
 
             if 'players' in json.loads(teamReadResponse):
                 for player in json.loads(teamReadResponse)['players']:
 
                     playerName = player['name'].encode("utf-8")
 
+                    obj['league'][len(obj['league'])-1][leagueCaption][len(obj['league'][len(obj['league'])-1][leagueCaption])-1][teamName].append(playerName)
+
+for league in obj['league']:
+    for leagueNameKey, teamNameValue in league.items():
+        teamNameValue.sort()
+        for team in teamNameValue:
+            for teamNameArr, playerNameArr in team.items():
+                #print(teamNameArr)
+                playerNameArr.sort()
+                for player in playerNameArr:
+
+                    #player = player.encode("utf-8")
+                    #print(player)
                     w2.writerow((
-                        leagueCaption,
-                        teamName,
-                        playerName
+                        ' ' + leagueNameKey.strip(),
+                        ' ' + teamNameArr,
+                        ' ' + player
                     ))
+
+                    nameArr = player.split(" ")
+                    if (len(nameArr) == 2):
+                        firstSpaceLast = nameArr[0][0] + " " + nameArr[1]
+                        firstDotLast = nameArr[0][0] + ". " + nameArr[1]
+                        firstLastDot = nameArr[0] + " " + nameArr[1][0] + "."
+                        last = nameArr[1]
+                    else:
+                        firstSpaceLast = player
+                        firstDotLast = player
+                        firstLastDot = player
+                        last = " ".join(nameArr[1:]) #de Bruyne from multi-part name
+
+                    w3.writerow((
+                        player,
+                        firstSpaceLast,
+                        firstDotLast,
+                        firstLastDot,
+                        last
+                    ))
+
 
 
