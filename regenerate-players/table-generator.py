@@ -54,7 +54,7 @@ for league in json.loads(allReadResponse):
     id = league['id']
 
 
-    if (id == 426 or id == 427 or id == 430 or id == 431 or id == 433 or id == 434 or (id >=436 and id <=439) or id == 441):
+    if (id == 426): # or id == 427 or id == 430 or id == 431 or id == 433 or id == 434 or (id >=436 and id <=439) or id == 441):
 
         leagueRequest = Request(leagueLink, headers = headers)
 
@@ -104,11 +104,13 @@ for league in json.loads(allReadResponse):
 
                     playerName = player['name'].encode("utf-8")
 
-                    countryName = ""
-                    if 'nationality' in json.loads(teamReadResponse):
+                    countryName = ''
+                    if 'nationality' in player:
                         countryName = player['nationality']
 
-                    playerName = playerName + ", " + countryName
+                    playerName = playerName + ', ' + countryName
+
+                    print(playerName)
 
                     obj['league'][len(obj['league'])-1][leagueCaption][len(obj['league'][len(obj['league'])-1][leagueCaption])-1][teamName].append(playerName)
 
