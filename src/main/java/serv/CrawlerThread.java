@@ -144,6 +144,7 @@ public class CrawlerThread implements Runnable {
 	}
 
 	public static String findKeyword(String postDescription) {
+		//could do postDescription = simplify.simplifyName(postDescription) here
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 		HashMap<String, Integer> maybes = new HashMap<String, Integer>();
 
