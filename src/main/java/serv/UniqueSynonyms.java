@@ -51,8 +51,8 @@ public class UniqueSynonyms {
 						String last = n1;
 						System.out.println(fullName + "," + firstSpaceLast + "," + firstDotLast + "," + firstLastDot + "," + last);
 					} else if (name.split(" ").length == 1) {
-						byte p2[] = name.split(" ")[0].getBytes("Windows-1252");
-						String n2 = new String(p2, UTF_8);
+//						byte p2[] = name.split(" ")[0].getBytes("Windows-1252");
+//						String n2 = new String(p2, UTF_8);
 						System.out.println(fullName);
 					} else if (name.split(" ").length == 3) {
 						byte p3[] = name.split(" ")[0].getBytes("Windows-1252");
@@ -70,6 +70,8 @@ public class UniqueSynonyms {
 					}
 				}
 			}
+			
+			reader.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
