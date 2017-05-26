@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
 from __future__ import print_function
 import csv
 from random import randint
@@ -120,25 +123,28 @@ for league in obj['league']:
                         ' ' + player
                     ))
 
-                    nameArr = player.split(" ")
-                    if (len(nameArr) == 2):
-                        firstSpaceLast = nameArr[0][0] + " " + nameArr[1]
-                        firstDotLast = nameArr[0][0] + ". " + nameArr[1]
-                        firstLastDot = nameArr[0] + " " + nameArr[1][0] + "."
-                        last = nameArr[1]
-                    else:
-                        firstSpaceLast = player
-                        firstDotLast = player
-                        firstLastDot = player
-                        last = " ".join(nameArr[1:]) #de Bruyne from multi-part name
+                    # nameArr = player.split(" ")
+                    # if (len(nameArr) == 2):
+                    #     firstSpaceLast = nameArr[0][0] + " " + nameArr[1]
+                    #     firstDotLast = nameArr[0][0] + ". " + nameArr[1]
+                    #     firstLastDot = nameArr[0] + " " + nameArr[1][0] + "."
+                    #     last = nameArr[1]
+                    # else:
+                    #     firstSpaceLast = player
+                    #     firstDotLast = player
+                    #     firstLastDot = player
+                    #     last = " ".join(nameArr[1:]) #de Bruyne from multi-part name
 
-                    w3.writerow((
-                        player,
-                        firstSpaceLast,
-                        firstDotLast,
-                        firstLastDot,
-                        last
-                    ))
+
+                    # print(firstSpaceLast) # + "," + firstDotLast + "," + firstLastDot + "," + last "\n")
+
+                    # w3.writerow((
+                    #     player,
+                    #     firstSpaceLast,
+                    #     firstDotLast,
+                    #     firstLastDot,
+                    #     last
+                    # ))
 
 
 
