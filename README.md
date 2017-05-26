@@ -28,3 +28,6 @@ To run, just run main.java. Settings are configured through pmr-web and http req
  - Logs are output daily into /logs. 
  - delete-timeq.jar needs to be run every 60 seconds on a cronjob.
  - db is Sqlite3
+
+
+ To regenerate player tables (after a transfer window, for instance), run the python script inside regenerate-tables and then run the UniqueSynonyms java program inside src and redirect the output to synsTable inside regenerate-players), then reload the db files using the skeletons
