@@ -51,15 +51,15 @@ public class UniqueSynonyms {
 						String last = n1;
 						System.out.println(fullName + "," + firstSpaceLast + "," + firstDotLast + "," + firstLastDot + "," + last);
 					} else if (name.split(" ").length == 1) {
-						byte p2[] = name.split(" ")[0].getBytes(ISO_8859_1);
+						byte p2[] = name.split(" ")[0].getBytes("Windows-1252");
 						String n2 = new String(p2, UTF_8);
 						System.out.println(fullName);
 					} else if (name.split(" ").length == 3) {
-						byte p3[] = name.split(" ")[0].getBytes(ISO_8859_1);
+						byte p3[] = name.split(" ")[0].getBytes("Windows-1252");
 						String n3 = new String(p3, UTF_8);
-						byte p4[] = name.split(" ")[1].getBytes(ISO_8859_1);
+						byte p4[] = name.split(" ")[1].getBytes("Windows-1252");
 						String n4 = new String(p4, UTF_8);
-						byte p5[] = name.split(" ")[2].getBytes(ISO_8859_1);
+						byte p5[] = name.split(" ")[2].getBytes("Windows-1252");
 						String n5 = new String(p5, UTF_8);
 						String firstSpaceLast = n3.substring(0,1) + " " + n4 + " " + n5;
 						String firstDotLast = n3.substring(0,1) + ". " + n4 + " " +n5;
