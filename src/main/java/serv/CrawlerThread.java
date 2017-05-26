@@ -452,7 +452,7 @@ public class CrawlerThread implements Runnable {
 		logger.info("Loading player HashSet...");
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("output.csv")); //backup version of this is "list-of-players2.csv"
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//synsTable.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
 
 			while ((line = reader.readLine()) != null) {
@@ -464,7 +464,7 @@ public class CrawlerThread implements Runnable {
 			reader.close();
 
 		} catch (Exception e) {
-			logger.error("Error trying to read output.csv");
+			logger.error("Error trying to read regenerate-players/synsTable.csv");
 			e.printStackTrace();
 		}
 		return playerMatches;
