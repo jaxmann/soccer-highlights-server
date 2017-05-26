@@ -22,8 +22,8 @@ import time
 
 g2=open("fullTable.csv","w")
 w2=csv.writer(g2, lineterminator='\n')
-g3=open("synsTable.csv","w")
-w3=csv.writer(g3, lineterminator='\n')
+# g3=open("synsTable.csv","w")
+# w3=csv.writer(g3, lineterminator='\n')
 
 headers = {'X-Auth-Token': 'd801fd51be9f4b74bfbb868c65b44043'}
 
@@ -103,6 +103,12 @@ for league in json.loads(allReadResponse):
                 for player in json.loads(teamReadResponse)['players']:
 
                     playerName = player['name'].encode("utf-8")
+
+                    countryName = ""
+                    if 'nationality' in json.loads(teamReadResponse):
+                        countryName = player['nationality']
+
+                    playerName = playerName + ", " + countryName
 
                     obj['league'][len(obj['league'])-1][leagueCaption][len(obj['league'][len(obj['league'])-1][leagueCaption])-1][teamName].append(playerName)
 
