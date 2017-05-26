@@ -426,7 +426,7 @@ public class CrawlerThread implements Runnable {
 		HashMap<String, String> playerTeams = new HashMap<String, String>();
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("playerTeams.csv")); 
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
 			String line;
 			logger.info("Loading playerTeam HashMap...");
 
@@ -441,7 +441,7 @@ public class CrawlerThread implements Runnable {
 			reader.close();
 
 		} catch (Exception e) {
-			logger.error("Error trying to read playerTeams.csv file");
+			logger.error("Error trying to read regenerate-players//fullTable.csv file");
 		}
 		return playerTeams;
 	}
