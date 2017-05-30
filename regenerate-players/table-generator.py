@@ -18,6 +18,7 @@ import csv
 import sys #maybe used in the future
 #import requests
 import time
+from operator import itemgetter
 
 
 g2=open("fullTable.csv","w")
@@ -108,11 +109,11 @@ for league in json.loads(allReadResponse):
                     if 'nationality' in player:
                         countryName = player['nationality']
 
-                    playerName = playerName + ', ' + countryName
+                    playerNameTup = (playerName, countryName)
 
                     print(playerName)
 
-                    obj['league'][len(obj['league'])-1][leagueCaption][len(obj['league'][len(obj['league'])-1][leagueCaption])-1][teamName].append(playerName)
+                    obj['league'][len(obj['league'])-1][leagueCaption][len(obj['league'][len(obj['league'])-1][leagueCaption])-1][teamName].append(playerNameTup)
 
 for league in obj['league']:
     for leagueNameKey, teamNameValue in league.items():
@@ -120,7 +121,10 @@ for league in obj['league']:
         for team in teamNameValue:
             for teamNameArr, playerNameArr in team.items():
                 #print(teamNameArr)
-                playerNameArr.sort()
+                print(playerNameArr[5])
+                playerNameArr = sorted(playerNameArr, key=lambda x: x[0])
+                print(playerNameArr[5])
+                #playerNameArr[0].sort()
                 for player in playerNameArr:
 
                     #player = player.encode("utf-8")
@@ -128,7 +132,8 @@ for league in obj['league']:
                     w2.writerow((
                         ' ' + leagueNameKey.strip(),
                         ' ' + teamNameArr,
-                        ' ' + player
+                        ' ' + player[0],
+                        ' ' + player[1]
                     ))
 
                     # nameArr = player.split(" ")
