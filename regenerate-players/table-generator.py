@@ -107,11 +107,11 @@ for league in json.loads(allReadResponse):
 
                     countryName = ''
                     if 'nationality' in player:
-                        countryName = player['nationality']
+                        countryName = player['nationality'].replace(' Korea, South','South Korea')
 
                     playerNameTup = (playerName, countryName)
 
-                    print(playerName)
+                    #print(playerName)
 
                     obj['league'][len(obj['league'])-1][leagueCaption][len(obj['league'][len(obj['league'])-1][leagueCaption])-1][teamName].append(playerNameTup)
 
@@ -121,9 +121,7 @@ for league in obj['league']:
         for team in teamNameValue:
             for teamNameArr, playerNameArr in team.items():
                 #print(teamNameArr)
-                print(playerNameArr[5])
                 playerNameArr = sorted(playerNameArr, key=lambda x: x[0])
-                print(playerNameArr[5])
                 #playerNameArr[0].sort()
                 for player in playerNameArr:
 
