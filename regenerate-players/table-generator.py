@@ -50,12 +50,14 @@ for league in json.loads(allReadResponse):
 
     leagueLink = league['_links']['teams']['href']
 
-    print("league link is " + leagueLink)
+    
 
     id = league['id']
 
 
-    if (id == 426): # or id == 427 or id == 430 or id == 431 or id == 433 or id == 434 or (id >=436 and id <=439) or id == 441):
+    if (id == 426 or id == 427 or id == 430 or id == 431 or id == 433 or id == 434 or id ==436 or id==437 or id == 438 or id ==439 or id == 441):
+
+        print("league link is " + leagueLink)
 
         leagueRequest = Request(leagueLink, headers = headers)
 
@@ -63,6 +65,12 @@ for league in json.loads(allReadResponse):
             leagueResponse = urlopen(leagueRequest)
         except URLError, e:
             print('Failed to connect to a team', e)
+            time.sleep(10)
+            try:
+                leagueResponse = urlopen(leagueRequest)
+                print("succeeded on second attempt")
+            except URLError, e:
+                print('Failed to connect to a team', e)
 
         leagueReadResponse = leagueResponse.read()
 
@@ -89,6 +97,7 @@ for league in json.loads(allReadResponse):
                 time.sleep(10)
                 try:
                     teamResponse = urlopen(teamRequest)
+                    print("succeeded on second attempt")
                 except URLError, e:
                     print('Failed to connect to a team twice', e)
 
@@ -105,13 +114,18 @@ for league in json.loads(allReadResponse):
 
                     playerName = player['name'].encode("utf-8")
 
-                    countryName = ''
+                    countryName = 'NA'
                     if 'nationality' in player:
-                        countryName = player['nationality'].replace(' Korea, South','South Korea')
+                        countryName = player['nationality'].replace('Korea, South','South Korea')
+
+                    for x in countryName:
+                        if (ord(x) > 128):
+                            countryName = 'NA'
+                            break;
 
                     playerNameTup = (playerName, countryName)
+                    
 
-                    #print(playerName)
 
                     obj['league'][len(obj['league'])-1][leagueCaption][len(obj['league'][len(obj['league'])-1][leagueCaption])-1][teamName].append(playerNameTup)
 
@@ -127,12 +141,18 @@ for league in obj['league']:
 
                     #player = player.encode("utf-8")
                     #print(player)
-                    w2.writerow((
-                        ' ' + leagueNameKey.strip(),
-                        ' ' + teamNameArr,
-                        ' ' + player[0],
-                        ' ' + player[1]
-                    ))
+                    try:
+                        w2.writerow((
+                            ' ' + leagueNameKey.strip(),
+                            ' ' + teamNameArr,
+                            ' ' + player[0],
+                            ' ' + player[1]
+                        ))
+                    except:
+                        print("error----")
+                        print(player[0])
+                        print(player[1])
+                        print("----error")
 
                     # nameArr = player.split(" ")
                     # if (len(nameArr) == 2):
