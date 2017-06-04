@@ -15,67 +15,59 @@ import org.jsoup.select.Elements;
 public class MLSCrawler {
 
 	public static void main(String[] args) {
-		start();
+		
+		String[] tms = {"Atlanta_United_FC","Chicago_Fire_Soccer_Club","Columbus_Crew_SC","D.C._United", "Montreal_Impact","New_England_Revolution",
+				"New_York_City_FC","New_York_Red_Bulls","Orlando_City_SC","Philadelphia_Union","Toronto_FC",
+				"Colorado_Rapids","FC_Dallas","Houston_Dynamo","LA_Galaxy","Minnesota_United_FC","Portland_Timbers",
+				"Real_Salt_Lake","San_Jose_Earthquakes","Seattle_Sounders_FC","Sporting_Kansas_City","Vancouver_Whitecaps_FC"
+		};
+		
+		for (String s : tms) {
+			start(s);
+		}
+		
+		//start("New_York_City_FC");
 
 	}
 	
-	public static void start() {
+	public static void start(String team) {
+				
+		String mlsURL = "https://en.wikipedia.org/wiki/" + team;
 		
-		String mlsURL = "https://en.wikipedia.org/wiki/Major_League_Soccer";
+		HashSet<MLSPlayer> mlsPlayers = new HashSet<MLSPlayer>();
 		
 		try {
 			Document document = Jsoup.connect(mlsURL).followRedirects(true).get(); 
-			Elements conferences = document.select("tr > td > a[title]:matches(United|Chicago|SC|Impact|Revolution|FC|Red Bulls|Union|Rapids|Dynamo|Galaxy|Portland|Real Salt|San Jose|Sounders|Kansas City|Vancouver)"); 
+			Elements players = document.select("tr[class~=vcard agent]"); //> a[title]:matches(United|Chicago|SC|Impact|Revolution|FC|Red Bulls|Union|Rapids|Dynamo|Galaxy|Portland|Real Salt|San Jose|Sounders|Kansas City|Vancouver)"); 
 			
-			HashSet<String> hs = new HashSet<String>();
 			
-			for (Element e : conferences) {
-				hs.add(e.toString());
-			}
-			
-			for (String s : hs) {
-				System.out.println(s);
-			}
-
-
-			/*for (i=links.size() - 1; i>=0; i--) { //doesn't allocate any new memory 
-				link = links.get(i);
-				inputTime = link.select("p.tagline").select("time").attr("title");
-				try {
-					dateReddit = formatter.parse(inputTime);
-					if (mostRecentPostTime.compareTo(dateReddit) < 0) {
-						m = p.matcher(link.select("p.title").select("a.title").text());
-						if (m.find()) { 
-							time = link.select("p.tagline").select("time").attr("title");
-							title = link.select("p.title").select("a.title").text();
-							url = link.select("p.title").select("a.title").attr("href");
-
-							mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
-
-							if (url.contains(".mp4") || url.contains("streamable")) { //only trigger if it's a video link
-
-								logger.info("New post found: [" + title + "] at [" + time + "]");
-
-								keyword = parseKeywords(title, url); //identify player keywords within play description
-								logger.info("Keyword is: [" + keyword + "]");
-								subbedUsers = findSubscribedUsers(keyword);
-								logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
-								if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
-									sendEmail(url, keyword, subbedUsers); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
-								}
-
-							} else {
-								logger.info("Non-video post found: [" + title + "] at [" + time + "]");
-							}
-						}
+			for (Element thisTd : players) {
+				Elements tds = thisTd.select("td");
+				String playerName = null;
+				String playerCountry = null;
+				String playerTeam = null;
+				for (Element td : tds) {
+					if (td.select("td > span > span > span > a").attr("title").length() > 1) {
+						playerName = td.select("td > span > span.vcard > span > a").attr("title").replaceAll("\\(.*\\)", "").trim();
+					} else if (td.select("td > span > a").attr("title").length() > 1) {
+						playerName = td.select("td > span > a").attr("title").replaceAll("\\(.*\\)", "").trim();
 					}
-				} catch (ParseException e1) {
-					logger.error(e1.toString());
-				}	
-			}*/
+					if (!td.select("td[style~=text-align] > a").attr("href").contains("association")) {
+						playerCountry = td.select("td[style~=text-align] > a").text();
+					} 
+					playerTeam = team.replaceAll("_", " ");
+				}
+				MLSPlayer newPlayer = new MLSPlayer(playerName, playerTeam, playerCountry);
+				mlsPlayers.add(newPlayer);			
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		for (MLSPlayer p : mlsPlayers) {
+			System.out.println(" Major League Soccer (MLS), " + p.getTeam() + ", " + p.getName() + ", " + p.getCountry());
+		}
+		
 	}
 
 }
