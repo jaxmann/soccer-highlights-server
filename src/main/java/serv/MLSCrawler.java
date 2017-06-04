@@ -26,7 +26,7 @@ public class MLSCrawler {
 			start(s);
 		}
 		
-		//start("New_York_City_FC");
+		//start("Orlando_City_SC");
 
 	}
 	
@@ -54,10 +54,12 @@ public class MLSCrawler {
 					}
 					if (!td.select("td[style~=text-align] > a").attr("href").contains("association")) {
 						playerCountry = td.select("td[style~=text-align] > a").text();
-					} 
-					playerTeam = team.replaceAll("_", " ");
+					}
+					
+					playerTeam = team.replaceAll("_", " ").replaceAll("\\.", "");
 				}
-				MLSPlayer newPlayer = new MLSPlayer(playerName, playerTeam, playerCountry);
+				MLSPlayer newPlayer = new MLSPlayer(playerName.replaceAll(",", ""), playerTeam, playerCountry);
+				
 				mlsPlayers.add(newPlayer);			
 			}
 		} catch (IOException e) {
@@ -65,8 +67,9 @@ public class MLSCrawler {
 		}
 		
 		for (MLSPlayer p : mlsPlayers) {
-			System.out.println(" Major League Soccer (MLS), " + p.getTeam() + ", " + p.getName() + ", " + p.getCountry());
+			System.out.println(" Major League Soccer, " + p.getTeam() + ", " + p.getName() + ", " + p.getCountry());
 		}
+		
 		
 	}
 

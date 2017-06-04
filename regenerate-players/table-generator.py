@@ -138,44 +138,46 @@ for league in obj['league']:
                 playerNameArr = sorted(playerNameArr, key=lambda x: x[0])
                 #playerNameArr[0].sort()
                 for player in playerNameArr:
+                
+                	if 'Uro' not in player[0] and 'Belenenses' not in teamNameArr:
 
-                    #player = player.encode("utf-8")
-                    #print(player)
-                    try:
-                        w2.writerow((
-                            ' ' + leagueNameKey.strip(),
-                            ' ' + teamNameArr,
-                            ' ' + player[0],
-                            ' ' + player[1]
-                        ))
-                    except:
-                        print("error----")
-                        print(player[0])
-                        print(player[1])
-                        print("----error")
-
-                    # nameArr = player.split(" ")
-                    # if (len(nameArr) == 2):
-                    #     firstSpaceLast = nameArr[0][0] + " " + nameArr[1]
-                    #     firstDotLast = nameArr[0][0] + ". " + nameArr[1]
-                    #     firstLastDot = nameArr[0] + " " + nameArr[1][0] + "."
-                    #     last = nameArr[1]
-                    # else:
-                    #     firstSpaceLast = player
-                    #     firstDotLast = player
-                    #     firstLastDot = player
-                    #     last = " ".join(nameArr[1:]) #de Bruyne from multi-part name
-
-
-                    # print(firstSpaceLast) # + "," + firstDotLast + "," + firstLastDot + "," + last "\n")
-
-                    # w3.writerow((
-                    #     player,
-                    #     firstSpaceLast,
-                    #     firstDotLast,
-                    #     firstLastDot,
-                    #     last
-                    # ))
+	                    #player = player.encode("utf-8")
+	                    #print(player)
+	                    try:
+	                        w2.writerow((
+	                            ' ' + leagueNameKey.strip(),
+	                            ' ' + teamNameArr,
+	                            ' ' + player[0],
+	                            ' ' + player[1]
+	                        ))
+	                    except:
+	                        print("error----")
+	                        print(player[0])
+	                        print(player[1])
+	                        print("----error")
+	
+	                    # nameArr = player.split(" ")
+	                    # if (len(nameArr) == 2):
+	                    #     firstSpaceLast = nameArr[0][0] + " " + nameArr[1]
+	                    #     firstDotLast = nameArr[0][0] + ". " + nameArr[1]
+	                    #     firstLastDot = nameArr[0] + " " + nameArr[1][0] + "."
+	                    #     last = nameArr[1]
+	                    # else:
+	                    #     firstSpaceLast = player
+	                    #     firstDotLast = player
+	                    #     firstLastDot = player
+	                    #     last = " ".join(nameArr[1:]) #de Bruyne from multi-part name
+	
+	
+	                    # print(firstSpaceLast) # + "," + firstDotLast + "," + firstLastDot + "," + last "\n")
+	
+	                    # w3.writerow((
+	                    #     player,
+	                    #     firstSpaceLast,
+	                    #     firstDotLast,
+	                    #     firstLastDot,
+	                    #     last
+	                    # ))
 
 
 
