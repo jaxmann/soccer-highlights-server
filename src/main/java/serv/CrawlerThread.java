@@ -41,6 +41,7 @@ public class CrawlerThread implements Runnable {
 	private static GmailService service;
 	private static String redditenv;
 	public static HashMap<String, String> playerTeams;
+	public static HashMap<String, String> playerCountry;
 	public static HashSet<String> playerMatches;
 
 	public CrawlerThread(String env) {
@@ -84,6 +85,7 @@ public class CrawlerThread implements Runnable {
 		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[0-9]"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
 
 		playerTeams = populatePlayerTeams(); //list of players with team names associated
+		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
 
 		while (true) { //run forever unless stopped
@@ -216,7 +218,7 @@ public class CrawlerThread implements Runnable {
 			Integer value = entry.getValue();
 
 			String tm = playerTeams.get(key.trim()); //'Manchester City'
-			String[] tmSplit = tm.split(" "); //if not "FC" etc
+			String[] tmSplit = tm.split(" ");
 			for (int i=0; i<tmSplit.length; i++) {
 				if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
 					maybes.put(key, value + 50); //if entire team is contained in snippet
@@ -224,6 +226,17 @@ public class CrawlerThread implements Runnable {
 				} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
 					maybes.put(key, value + 15); //add 15 points for each part of a team that is contained
 				}
+			}
+		}
+		//////////////////////////////////////////////////////
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			String tm = playerCountry.get(key.trim()); //'Germany'
+			if (postDescription.contains(tm)) {
+				maybes.put(key, value + 50); 
+				logger.info("Country treated as [" + tm + "] for player [" + key + "]");
 			}
 		}
 		//////////////////////////////////////////////////////
@@ -452,6 +465,33 @@ public class CrawlerThread implements Runnable {
 		}
 		return playerTeams;
 	}
+	
+	
+	public static HashMap<String, String> populatePlayerCountry() {
+		
+		HashMap<String, String> playerCountry = new HashMap<String, String>();
+
+		try {
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
+			String line;
+			logger.info("Loading playerCountry HashMap...");
+
+
+			while ((line = reader.readLine()) != null) {
+
+				String[] s = line.split(",");
+				playerCountry.put(s[2].trim(), s[3].trim());
+
+			}
+			logger.info("playerCountry HashMap loaded.");
+
+			reader.close();
+
+		} catch (Exception e) {
+			logger.error("Error trying to read regenerate-players//fullTable.csv file");
+		}
+		return playerCountry;
+	}	
 
 	public static HashSet<String> loadPlayers() {
 
