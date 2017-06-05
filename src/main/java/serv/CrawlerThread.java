@@ -125,8 +125,10 @@ public class CrawlerThread implements Runnable {
 									logger.info("Keyword is: [" + keyword + "]");
 									subbedUsers = findSubscribedUsers(keyword, title);
 									logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
-									if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
+									if (subbedUsers.size() != 0 && !redditenv.equals("test")) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
 										sendEmail(url, keyword, subbedUsers, title); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
+									} else if (redditenv.equals("test")) {
+										addToTimeq(keyword, title, "thiswill@never.happen");
 									}
 
 								} else {
@@ -385,52 +387,61 @@ public class CrawlerThread implements Runnable {
 				logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
 
 			}
+			
+			addToTimeq(keyword, postDescription, em);
+
+			
+		}
+	}
+	
+	public static void addToTimeq(String keyword, String postDescription, String em) {
+		
+		try {
+
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
 
 			try {
-
-				Connection connection = null;
-				PreparedStatement preparedStatement = null;
-
-				try {
-					String url = "jdbc:sqlite:../server/db/timeq.db";
-					connection = DriverManager.getConnection(url);
-					long currentTime = System.nanoTime();
-					keyword = keyword.replace("'", "''");
-					
-					Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
-					Matcher m = p.matcher(postDescription);
-					String score = "0-0";
-					
-					if (m.find()) { 
-						score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
-					}
-					
-					String sql = "INSERT INTO Timeq(Email, Player, Timestamp, Score)"
-							+ " VALUES(?,?,?,?)";
-					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setString(1, em);
-					preparedStatement.setString(2, keyword);
-					preparedStatement.setLong(3, currentTime);
-					preparedStatement.setString(4, score);
-					preparedStatement.executeUpdate(); 
-					logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
-
-				} catch (SQLException e) {
-					logger.error(e.toString());
-				} finally {
-					try {
-						if (connection != null) {
-							preparedStatement.close();
-							connection.close();
-						}
-					} catch (SQLException ex) {
-						logger.error(ex.toString());
-					}
+				String url = "jdbc:sqlite:../server/db/timeq.db";
+				connection = DriverManager.getConnection(url);
+				long currentTime = System.nanoTime();
+				keyword = keyword.replace("'", "''");
+				
+				Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
+				Matcher m = p.matcher(postDescription);
+				String score = "0-0";
+				
+				if (m.find()) { 
+					score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
 				}
-			} catch (Exception ex) {
-				logger.error(ex.toString());
+				
+				String sql = "INSERT INTO Timeq(Email, Player, Timestamp, Score)"
+						+ " VALUES(?,?,?,?)";
+				preparedStatement = connection.prepareStatement(sql);
+				preparedStatement.setString(1, em);
+				preparedStatement.setString(2, keyword);
+				preparedStatement.setLong(3, currentTime);
+				preparedStatement.setString(4, score);
+				preparedStatement.executeUpdate(); 
+				logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
+
+			} catch (SQLException e) {
+				logger.error(e.toString());
+			} finally {
+				try {
+					if (connection != null) {
+						preparedStatement.close();
+						connection.close();
+					}
+				} catch (SQLException ex) {
+					logger.error(ex.toString());
+				}
 			}
+		} catch (Exception ex) {
+			logger.error(ex.toString());
 		}
+		
+		
 	}
 
 	public static int getSleepTime() {
