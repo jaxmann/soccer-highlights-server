@@ -130,7 +130,7 @@ public class CrawlerThread implements Runnable {
 									}
 
 								} else {
-									logger.info("Non-video post found: [" + title + "] at [" + time + "]");
+									logger.info("Non-video post found: [" + title + "] at [" + time + "] link [" + url + "]");
 								}
 							}
 						}

@@ -17,6 +17,18 @@ public class main {
 
 	public static void main(String[] args) {
 		
+		String postDescription = "Juventus 1-3 Real Madrid (Ronaldo 63')";
+		
+		String player = "Ronaldo";
+		
+		String reg = "((^|\\s|\\()" + player + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(player) + "(\\)|'|\\s|$))";
+		Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(postDescription);
+
+		if (m.find()) {
+			System.out.println(postDescription.substring(m.start(), m.end()));
+		}
+		
 		
 		/*String player = "Mickaël Le Bihan";
 		
