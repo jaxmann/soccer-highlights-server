@@ -123,10 +123,10 @@ public class CrawlerThread implements Runnable {
 
 									keyword = parseKeywords(title, url); //identify player keywords within play description
 									logger.info("Keyword is: [" + keyword + "]");
-									subbedUsers = findSubscribedUsers(keyword);
+									subbedUsers = findSubscribedUsers(keyword, title);
 									logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
 									if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
-										sendEmail(url, keyword, subbedUsers); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
+										sendEmail(url, keyword, subbedUsers, title); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
 									}
 
 								} else {
@@ -286,7 +286,7 @@ public class CrawlerThread implements Runnable {
 		}
 	}
 
-	public static ArrayList<String> findSubscribedUsers(String keyword) { 
+	public static ArrayList<String> findSubscribedUsers(String keyword, String postDescription) { 
 
 		ArrayList<String> subscribedUsers = new ArrayList<String>();
 
@@ -313,16 +313,24 @@ public class CrawlerThread implements Runnable {
 				if(resultSet.next()) {
 
 					try {
+						
+						Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
+						Matcher m = p.matcher(postDescription);
+						String score = "0-0";
+						
+						if (m.find()) { 
+							score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
+						}
 
 						String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
 						tqConnection = DriverManager.getConnection(tqUrl);
-						String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "';";
+						String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "' and Score='" + score + "';";
 						logger.info("SQL time queue: " + sqlTQ);
 						tqStatement = tqConnection.createStatement();
 						tqResultSet = tqStatement.executeQuery(sqlTQ);
 						boolean tqFilled = tqResultSet.next();
 
-						logger.info("Already in TQ? (i.e. email already sent to this user/email in last 2 mins): [" + tqFilled + "]");
+						logger.info("Already in TQ? (i.e. email already sent to this user/email for this player+score today): [" + tqFilled + "]");
 
 						if (tqFilled == false) { //if no player exists, add to list and send email
 							subscribedUsers.add(resultSet.getString("Email"));
@@ -363,7 +371,7 @@ public class CrawlerThread implements Runnable {
 		return subscribedUsers;
 	}
 
-	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddresses) {
+	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddresses, String postDescription) {
 
 		for (String em : emailAddresses) {
 
@@ -388,12 +396,22 @@ public class CrawlerThread implements Runnable {
 					connection = DriverManager.getConnection(url);
 					long currentTime = System.nanoTime();
 					keyword = keyword.replace("'", "''");
-					String sql = "INSERT INTO Timeq(Email, Player, Timestamp)"
-							+ " VALUES(?,?,?)";
+					
+					Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
+					Matcher m = p.matcher(postDescription);
+					String score = "0-0";
+					
+					if (m.find()) { 
+						score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
+					}
+					
+					String sql = "INSERT INTO Timeq(Email, Player, Timestamp, Score)"
+							+ " VALUES(?,?,?,?)";
 					preparedStatement = connection.prepareStatement(sql);
 					preparedStatement.setString(1, em);
 					preparedStatement.setString(2, keyword);
 					preparedStatement.setLong(3, currentTime);
+					preparedStatement.setString(4, score);
 					preparedStatement.executeUpdate(); 
 					logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
 
