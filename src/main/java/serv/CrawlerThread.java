@@ -423,7 +423,7 @@ public class CrawlerThread implements Runnable {
 				preparedStatement.setLong(3, currentTime);
 				preparedStatement.setString(4, score);
 				preparedStatement.executeUpdate(); 
-				logger.info("TQ insertion: [" + em + "], [" + keyword + "], inserted at [" + currentTime + "]");
+				logger.info("TQ insertion: [" + em + "], [" + keyword + "],[" + score + "] inserted at [" + currentTime + "]");
 
 			} catch (SQLException e) {
 				logger.error(e.toString());

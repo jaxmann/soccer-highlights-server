@@ -10,140 +10,28 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class test {
 
 	public static void main(String[] args) {
 		
-//		String a = "Josip Iličić";
-//		System.out.println(simplify.simplifyName(a));
-//		byte ptext[] = a.getBytes(ISO_8859_1);
-//		String newline = new String(ptext, UTF_8);
-//		
-//		for (int i=0; i<a.length(); i++) {
-//			if ((int)a.charAt(i) > 127) {
-//				System.out.println((int)a.charAt(i) + " is [" + a.charAt(i) + "]");
-//			}
-//		}
+		String postDescription = "Juventus 1-[1] Real Madrid ( Mandzukic M. 27')";
 		
-//		for (int i=0; i<300;i++) {
-//			System.out.println((char)i + " | " + i);
-//		}
+		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
+	
+		Matcher m = p.matcher(postDescription);
 		
-		String postDescription = "M Reus asdfasdfasdf";
-		
-		if (postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') {
-			postDescription = postDescription.substring(2);
+		if (m.find()) { 
+			String score = postDescription.substring(m.start(), m.end());
+			System.out.println(score.replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", ""));
 		}
 		
-		System.out.println(postDescription);
 		
-		
-
-//		System.out.println(simplify.simplifyName(a));
-		
-
 
 	}
 	
-	public static void createFile() {
-		
-		HashMap<String, Integer> myLastNames = new HashMap<String, Integer>();
-		///set run configuration to output this file where needed - equivalent of doing redirect for output
-		try {
-			BufferedReader reader = new BufferedReader (new FileReader("list-of-players2.csv"));
-			String line;
-
-			while ((line = reader.readLine()) != null) {
-				byte ptext[] = line.getBytes(ISO_8859_1);
-				String newline = new String(ptext, UTF_8);
-				
-				String[] arr = newline.split(",");
-				//System.out.println(arr[0]);
-				String[] name = arr[0].split(" ");
-				if (name.length == 2) {
-					
-					if (myLastNames.containsKey(name[1])) {
-						myLastNames.put(name[1], myLastNames.get(name[1]) + 1);
-					} else {
-						myLastNames.put(name[1], 1);
-					}
-					
-				} else {
-					
-				}
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		///////////////////////////////////////////////////////////////////////////////////////////////
-		try {
-			BufferedReader reader2 = new BufferedReader (new FileReader("list-of-players2.csv")); 
-			String line;
-
-			while ((line = reader2.readLine()) != null) {
-				
-				byte ptext[] = line.getBytes(ISO_8859_1);
-				String newline = new String(ptext, UTF_8);
-				
-				String firstDotLast = "";
-				String firstLast = "";
-				String last = "";
-				
-				String[] arr = newline.split(",");
-				
-				String firstChunk = line;
-				
-				if (newline.indexOf(",,") > 0) {
-					firstChunk = newline.substring(0, line.indexOf(",,") + 1);
-				}
-				
-				
-				
-				String[] name = arr[0].split(" ");
-				if (name.length == 2) {
-					if (myLastNames.containsKey(name[1])) {
-						if (myLastNames.get(name[1]) == 1) {
-							firstDotLast = name[0].substring(0, 1) + ". " + name[1];
-							firstLast = name[0].substring(0, 1) + " " + name[1];
-							last = name[1];
-							String fullLine = firstChunk + firstDotLast + "," + firstLast + "," + last;
-							int commaCount = fullLine.length() - fullLine.replace(",", "").length();
-							for (int i=commaCount; i<=5; i++) {
-								fullLine += ",";
-							}
-							System.out.println(fullLine);
-						} else {
-							int commaCount = firstChunk.length() - firstChunk.replace(",", "").length();
-							for (int i=commaCount; i<=5; i++) {
-								firstChunk += ",";
-							}
-							System.out.println(firstChunk);
-						}
-					}
-					
-				} else {
-					int commaCount = firstChunk.length() - firstChunk.replace(",", "").length();
-					for (int i=commaCount; i<=5; i++) {
-						firstChunk += ",";
-					}
-					System.out.println(firstChunk);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
 
 }
 

@@ -17,7 +17,7 @@ public class main {
 
 	public static void main(String[] args) {
 		
-		String postDescription = "Juventus 1-3 Real Madrid (Ronaldo 63')";
+		/*String postDescription = "Juventus 1-3 Real Madrid (Ronaldo 63')";
 		
 		String player = "Ronaldo";
 		
@@ -27,7 +27,7 @@ public class main {
 
 		if (m.find()) {
 			System.out.println(postDescription.substring(m.start(), m.end()));
-		}
+		}*/
 		
 		
 		/*String player = "Mickaël Le Bihan";
