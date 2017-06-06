@@ -1,4 +1,4 @@
-package serv;
+package depr;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
