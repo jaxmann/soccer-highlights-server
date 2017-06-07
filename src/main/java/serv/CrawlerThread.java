@@ -1,5 +1,8 @@
 package serv;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -469,8 +472,7 @@ public class CrawlerThread implements Runnable {
 		
 		
 	}
-
-
+	
 	public static HashMap<String, String> populatePlayerTeams() {
 		HashMap<String, String> playerTeams = new HashMap<String, String>();
 
@@ -482,7 +484,13 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 
 				String[] s = line.split(",");
-				playerTeams.put(s[2].trim(), s[1].trim());
+				
+				byte pplayer[] = s[2].trim().getBytes(ISO_8859_1);
+				String newplayer = new String(pplayer, UTF_8);
+				byte pteam[] = s[1].trim().getBytes(ISO_8859_1);
+				String newteam = new String(pteam, UTF_8);
+				
+				playerTeams.put(newplayer, newteam);
 
 			}
 
@@ -509,7 +517,14 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 
 				String[] s = line.split(",");
-				playerCountry.put(s[2].trim(), s[3].trim());
+				
+				byte pplayer[] = s[2].trim().getBytes(ISO_8859_1);
+				String newplayer = new String(pplayer, UTF_8);
+				byte pteam[] = s[3].trim().getBytes(ISO_8859_1);
+				String newcountry = new String(pteam, UTF_8);
+				
+				playerTeams.put(newplayer, newcountry);
+				
 
 			}
 			logger.info("playerCountry HashMap loaded.");
@@ -532,7 +547,11 @@ public class CrawlerThread implements Runnable {
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-				playerMatches.add(line);
+				
+				byte pplayer[] = line.getBytes(ISO_8859_1);
+				String newplayer = new String(pplayer, UTF_8);
+				
+				playerMatches.add(newplayer);
 
 			}
 
@@ -545,4 +564,7 @@ public class CrawlerThread implements Runnable {
 		}
 		return playerMatches;
 	}
+
+
+	
 }
