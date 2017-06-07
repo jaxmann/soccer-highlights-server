@@ -221,15 +221,17 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-
-			String tm = playerTeams.get(key.trim()); //'Manchester City'
-			String[] tmSplit = tm.split(" ");
-			for (int i=0; i<tmSplit.length; i++) {
-				if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
-					maybes.put(key, value + 50); //if entire team is contained in snippet
-					logger.info("Team treated as [" + tm + "] for player [" + key + "]");
-				} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
-					maybes.put(key, value + 15); //add 15 points for each part of a team that is contained
+			
+			if (playerTeams.containsKey(key.trim())) {
+				String tm = playerTeams.get(key.trim()); //'Manchester City'
+				String[] tmSplit = tm.split(" ");
+				for (int i=0; i<tmSplit.length; i++) {
+					if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
+						maybes.put(key, value + 50); //if entire team is contained in snippet
+						System.out.println("Team treated as [" + tm + "] for player [" + key + "]");
+					} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
+						maybes.put(key, value + 15); //add 15 points for each part of a team that is contained
+					}
 				}
 			}
 		}
@@ -237,12 +239,15 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-
-			String tm = playerCountry.get(key.trim()); //'Germany'
-			if (postDescription.contains(tm)) {
-				maybes.put(key, value + 50); 
-				logger.info("Country treated as [" + tm + "] for player [" + key + "]");
+			
+			if (playerTeams.containsKey(key.trim())) {
+				String tm = playerCountry.get(key.trim()); //'Germany'
+				if (postDescription.contains(tm)) {
+					maybes.put(key, value + 50); 
+					System.out.println("Country treated as [" + tm + "] for player [" + key + "]");
+				}
 			}
+			
 		}
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
