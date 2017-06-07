@@ -36,13 +36,15 @@ public class AccuracyTest {
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
 		
-//		for (HashMap.Entry<String, String> entry : playerMatches.entrySet()) {
+//		for (HashMap.Entry<String, String> entry : playerTeams.entrySet()) {
 //			String key = entry.getKey();
 //			String value = entry.getValue();
 //			
 //			System.out.println(key + "|" + value);
 //
 //		}
+		
+		//System.out.println(playerTeams.get("Alexis Sánchez"));
 		
 		/*Iterator iter = playerMatches.iterator();
 		while (iter.hasNext()) {
@@ -180,7 +182,7 @@ public class AccuracyTest {
 					}
 					if (player.equals(s[0])) {
 						if (!maybes.containsKey(player)) {
-							maybes.put(player, 100); //full name found
+							maybes.put(player, 120); //full name found
 						}
 					}
 					break;
@@ -210,7 +212,7 @@ public class AccuracyTest {
 			if (!key.equals(minName) && (!maybes.containsKey(key))) {
 				maybes.put(key, 80); //partial/syn name found inside snippet
 			} else if (key.equals(minName)) { //overwrite if already set as 100
-				maybes.put(key, 120); //full name found and is minName (closest to front)
+				maybes.put(key, 90); //full name found and is minName (closest to front)
 			}
 		}
 		/////////////////////////
@@ -227,10 +229,10 @@ public class AccuracyTest {
 				String[] tmSplit = tm.split(" ");
 				for (int i=0; i<tmSplit.length; i++) {
 					if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
-						maybes.put(key, value + 50); //if entire team is contained in snippet
+						maybes.put(key, value + 60); //if entire team is contained in snippet
 						System.out.println("Team treated as [" + tm + "] for player [" + key + "]");
 					} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
-						maybes.put(key, value + 15); //add 15 points for each part of a team that is contained
+						maybes.put(key, value + 40); //add 15 points for each part of a team that is contained
 					}
 				}
 			}
@@ -276,9 +278,9 @@ public class AccuracyTest {
 				String[] s = line.split(",");
 
 				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
-				String newplayer = new String(pplayer, "Windows-1252");
+				String newplayer = new String(pplayer, UTF_8);
 				byte pteam[] = s[1].trim().getBytes("Windows-1252");
-				String newteam = new String(pteam, "Windows-1252");
+				String newteam = new String(pteam, UTF_8);
 
 				playerTeams.put(newplayer, newteam);
 
@@ -308,9 +310,9 @@ public class AccuracyTest {
 				String[] s = line.split(",");
 
 				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
-				String newplayer = new String(pplayer, "Windows-1252");
+				String newplayer = new String(pplayer, UTF_8);
 				byte pteam[] = s[3].trim().getBytes("Windows-1252");
-				String newcountry = new String(pteam, "Windows-1252");
+				String newcountry = new String(pteam, UTF_8);
 
 				playerCountry.put(newplayer, newcountry);
 
