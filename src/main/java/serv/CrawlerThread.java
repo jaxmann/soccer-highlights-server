@@ -272,7 +272,7 @@ public class CrawlerThread implements Runnable {
 				Twitter twitter = TwitterFactory.getSingleton();
 				Status status = null;
 				postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2"); //M. Reus -> M Reus
-				if (postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') {
+				if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
 					postDescription = postDescription.substring(2); //M Reus - > Reus
 				}
 				try {
