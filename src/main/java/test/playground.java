@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class test {
+public class playground {
 
 	public static void main(String[] args) {
 		
