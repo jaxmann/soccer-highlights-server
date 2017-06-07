@@ -34,17 +34,52 @@ public class AccuracyTest {
 		playerTeams = populatePlayerTeams(); //list of players with team names associated
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
-		
+
 		/*System.out.println(playerCountry.size());
 		for (HashMap.Entry<String, String> entry : playerCountry.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
-			
+
 			System.out.println(key + "|" + value);
 
-			
+
 		}*/
 
+
+		String redditURL = "http://www.reddit.com/r/soccer/";
+		
+		crawl(redditURL);
+		redditURL = nextURL(redditURL);
+		crawl(redditURL);
+		redditURL = nextURL(redditURL);
+		crawl(redditURL);
+		
+
+		
+
+
+	}
+	
+	public static String nextURL(String currURL) {
+		
+		Document doc;
+		Elements next;
+		try {
+			doc = Jsoup.connect(currURL).userAgent(USER_AGENT).timeout(0).get();
+			next = doc.select("span.next-button > a[href]"); //Get the entire posts from the doc
+			for (Element e : next) {
+				return e.attr("href");
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} //Get the url - Reddit only accepts 2 requests a minute. edit: 60/min i think? -jonathan
+		
+		return null;
+
+	}
+
+	public static void crawl(String redditURL) {
 		//declare variables outside so they are not re-declared and use more memory each time
 		Document document = null;
 		Elements links = null;
@@ -54,15 +89,10 @@ public class AccuracyTest {
 
 		Element link = null;
 		int i = 0;
+
 		String score = "0-0";
-
-
 		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
 
-
-
-
-		String redditURL = "http://www.reddit.com/r/soccerpmr/new";
 
 		try {
 			document = Jsoup.connect(redditURL).userAgent(USER_AGENT).timeout(0).get(); //Get the url - Reddit only accepts 2 requests a minute. edit: 60/min i think? -jonathan
@@ -84,10 +114,13 @@ public class AccuracyTest {
 						System.out.println("URL is [" + url + "]");
 						String keyword = parseKeywords(title, url); //identify player keywords within play description
 						System.out.println("Keyword is: [" + keyword + "]");
+						System.out.println("-------------------------");
 
 
 					} else {
 						System.out.println("Non-video post found: [" + title + "] link [" + url + "]");
+						System.out.println("-------------------------");
+
 					}
 				}
 
@@ -96,6 +129,8 @@ public class AccuracyTest {
 			//exceptions involving connecting to reddit (i.e 503/502 http errors)
 			e.printStackTrace();
 		}
+
+
 
 
 	}
@@ -179,7 +214,7 @@ public class AccuracyTest {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			
+
 			if (playerTeams.containsKey(key.trim())) {
 				String tm = playerTeams.get(key.trim()); //'Manchester City'
 				String[] tmSplit = tm.split(" ");
@@ -197,7 +232,7 @@ public class AccuracyTest {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			
+
 			if (playerTeams.containsKey(key.trim())) {
 				String tm = playerCountry.get(key.trim()); //'Germany'
 				if (postDescription.contains(tm)) {
@@ -205,7 +240,7 @@ public class AccuracyTest {
 					System.out.println("Country treated as [" + tm + "] for player [" + key + "]");
 				}
 			}
-			
+
 		}
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
@@ -220,7 +255,7 @@ public class AccuracyTest {
 		}
 		return maxPlayer;
 	}
-	
+
 	public static HashMap<String, String> populatePlayerTeams() {
 		HashMap<String, String> playerTeams = new HashMap<String, String>();
 
@@ -232,12 +267,12 @@ public class AccuracyTest {
 			while ((line = reader.readLine()) != null) {
 
 				String[] s = line.split(",");
-				
+
 				byte pplayer[] = s[2].trim().getBytes(ISO_8859_1);
 				String newplayer = new String(pplayer, UTF_8);
 				byte pteam[] = s[1].trim().getBytes(ISO_8859_1);
 				String newteam = new String(pteam, UTF_8);
-				
+
 				playerTeams.put(newplayer, newteam);
 
 			}
@@ -249,10 +284,10 @@ public class AccuracyTest {
 		}
 		return playerTeams;
 	}
-	
-	
+
+
 	public static HashMap<String, String> populatePlayerCountry() {
-		
+
 		HashMap<String, String> playerCountry = new HashMap<String, String>();
 
 		try {
@@ -264,14 +299,14 @@ public class AccuracyTest {
 			while ((line = reader.readLine()) != null) {
 
 				String[] s = line.split(",");
-				
+
 				byte pplayer[] = s[2].trim().getBytes(ISO_8859_1);
 				String newplayer = new String(pplayer, UTF_8);
 				byte pteam[] = s[3].trim().getBytes(ISO_8859_1);
 				String newcountry = new String(pteam, UTF_8);
-				
+
 				playerCountry.put(newplayer, newcountry);
-				
+
 
 			}
 			System.out.println("playerCountry HashMap loaded.");
@@ -293,10 +328,10 @@ public class AccuracyTest {
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-				
+
 				byte pplayer[] = line.getBytes(ISO_8859_1);
 				String newplayer = new String(pplayer, UTF_8);
-				
+
 				playerMatches.add(newplayer);
 
 			}
