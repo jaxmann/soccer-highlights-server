@@ -35,29 +35,17 @@ public class AccuracyTest {
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
 
-		/*System.out.println(playerCountry.size());
-		for (HashMap.Entry<String, String> entry : playerCountry.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-
-			System.out.println(key + "|" + value);
-
-
-		}*/
-
-
 		String redditURL = "http://www.reddit.com/r/soccer/";
 		
-		crawl(redditURL);
-		redditURL = nextURL(redditURL);
-		crawl(redditURL);
-		redditURL = nextURL(redditURL);
-		crawl(redditURL);
+		int i=0;
 		
-
+		while (i < 20) {
+			crawl(redditURL);
+			redditURL = nextURL(redditURL);
+			i++;
+			System.out.println("=========================");
+		}
 		
-
-
 	}
 	
 	public static String nextURL(String currURL) {
