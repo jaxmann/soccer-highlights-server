@@ -491,9 +491,9 @@ public class CrawlerThread implements Runnable {
 				String[] s = line.split(",");
 
 				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
-				String newplayer = new String(pplayer, UTF_8);
+				String newplayer = new String(pplayer, "Windows-1252");
 				byte pteam[] = s[1].trim().getBytes("Windows-1252");
-				String newteam = new String(pteam, UTF_8);
+				String newteam = new String(pteam, "Windows-1252");
 
 				playerTeams.put(newplayer, newteam);
 
@@ -523,9 +523,9 @@ public class CrawlerThread implements Runnable {
 				String[] s = line.split(",");
 
 				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
-				String newplayer = new String(pplayer, UTF_8);
+				String newplayer = new String(pplayer, "Windows-1252");
 				byte pteam[] = s[3].trim().getBytes("Windows-1252");
-				String newcountry = new String(pteam, UTF_8);
+				String newcountry = new String(pteam, "Windows-1252");
 
 				playerCountry.put(newplayer, newcountry);
 
@@ -552,8 +552,8 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 
 				byte pplayer[] = line.getBytes("Windows-1252");
-				String newplayer = new String(pplayer, UTF_8);
-
+				String newplayer = new String(pplayer, "Windows-1252");
+				
 				playerMatches.add(newplayer);
 
 			}
