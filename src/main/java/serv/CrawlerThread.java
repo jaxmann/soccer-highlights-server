@@ -484,60 +484,58 @@ public class CrawlerThread implements Runnable {
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
 			String line;
-			logger.info("Loading playerTeam HashMap...");
+			System.out.println("Loading playerTeam HashMap...");
 
 			while ((line = reader.readLine()) != null) {
 
 				String[] s = line.split(",");
-				
-				byte pplayer[] = s[2].trim().getBytes(ISO_8859_1);
+
+				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
 				String newplayer = new String(pplayer, UTF_8);
-				byte pteam[] = s[1].trim().getBytes(ISO_8859_1);
+				byte pteam[] = s[1].trim().getBytes("Windows-1252");
 				String newteam = new String(pteam, UTF_8);
-				
+
 				playerTeams.put(newplayer, newteam);
 
 			}
 
-			logger.info("playerTeam HashMap loaded.");
+			System.out.println("playerTeam HashMap loaded.");
 			reader.close();
 
 		} catch (Exception e) {
-			logger.error("Error trying to read regenerate-players//fullTable.csv file");
 		}
 		return playerTeams;
 	}
-	
-	
+
+
 	public static HashMap<String, String> populatePlayerCountry() {
-		
+
 		HashMap<String, String> playerCountry = new HashMap<String, String>();
 
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
 			String line;
-			logger.info("Loading playerCountry HashMap...");
+			System.out.println("Loading playerCountry HashMap...");
 
 
 			while ((line = reader.readLine()) != null) {
 
 				String[] s = line.split(",");
-				
-				byte pplayer[] = s[2].trim().getBytes(ISO_8859_1);
+
+				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
 				String newplayer = new String(pplayer, UTF_8);
-				byte pteam[] = s[3].trim().getBytes(ISO_8859_1);
+				byte pteam[] = s[3].trim().getBytes("Windows-1252");
 				String newcountry = new String(pteam, UTF_8);
-				
-				playerTeams.put(newplayer, newcountry);
-				
+
+				playerCountry.put(newplayer, newcountry);
+
 
 			}
-			logger.info("playerCountry HashMap loaded.");
+			System.out.println("playerCountry HashMap loaded.");
 
 			reader.close();
 
 		} catch (Exception e) {
-			logger.error("Error trying to read regenerate-players//fullTable.csv file");
 		}
 		return playerCountry;
 	}	
@@ -545,26 +543,25 @@ public class CrawlerThread implements Runnable {
 	public static HashSet<String> loadPlayers() {
 
 		HashSet<String> playerMatches = new HashSet<String>();
-		logger.info("Loading player HashSet...");
+		System.out.println("Loading player HashSet...");
 
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//synsTable.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-				
-				byte pplayer[] = line.getBytes(ISO_8859_1);
+
+				byte pplayer[] = line.getBytes("Windows-1252");
 				String newplayer = new String(pplayer, UTF_8);
-				
+
 				playerMatches.add(newplayer);
 
 			}
 
-			logger.info("player HashSet loaded.");
+			System.out.println("player HashSet loaded.");
 			reader.close();
 
 		} catch (Exception e) {
-			logger.error("Error trying to read regenerate-players/synsTable.csv");
 			e.printStackTrace();
 		}
 		return playerMatches;
