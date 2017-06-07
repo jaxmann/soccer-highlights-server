@@ -55,7 +55,7 @@ public class AccuracyTest {
 		
 		int i=0;
 		
-		while (i < 10) {
+		while (i < 30) {
 			crawl(redditURL);
 			redditURL = nextURL(redditURL);
 			i++;
