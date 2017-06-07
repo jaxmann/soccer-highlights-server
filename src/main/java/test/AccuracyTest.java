@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,12 +35,25 @@ public class AccuracyTest {
 		playerTeams = populatePlayerTeams(); //list of players with team names associated
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
-
-		String redditURL = "http://www.reddit.com/r/soccer/";
+		
+//		for (HashMap.Entry<String, String> entry : playerMatches.entrySet()) {
+//			String key = entry.getKey();
+//			String value = entry.getValue();
+//			
+//			System.out.println(key + "|" + value);
+//
+//		}
+		
+		/*Iterator iter = playerMatches.iterator();
+		while (iter.hasNext()) {
+			System.out.println(iter.next());
+		}
+*/
+		String redditURL = "https://www.reddit.com/r/soccer/top/?sort=top&t=month";
 		
 		int i=0;
 		
-		while (i < 20) {
+		while (i < 10) {
 			crawl(redditURL);
 			redditURL = nextURL(redditURL);
 			i++;
@@ -142,10 +156,15 @@ public class AccuracyTest {
 			//String newline = new String(ptext, UTF_8);
 
 			String[] s = line.split(",");
+//			if (line.contains("zil")) {
+//				System.out.println(line);
+//			}
 			for (String player : s) {
 
 				// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
 				String reg = "((^|\\s|\\()" + player + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(player) + "(\\)|'|\\s|$))";
+				
+				
 				Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(postDescription);
 
@@ -256,10 +275,10 @@ public class AccuracyTest {
 
 				String[] s = line.split(",");
 
-				byte pplayer[] = s[2].trim().getBytes(ISO_8859_1);
-				String newplayer = new String(pplayer, UTF_8);
-				byte pteam[] = s[1].trim().getBytes(ISO_8859_1);
-				String newteam = new String(pteam, UTF_8);
+				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
+				String newplayer = new String(pplayer, "Windows-1252");
+				byte pteam[] = s[1].trim().getBytes("Windows-1252");
+				String newteam = new String(pteam, "Windows-1252");
 
 				playerTeams.put(newplayer, newteam);
 
@@ -288,10 +307,10 @@ public class AccuracyTest {
 
 				String[] s = line.split(",");
 
-				byte pplayer[] = s[2].trim().getBytes(ISO_8859_1);
-				String newplayer = new String(pplayer, UTF_8);
-				byte pteam[] = s[3].trim().getBytes(ISO_8859_1);
-				String newcountry = new String(pteam, UTF_8);
+				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
+				String newplayer = new String(pplayer, "Windows-1252");
+				byte pteam[] = s[3].trim().getBytes("Windows-1252");
+				String newcountry = new String(pteam, "Windows-1252");
 
 				playerCountry.put(newplayer, newcountry);
 
@@ -317,9 +336,9 @@ public class AccuracyTest {
 
 			while ((line = reader.readLine()) != null) {
 
-				byte pplayer[] = line.getBytes(ISO_8859_1);
-				String newplayer = new String(pplayer, UTF_8);
-
+				byte pplayer[] = line.getBytes("Windows-1252");
+				String newplayer = new String(pplayer, "Windows-1252");
+				
 				playerMatches.add(newplayer);
 
 			}

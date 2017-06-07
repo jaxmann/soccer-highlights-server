@@ -13,9 +13,13 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import serv.simplify;
+
 public class Playground {
 
 	public static void main(String[] args) {
+		
+		System.out.println(simplify.simplifyName("Mesut Özil"));
 		
 /*String postDescription = "Juventus 1-3 Real Madrid (Ronaldo 63')";
 		
