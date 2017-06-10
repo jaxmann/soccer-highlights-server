@@ -568,7 +568,7 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 
 				byte pplayer[] = line.getBytes("Windows-1252");
-				String newplayer = new String(pplayer, UTF_8);
+				String newplayer = new String(pplayer, "Windows-1252");
 				
 				playerMatches.add(newplayer);
 
