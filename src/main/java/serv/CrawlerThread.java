@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,6 +91,11 @@ public class CrawlerThread implements Runnable {
 		playerTeams = populatePlayerTeams(); //list of players with team names associated
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
+		
+		Iterator iter = playerMatches.iterator();
+		while (iter.hasNext()) {
+			System.out.println(iter.next());
+		}
 
 		while (true) { //run forever unless stopped
 
@@ -157,7 +163,7 @@ public class CrawlerThread implements Runnable {
 
 		for (String line : playerMatches) {
 			
-			System.out.println(line);
+			
 
 			//byte ptext[] = line.getBytes(ISO_8859_1);
 			//String newline = new String(ptext, UTF_8);
@@ -559,7 +565,7 @@ public class CrawlerThread implements Runnable {
 			while ((line = reader.readLine()) != null) {
 
 				byte pplayer[] = line.getBytes("Windows-1252");
-				String newplayer = new String(pplayer, UTF_8);
+				String newplayer = new String(pplayer, "Windows-1252");
 				
 				playerMatches.add(newplayer);
 

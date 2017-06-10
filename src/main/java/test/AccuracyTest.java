@@ -46,21 +46,21 @@ public class AccuracyTest {
 		
 		//System.out.println(playerTeams.get("Alexis Sánchez"));
 		
-		/*Iterator iter = playerMatches.iterator();
+		Iterator iter = playerMatches.iterator();
 		while (iter.hasNext()) {
 			System.out.println(iter.next());
 		}
-*/
+
 		String redditURL = "https://www.reddit.com/r/soccer/top/?sort=top&t=month";
 		
 		int i=0;
 		
-		while (i < 30) {
-			crawl(redditURL);
-			redditURL = nextURL(redditURL);
-			i++;
-			System.out.println("=========================");
-		}
+//		while (i < 30) {
+//			crawl(redditURL);
+//			redditURL = nextURL(redditURL);
+//			i++;
+//			System.out.println("=========================");
+//		}
 		
 	}
 	
