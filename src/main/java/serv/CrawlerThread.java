@@ -92,9 +92,12 @@ public class CrawlerThread implements Runnable {
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
 		
-		Iterator iter = playerMatches.iterator();
-		while (iter.hasNext()) {
-			System.out.println(iter.next());
+		for (HashMap.Entry<String, String> entry : playerCountry.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			
+			System.out.println(key + "|" + value);
+
 		}
 
 		while (true) { //run forever unless stopped
