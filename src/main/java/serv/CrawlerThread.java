@@ -498,7 +498,7 @@ public class CrawlerThread implements Runnable {
 		HashMap<String, String> playerTeams = new HashMap<String, String>();
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//EfullTable.csv")); 
 			String line;
 			logger.info("Loading playerTeam HashMap...");
 
@@ -506,9 +506,9 @@ public class CrawlerThread implements Runnable {
 
 				String[] s = line.split(",");
 
-				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
+				byte pplayer[] = s[2].trim().getBytes(UTF_8);
 				String newplayer = new String(pplayer, UTF_8);
-				byte pteam[] = s[1].trim().getBytes("Windows-1252");
+				byte pteam[] = s[1].trim().getBytes(UTF_8);
 				String newteam = new String(pteam, UTF_8);
 
 				playerTeams.put(newplayer, newteam);
@@ -529,7 +529,7 @@ public class CrawlerThread implements Runnable {
 		HashMap<String, String> playerCountry = new HashMap<String, String>();
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//EfullTable.csv")); 
 			String line;
 			logger.info("Loading playerCountry HashMap...");
 
@@ -538,9 +538,9 @@ public class CrawlerThread implements Runnable {
 
 				String[] s = line.split(",");
 
-				byte pplayer[] = s[2].trim().getBytes("Windows-1252");
+				byte pplayer[] = s[2].trim().getBytes(UTF_8);
 				String newplayer = new String(pplayer, UTF_8);
-				byte pteam[] = s[3].trim().getBytes("Windows-1252");
+				byte pteam[] = s[3].trim().getBytes(UTF_8);
 				String newcountry = new String(pteam, UTF_8);
 
 				playerCountry.put(newplayer, newcountry);
@@ -562,13 +562,13 @@ public class CrawlerThread implements Runnable {
 		logger.info("Loading player HashSet...");
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//synsTable.csv")); //backup version of this is "list-of-players2.csv"
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//EsynsTable.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
 
 			while ((line = reader.readLine()) != null) {
 
-				byte pplayer[] = line.getBytes("Windows-1252");
-				String newplayer = new String(pplayer, "Windows-1252");
+				byte pplayer[] = line.getBytes(UTF_8);
+				String newplayer = new String(pplayer, UTF_8);
 				
 				playerMatches.add(newplayer);
 
