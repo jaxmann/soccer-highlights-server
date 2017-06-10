@@ -156,6 +156,8 @@ public class CrawlerThread implements Runnable {
 		HashMap<String, Integer> maybes = new HashMap<String, Integer>();
 
 		for (String line : playerMatches) {
+			
+			System.out.println(line);
 
 			//byte ptext[] = line.getBytes(ISO_8859_1);
 			//String newline = new String(ptext, UTF_8);
