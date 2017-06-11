@@ -138,9 +138,13 @@ public class CrawlerThread implements Runnable {
 									subbedUsers = findSubscribedUsers(keyword, title);
 									logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
 									if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
-										if (isValidTQ(title, keyword)) {
-											logger.info("Keyword not in tq... calling sendEmail");
-											sendEmail(url, keyword, subbedUsers, title); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
+										if (!isValidTQ(title, keyword)) {
+											if (redditenv.equals("test")) {
+												logger.info("Keyword not in tq... but test env");
+											} else {
+												logger.info("Keyword not in tq... calling sendEmail");
+												sendEmail(url, keyword, subbedUsers, title); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
+											}
 										} else {
 											logger.info("Not calling sendEmail because keyword is already in TQ");
 										}
