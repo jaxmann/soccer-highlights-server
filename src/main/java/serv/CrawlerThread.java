@@ -91,14 +91,14 @@ public class CrawlerThread implements Runnable {
 		playerTeams = populatePlayerTeams(); //list of players with team names associated
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
-		
-//		for (HashMap.Entry<String, String> entry : playerCountry.entrySet()) {
-//			String key = entry.getKey();
-//			String value = entry.getValue();
-//			
-//			System.out.println(key + "|" + value);
-//
-//		}
+
+		//		for (HashMap.Entry<String, String> entry : playerCountry.entrySet()) {
+		//			String key = entry.getKey();
+		//			String value = entry.getValue();
+		//			
+		//			System.out.println(key + "|" + value);
+		//
+		//		}
 
 		while (true) { //run forever unless stopped
 
@@ -137,12 +137,17 @@ public class CrawlerThread implements Runnable {
 									logger.info("Keyword is: [" + keyword + "]");
 									subbedUsers = findSubscribedUsers(keyword, title);
 									logger.info("Number of subbed users: [" + subbedUsers.size() + "]");
-									if (subbedUsers.size() != 0 && !redditenv.equals("test")) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
-										sendEmail(url, keyword, subbedUsers, title); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
-									} else if (redditenv.equals("test")) {
-										addToTimeq(keyword, title, "thiswill@never.happen");
-									}
-
+									if (subbedUsers.size() != 0) { //if no users are subscribed to a particular player, don't try to send email (it will fail)
+										if (isValidTQ(title, keyword)) {
+											logger.info("Keyword not in tq... calling sendEmail");
+											sendEmail(url, keyword, subbedUsers, title); //send email to users who match keywords - send them the url, use keyword in email title/body; user's email is returned from sql query
+										} else {
+											logger.info("Not calling sendEmail because keyword is already in TQ");
+										}
+										
+									} 
+										
+								addToTimeq(keyword, title);
 								} else {
 									logger.info("Non-video post found: [" + title + "] at [" + time + "] link [" + url + "]");
 								}
@@ -165,22 +170,22 @@ public class CrawlerThread implements Runnable {
 		HashMap<String, Integer> maybes = new HashMap<String, Integer>();
 
 		for (String line : playerMatches) {
-			
-			
+
+
 
 			//byte ptext[] = line.getBytes(ISO_8859_1);
 			//String newline = new String(ptext, UTF_8);
 
 			String[] s = line.split(",");
-//			if (line.contains("zil")) {
-//				logger.info(line);
-//			}
+			//			if (line.contains("zil")) {
+			//				logger.info(line);
+			//			}
 			for (String player : s) {
 
 				// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
 				String reg = "((^|\\s|\\()" + player + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(player) + "(\\)|'|\\s|$))";
-				
-				
+
+
 				Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(postDescription);
 
@@ -319,11 +324,9 @@ public class CrawlerThread implements Runnable {
 		if (!keyword.equals("no-player-found")) {
 
 			Connection connection = null;
-			Connection tqConnection = null;
 			ResultSet resultSet = null;
-			ResultSet tqResultSet = null;
 			Statement statement = null;
-			Statement tqStatement = null;
+
 			try {
 				String url = "jdbc:sqlite:../server/db/user.db";
 				connection = DriverManager.getConnection(url);
@@ -335,47 +338,10 @@ public class CrawlerThread implements Runnable {
 				resultSet = statement.executeQuery(sql);
 				//connection successful if error not caught below
 
-				//iterate over results
-				if(resultSet.next()) {
-
-					try {
-						
-						Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
-						Matcher m = p.matcher(postDescription);
-						String score = "0-0";
-						
-						if (m.find()) { 
-							score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
-						}
-
-						String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
-						tqConnection = DriverManager.getConnection(tqUrl);
-						String sqlTQ = "Select * from Timeq WHERE Email='" + resultSet.getString("Email") + "' and Player='" + keyword + "' and Score='" + score + "';";
-						logger.info("SQL time queue: " + sqlTQ);
-						tqStatement = tqConnection.createStatement();
-						tqResultSet = tqStatement.executeQuery(sqlTQ);
-						boolean tqFilled = tqResultSet.next();
-
-						logger.info("Already in TQ? (i.e. email already sent to this user/email for this player+score today): [" + tqFilled + "]");
-
-						if (tqFilled == false) { //if no player exists, add to list and send email
-							subscribedUsers.add(resultSet.getString("Email"));
-						}
-
-					} catch (SQLException e) {
-						logger.error(e.toString());
-					} finally {
-						try {
-							if (tqConnection != null) {
-								tqResultSet.close();
-								tqStatement.close();
-								tqConnection.close();
-							}
-						} catch (SQLException ex) {
-							logger.error(ex.toString());
-						}
-					}
+				while(resultSet.next()){
+					subscribedUsers.add(resultSet.getString("Email"));
 				}
+
 
 				return subscribedUsers;
 
@@ -397,6 +363,51 @@ public class CrawlerThread implements Runnable {
 		return subscribedUsers;
 	}
 
+	public static boolean isValidTQ(String postDescription, String keyword) {
+
+		Connection tqConnection = null;
+		Statement tqStatement = null;
+		ResultSet tqResultSet = null;
+		
+		try {
+
+			Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
+			Matcher m = p.matcher(postDescription);
+			String score = "0-0";
+
+			if (m.find()) { 
+				score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
+			}
+
+			String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
+			tqConnection = DriverManager.getConnection(tqUrl);
+			String sqlTQ = "Select * from Timeq WHERE Player='" + keyword + "' and Score='" + score + "';";
+			logger.info("SQL time queue: " + sqlTQ);
+			tqStatement = tqConnection.createStatement();
+			tqResultSet = tqStatement.executeQuery(sqlTQ);
+			boolean tqFilled = tqResultSet.next();
+
+			logger.info("Already in TQ? (i.e. already found a highlight for this play today): [" + tqFilled + "]");
+			
+			return tqFilled;
+
+		} catch (SQLException e) {
+			logger.error(e.toString());
+		} finally {
+			try {
+				if (tqConnection != null) {
+					tqResultSet.close();
+					tqStatement.close();
+					tqConnection.close();
+				}
+			} catch (SQLException ex) {
+				logger.error(ex.toString());
+			}
+		}
+		return false; //exit with error
+
+	}
+
 	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddresses, String postDescription) {
 
 		for (String em : emailAddresses) {
@@ -411,15 +422,12 @@ public class CrawlerThread implements Runnable {
 				logger.info("Email sent to [" + em + "] successfully - starting insert into time queue...");
 
 			}
-			
-			addToTimeq(keyword, postDescription, em);
 
-			
 		}
 	}
-	
-	public static void addToTimeq(String keyword, String postDescription, String em) {
-		
+
+	public static void addToTimeq(String keyword, String postDescription) {
+
 		try {
 
 			Connection connection = null;
@@ -430,24 +438,23 @@ public class CrawlerThread implements Runnable {
 				connection = DriverManager.getConnection(url);
 				long currentTime = System.nanoTime();
 				keyword = keyword.replace("'", "''");
-				
+
 				Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
 				Matcher m = p.matcher(postDescription);
 				String score = "0-0";
-				
+
 				if (m.find()) { 
 					score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
 				}
-				
-				String sql = "INSERT INTO Timeq(Email, Player, Timestamp, Score)"
-						+ " VALUES(?,?,?,?)";
+
+				String sql = "INSERT INTO Timeq(Player, Timestamp, Score)"
+						+ " VALUES(?,?,?)";
 				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setString(1, em);
-				preparedStatement.setString(2, keyword);
-				preparedStatement.setLong(3, currentTime);
-				preparedStatement.setString(4, score);
+				preparedStatement.setString(1, keyword);
+				preparedStatement.setLong(2, currentTime);
+				preparedStatement.setString(3, score);
 				preparedStatement.executeUpdate(); 
-				logger.info("TQ insertion: [" + em + "], [" + keyword + "],[" + score + "] inserted at [" + currentTime + "]");
+				logger.info("TQ insertion: [" + keyword + "],[" + score + "] inserted at [" + currentTime + "]");
 
 			} catch (SQLException e) {
 				logger.error(e.toString());
@@ -464,15 +471,15 @@ public class CrawlerThread implements Runnable {
 		} catch (Exception ex) {
 			logger.error(ex.toString());
 		}
-		
-		
+
+
 	}
 
 	public static int getSleepTime() {
 		Calendar calendar = Calendar.getInstance();
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
 		int msWait = 60000;
-		
+
 		if (!redditenv.equals("test")) { //ie prod
 			if (hours >= 22 || hours <= 9) { //7pm to 6am
 				if (hours >= 22) {
@@ -490,10 +497,10 @@ public class CrawlerThread implements Runnable {
 		} else {
 			return 60000;
 		}
-		
-		
+
+
 	}
-	
+
 	public static HashMap<String, String> populatePlayerTeams() {
 		HashMap<String, String> playerTeams = new HashMap<String, String>();
 
@@ -569,7 +576,7 @@ public class CrawlerThread implements Runnable {
 
 				byte pplayer[] = line.getBytes(UTF_8);
 				String newplayer = new String(pplayer, UTF_8);
-				
+
 				playerMatches.add(newplayer);
 
 			}
@@ -584,5 +591,5 @@ public class CrawlerThread implements Runnable {
 	}
 
 
-	
+
 }
