@@ -14,4 +14,4 @@ HOME=/
 # |  |  |  |  |
 # *  *  *  *  * user-name command to be executed
 
-0 0 * * * ec2-user sudo java -jar /home/ec2-user/server/delete-timeq.jar
+0 4 * * * ec2-user sudo java -jar /home/ec2-user/server/delete-timeq.jar
