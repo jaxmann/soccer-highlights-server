@@ -28,7 +28,7 @@ public class Delete {
 		PreparedStatement statement = null;
 				
 		try{
-			String url = "jdbc:sqlite:/home/pi/server/db/timeq.db";
+			String url = "jdbc:sqlite:../server/db/timeq.db";
 			connection = DriverManager.getConnection(url);
 			System.nanoTime();
 
