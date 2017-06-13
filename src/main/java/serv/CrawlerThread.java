@@ -419,7 +419,7 @@ public class CrawlerThread implements Runnable {
 			if (!redditenv.equals("test")) {
 
 				String subject = "PMR Highlight Found - " + keyword;
-				String content = "Goal by " + keyword + "!" + " View " + link + ".\n\n\n If this wasn't the correct player you selected, it's easiest just to uncheck that player"
+				String content = "Goal by " + keyword + "!" + " View " + link + ".\n\n\nIf this wasn't the correct player you selected, it's easiest just to uncheck that player"
 						+ " within the website - we're working on a solution to improve our app's cognitive ability. If you notice any other bugs feel free to send me an email personally at jonathan.axmann09@gmail.com";
 				logger.info("Attempting to email: [" + em + "]...");
 				GmailService.send(service.getService(), em, "pmridontcareifyourespond@gmail.com", subject, content); 
