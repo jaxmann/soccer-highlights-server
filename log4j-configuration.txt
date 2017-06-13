@@ -2,7 +2,10 @@ log4j.rootLogger=debug, stdout, file
 
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.EnhancedPatternLayout
+<<<<<<< HEAD
 
+=======
+>>>>>>> 91ca2f1e8efd3784539a058eb4366aba13651363
 # Pattern to output the caller's file name and line number.
 log4j.appender.stdout.layout.ConversionPattern=%5p [%t] %d{yyyy-MM-dd HH:mm:ss}{America/New_York} (%F:%L) - %m%n
 
