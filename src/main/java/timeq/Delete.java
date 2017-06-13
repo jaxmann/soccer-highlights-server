@@ -12,13 +12,13 @@ import java.sql.SQLException;
 //);
 
 
-//delete database records older than 2 mins - run this job every 1 min
+//delete database records - run this job at midnight
 public class Delete {
 
 	//MAKE THIS FILE INTO A JAR
 	public static void main(String[] args) {
 		
-		delete(); //delete older than 2 mins
+		delete(); //truncate table
 
 	}
 	
@@ -26,15 +26,13 @@ public class Delete {
 	public static void delete() {
 		Connection connection = null;
 		PreparedStatement statement = null;
-		
-		long twoMinsAgo = System.nanoTime() - 120000000000L; //2 mins in nanoseconds
-		
+				
 		try{
-			String url = "jdbc:sqlite:/home/pi/server/db/pmr.db";
+			String url = "jdbc:sqlite:/home/pi/server/db/timeq.db";
 			connection = DriverManager.getConnection(url);
 			System.nanoTime();
 
-			String sql = "Delete from Timeq where Timestamp<" + twoMinsAgo+ ";";
+			String sql = "DELETE FROM Timeq;";
 			statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
 			
