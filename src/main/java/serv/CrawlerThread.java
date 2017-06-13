@@ -451,14 +451,13 @@ public class CrawlerThread implements Runnable {
 					score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
 				}
 
-				String sql = "INSERT INTO Timeq(Player, Timestamp, Score)"
-						+ " VALUES(?,?,?)";
+				String sql = "INSERT INTO Timeq(Player, Score)"
+						+ " VALUES(?,?)";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setString(1, keyword);
-				preparedStatement.setLong(2, currentTime);
-				preparedStatement.setString(3, score);
+				preparedStatement.setString(2, score);
 				preparedStatement.executeUpdate(); 
-				logger.info("TQ insertion: [" + keyword + "],[" + score + "] inserted at [" + currentTime + "]");
+				logger.info("TQ insertion: [" + keyword + "],[" + score + "]");
 
 			} catch (SQLException e) {
 				logger.error(e.toString());
