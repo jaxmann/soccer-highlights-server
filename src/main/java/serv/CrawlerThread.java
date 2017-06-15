@@ -484,7 +484,7 @@ public class CrawlerThread implements Runnable {
 		int msWait = 60000;
 
 		if (!redditenv.equals("test")) { //ie prod
-			if (hours >= 4 || hours <= 9) { //12am to 5am EST
+			if (hours >= 4 && hours <= 9) { //12am to 5am EST
 				msWait = 3600000 * (9 - hours); // milliseconds remaining until 5 am
 				return msWait;
 			} else {

@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +20,12 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
-		System.out.println(simplify.simplifyName("Mesut Özil"));
+		Calendar calendar = Calendar.getInstance();
+		int hours = calendar.get(Calendar.HOUR_OF_DAY);
+		
+		System.out.println("hours is" + hours);
+		
+//		System.out.println(simplify.simplifyName("Mesut Özil"));
 		
 /*String postDescription = "Juventus 1-3 Real Madrid (Ronaldo 63')";
 		
