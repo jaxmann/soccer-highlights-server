@@ -501,7 +501,7 @@ public class CrawlerThread implements Runnable {
 		HashMap<String, String> playerTeams = new HashMap<String, String>();
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//EfullTable.csv")); 
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
 			String line;
 			logger.info("Loading playerTeam HashMap...");
 
@@ -532,7 +532,7 @@ public class CrawlerThread implements Runnable {
 		HashMap<String, String> playerCountry = new HashMap<String, String>();
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//EfullTable.csv")); 
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
 			String line;
 			logger.info("Loading playerCountry HashMap...");
 
@@ -565,7 +565,7 @@ public class CrawlerThread implements Runnable {
 		logger.info("Loading player HashSet...");
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//EsynsTable.csv")); //backup version of this is "list-of-players2.csv"
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//synsTable.csv")); //backup version of this is "list-of-players2.csv"
 			String line;
 
 			while ((line = reader.readLine()) != null) {
