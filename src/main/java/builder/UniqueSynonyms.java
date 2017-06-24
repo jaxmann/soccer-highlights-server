@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
+
 public class UniqueSynonyms {
 
 	public static void main(String[] args) {
@@ -23,13 +24,19 @@ public class UniqueSynonyms {
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv"));
 			String line;
-
+ 
 
 			while ((line = reader.readLine()) != null) {
 				String[] arr = line.split(",");
 				String name = arr[2].trim();
-				byte pFull[] = name.getBytes("Windows-1252");
+				byte pFull[] = name.getBytes(UTF_8);
 				String fullName = new String(pFull, UTF_8);
+//				for (int i=0; i<fullName.length();i++) {
+//					if ((int)fullName.charAt(i)>300) {
+//						System.out.println((int)fullName.charAt(i));
+//						System.out.println(fullName.charAt(i));
+//					}
+//				}
 				boolean hasIllegalChars = false;
 
 				for (int i=0; i<fullName.length(); i++) {
@@ -41,25 +48,26 @@ public class UniqueSynonyms {
 
 				if (!hasIllegalChars) {
 					if (name.split(" ").length == 2) {
-						byte p0[] = name.split(" ")[0].getBytes("Windows-1252");
+						byte p0[] = name.split(" ")[0].getBytes(UTF_8);
 						String n0 = new String(p0, UTF_8);
-						byte p1[] = name.split(" ")[1].getBytes("Windows-1252");
+						byte p1[] = name.split(" ")[1].getBytes(UTF_8);
 						String n1 = new String(p1, UTF_8);
 						String firstSpaceLast = n0.substring(0,1) + " " + n1;
 						String firstDotLast = n0.substring(0,1) + ". " + n1;
 						String firstLastDot = n0 + " " + n1.substring(0,1) + ".";
 						String last = n1;
 						System.out.println(fullName + "," + firstSpaceLast + "," + firstDotLast + "," + firstLastDot + "," + last);
+						
 					} else if (name.split(" ").length == 1) {
-//						byte p2[] = name.split(" ")[0].getBytes("Windows-1252");
+//						byte p2[] = name.split(" ")[0].getBytes(UTF_8);
 //						String n2 = new String(p2, UTF_8);
 						System.out.println(fullName);
 					} else if (name.split(" ").length == 3) {
-						byte p3[] = name.split(" ")[0].getBytes("Windows-1252");
+						byte p3[] = name.split(" ")[0].getBytes(UTF_8);
 						String n3 = new String(p3, UTF_8);
-						byte p4[] = name.split(" ")[1].getBytes("Windows-1252");
+						byte p4[] = name.split(" ")[1].getBytes(UTF_8);
 						String n4 = new String(p4, UTF_8);
-						byte p5[] = name.split(" ")[2].getBytes("Windows-1252");
+						byte p5[] = name.split(" ")[2].getBytes(UTF_8);
 						String n5 = new String(p5, UTF_8);
 						String firstSpaceLast = n3.substring(0,1) + " " + n4 + " " + n5;
 						String firstDotLast = n3.substring(0,1) + ". " + n4 + " " +n5;
@@ -70,7 +78,7 @@ public class UniqueSynonyms {
 					}
 				}
 			}
-			
+						 
 			reader.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
