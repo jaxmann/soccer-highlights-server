@@ -251,10 +251,10 @@ public class CrawlerThread implements Runnable {
 				String tm = playerTeams.get(key.trim()); //'Manchester City'
 				String[] tmSplit = tm.split(" ");
 				for (int i=0; i<tmSplit.length; i++) {
-					if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
+					if (postDescription.toLowerCase().contains(tm.toLowerCase()) || postDescription.toLowerCase().contains(simplify.simplifyName(tm.toLowerCase()))) {
 						maybes.put(key, value + 60); //if entire team is contained in snippet
 						logger.info("Team treated as [" + tm + "] for player [" + key + "]");
-					} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
+					} else if (postDescription.toLowerCase().contains(tmSplit[i].toLowerCase()) || postDescription.toLowerCase().contains(simplify.simplifyName(tmSplit[i].toLowerCase()))) {
 						maybes.put(key, value + 40); //add 15 points for each part of a team that is contained
 						logger.info("Team treated as [" + tm + "] for player [" + key + "]");
 					}
@@ -268,7 +268,7 @@ public class CrawlerThread implements Runnable {
 
 			if (playerTeams.containsKey(key.trim())) {
 				String tm = playerCountry.get(key.trim()); //'Germany'
-				if (postDescription.contains(tm)) {
+				if (postDescription.toLowerCase().contains(tm.toLowerCase())) {
 					maybes.put(key, value + 50); 
 					logger.info("Country treated as [" + tm + "] for player [" + key + "]");
 				}
