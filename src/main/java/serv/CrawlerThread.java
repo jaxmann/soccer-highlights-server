@@ -256,6 +256,7 @@ public class CrawlerThread implements Runnable {
 						logger.info("Team treated as [" + tm + "] for player [" + key + "]");
 					} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
 						maybes.put(key, value + 40); //add 15 points for each part of a team that is contained
+						logger.info("Team treated as [" + tm + "] for player [" + key + "]");
 					}
 				}
 			}
