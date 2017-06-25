@@ -311,6 +311,7 @@ public class CrawlerThread implements Runnable {
 			}
 			try {
 
+				//------------------------------------------------------//
 				String playerHashtag = "";
 				String[] fullN = minName.split(" ");
 				if (fullN.length == 1) {
@@ -320,12 +321,12 @@ public class CrawlerThread implements Runnable {
 				} else {
 					playerHashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
 				}
-
+				playerHashtag = simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+				//------------------------------------------------------//
 				String teamName = "";
 				if (playerTeams.containsKey(minName.trim())) {
 					teamName = playerTeams.get(minName.trim()); //'Manchester City'
 				}
-
 				String[] teamParts = teamName.split(" ");
 				String teamHashtag = "";
 				if (teamParts.length == 1) {
@@ -337,30 +338,42 @@ public class CrawlerThread implements Runnable {
 						}
 					}
 				}
-
+				teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+				//------------------------------------------------------//
 				String countryName = "";
 				if (playerCountry.containsKey(minName.trim())) {
 					countryName = playerCountry.get(minName.trim()); //'Germany'
 				}
-
 				String[] countryParts = countryName.split(" ");
 				String countryHashtag = "";
-
 				for (int i=0; i<countryParts.length;i++) {
 					countryHashtag += countryParts[i];
 				}
+				countryHashtag = simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+				//------------------------------------------------------//
+				String ellipsePost = "";
+				String[] postParts = postDescription.split(" ");
+				for (int i=0; i<postParts.length;i++) {
+					if (ellipsePost.length() + postParts[i].length() < maxPostLength) {
+						ellipsePost += postParts[i] + " ";
+					} else {
+						System.out.println(ellipsePost);
+						break;
+					}
+				}
+				ellipsePost = ellipsePost.trim();
+				ellipsePost += "...";
+				
+				String stat = ellipsePost + " | " + url;
 
-
-				String stat = postDescription + " | " + url;
-
-				if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() + 2 < 140)) {
+				if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() + 2 <= 140)) {
 					stat += " #" + simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 
-				if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 < 140)) {
+				if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 <= 140)) {
 					stat += " #" + simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
 				}
-				if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() + 2 < 140)) {
+				if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() + 2 <= 140)) {
 					stat += " #" + simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 
