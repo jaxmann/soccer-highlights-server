@@ -1,0 +1,5 @@
+o'higgins
+remove transferred players
+brighton & albion --- (^\s[\w\s]+,\s[\w\s]+)&\s
+remove ALL periods
+st patricks athletic remove apostrophe
