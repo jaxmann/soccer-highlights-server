@@ -358,7 +358,7 @@ public class CrawlerThread implements Runnable {
 				}
 
 				if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 < 140)) {
-					stat += " #" + simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+					stat += " #" + simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
 				}
 				if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() + 2 < 140)) {
 					stat += " #" + simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
