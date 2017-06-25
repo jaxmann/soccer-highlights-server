@@ -24,6 +24,8 @@ public class Playground {
 		
 		String minName = "Marco Reus";
 		
+		String teamName = "AZ"; //not actually the name
+		
 		postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2"); //M. Reus -> M Reus
 		if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
 			postDescription = postDescription.substring(2); //M Reus - > Reus
@@ -38,6 +40,21 @@ public class Playground {
 		} else {
 			hashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
 		}
+		/////////////////////////
+		String[] teamParts = teamName.split(" ");
+		String teamHashtag = "";
+		if (teamParts.length == 1) {
+			teamHashtag = teamParts[0];
+		} else {
+			for (int i=0; i<teamParts.length;i++) {
+				if (!teamParts[i].equals(teamParts[i].toUpperCase())) {
+					teamHashtag += teamParts[i];
+				}
+			}
+		}
+		
+		
+		System.out.println(teamHashtag);
 		
 		String stat = postDescription + " | " + "http://google.com" + " #" + hashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
 		

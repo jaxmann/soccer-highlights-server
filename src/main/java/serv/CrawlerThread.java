@@ -266,7 +266,7 @@ public class CrawlerThread implements Runnable {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
 
-			if (playerTeams.containsKey(key.trim())) {
+			if (playerCountry.containsKey(key.trim())) {
 				String tm = playerCountry.get(key.trim()); //'Germany'
 				if (postDescription.toLowerCase().contains(tm.toLowerCase())) {
 					maybes.put(key, value + 50); 
@@ -321,7 +321,46 @@ public class CrawlerThread implements Runnable {
 						playerHashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
 					}
 					
+					String teamName = "";
+					if (playerTeams.containsKey(minName.trim())) {
+						teamName = playerTeams.get(minName.trim()); //'Manchester City'
+					}
+					
+					String[] teamParts = teamName.split(" ");
+					String teamHashtag = "";
+					if (teamParts.length == 1) {
+						teamHashtag = teamParts[0];
+					} else {
+						for (int i=0; i<teamParts.length;i++) {
+							if (!teamParts[i].equals(teamParts[i].toUpperCase())) {
+								teamHashtag += teamParts[i];
+							}
+						}
+					}
+					
+					String countryName = "";
+					if (playerCountry.containsKey(minName.trim())) {
+						countryName = playerCountry.get(minName.trim()); //'Germany'
+					}
+					
+					String[] countryParts = teamName.split(" ");
+					String countryHashtag = "";
+					
+					for (int i=0; i<countryParts.length;i++) {
+						countryHashtag += countryParts[i];
+					}
+					
+					
 					String stat = postDescription + " | " + url + " #" + playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
+					
+					if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 < 140)) {
+						stat += " #" + teamHashtag;
+					}
+					if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() + 2 < 140)) {
+						stat += " #" + countryHashtag;
+					}
+
+					
 					if (stat.length() < 140) {
 						status = twitter.updateStatus(stat);
 						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
