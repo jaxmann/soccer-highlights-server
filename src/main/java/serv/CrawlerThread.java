@@ -351,13 +351,17 @@ public class CrawlerThread implements Runnable {
 				}
 
 
-				String stat = postDescription + " | " + url + " #" + playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
+				String stat = postDescription + " | " + url;
+
+				if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() + 2 < 140)) {
+					stat += " #" + playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
+				}
 
 				if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 < 140)) {
-					stat += " #" + teamHashtag;
+					stat += " #" + teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
 				}
 				if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() + 2 < 140)) {
-					stat += " #" + countryHashtag;
+					stat += " #" + countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
 				}
 
 
