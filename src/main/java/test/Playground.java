@@ -20,52 +20,59 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
-		String postDescription = "Germany 1-0 Cameroon - Demirbay 48' (FIFA Confederations Cup - Group B) - Streamable links in the comment section";
-		
-		String url = "https://my.mixtape.moe/bjdlnm.mp4";
-		
-		String playerHashtag = " #Demirbay";
-		
-		String team = "1899Hoffenheim";
-				
-		String teamHashtag = " #" + team.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","");
-		
-		String countryHashtag = " #Germany";
-		
-		int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
-				
-		String ellipsePost = "";
-		String[] postParts = postDescription.split(" ");
-		for (int i=0; i<postParts.length;i++) {
-			if (ellipsePost.length() + postParts[i].length() < maxPostLength) {
-				ellipsePost += postParts[i] + " ";
-			} else {
-				System.out.println(ellipsePost);
-				break;
-			}
+		for (int i=300; i<400;i++) {
+			System.out.println((char)i + "   " + i);
 		}
-		ellipsePost = ellipsePost.trim();
-		ellipsePost += "...";
 		
-		System.out.println("ellipse length is: " + ellipsePost.length());
-		String stat = ellipsePost + " | " + url;
-
-		if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() <= 140)) {
-			stat += playerHashtag;
-		}
-		if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() <= 140)) {
-			stat += teamHashtag;
-		}
-		if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() <= 140)) {
-			stat += countryHashtag;
-		}		
 		
-		System.out.println(stat.length());
-		System.out.println(stat);
 		
-		System.out.println(playerHashtag + " | " + playerHashtag.length());
-		System.out.println(teamHashtag + " | " + teamHashtag.length());
-		System.out.println(countryHashtag + " | " + countryHashtag.length());
+		
+//		String postDescription = "Germany 1-0 Cameroon - Demirbay 48' (FIFA Confederations Cup - Group B) - Streamable links in the comment section";
+//		
+//		String url = "https://my.mixtape.moe/bjdlnm.mp4";
+//		
+//		String playerHashtag = " #Demirbay";
+//		
+//		String team = "1899Hoffenheim";
+//				
+//		String teamHashtag = " #" + team.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","");
+//		
+//		String countryHashtag = " #Germany";
+//		
+//		int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
+//				
+//		String ellipsePost = "";
+//		String[] postParts = postDescription.split(" ");
+//		for (int i=0; i<postParts.length;i++) {
+//			if (ellipsePost.length() + postParts[i].length() < maxPostLength) {
+//				ellipsePost += postParts[i] + " ";
+//			} else {
+//				System.out.println(ellipsePost);
+//				break;
+//			}
+//		}
+//		ellipsePost = ellipsePost.trim();
+//		ellipsePost += "...";
+//		
+//		System.out.println("ellipse length is: " + ellipsePost.length());
+//		String stat = ellipsePost + " | " + url;
+//
+//		if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() <= 140)) {
+//			stat += playerHashtag;
+//		}
+//		if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() <= 140)) {
+//			stat += teamHashtag;
+//		}
+//		if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() <= 140)) {
+//			stat += countryHashtag;
+//		}		
+//		
+//		System.out.println(stat.length());
+//		System.out.println(stat);
+//		
+//		System.out.println(playerHashtag + " | " + playerHashtag.length());
+//		System.out.println(teamHashtag + " | " + teamHashtag.length());
+//		System.out.println(countryHashtag + " | " + countryHashtag.length());
 		
 //		String postDescription = "Wissam Ben Yedder 3:6 against Marseille";
 //		
