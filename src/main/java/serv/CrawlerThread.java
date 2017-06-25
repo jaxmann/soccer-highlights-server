@@ -351,6 +351,9 @@ public class CrawlerThread implements Runnable {
 				}
 				countryHashtag = simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				//------------------------------------------------------//
+				int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
+
+				
 				String ellipsePost = "";
 				String[] postParts = postDescription.split(" ");
 				for (int i=0; i<postParts.length;i++) {
