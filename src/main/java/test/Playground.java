@@ -20,10 +20,16 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
-		Calendar calendar = Calendar.getInstance();
-		int hours = calendar.get(Calendar.HOUR_OF_DAY);
+		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?[-|:][\\[|(]?[0-9][\\]|)]?");
 		
-		System.out.println("hours is" + hours);
+		Matcher m = p.matcher("Marco Reus 7:3 against Bayern");
+		
+		System.out.println(m.find());
+		
+//		Calendar calendar = Calendar.getInstance();
+//		int hours = calendar.get(Calendar.HOUR_OF_DAY);
+//		
+//		System.out.println("hours is" + hours);
 		
 //		System.out.println(simplify.simplifyName("Mesut Özil"));
 		
@@ -129,16 +135,16 @@ public class Playground {
 			//logger.error("Error trying to read player file");
 		}*/
 		
-		String postDescription = "Juventus 1-[1] Real Madrid ( Mandzukic M. 27')";
-		
-		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
-	
-		Matcher m = p.matcher(postDescription);
-		
-		if (m.find()) { 
-			String score = postDescription.substring(m.start(), m.end());
-			System.out.println(score.replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", ""));
-		}
+//		String postDescription = "Juventus 1-[1] Real Madrid ( Mandzukic M. 27')";
+//		
+//		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
+//	
+//		Matcher m = p.matcher(postDescription);
+//		
+//		if (m.find()) { 
+//			String score = postDescription.substring(m.start(), m.end());
+//			System.out.println(score.replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", ""));
+//		}
 		
 		
 

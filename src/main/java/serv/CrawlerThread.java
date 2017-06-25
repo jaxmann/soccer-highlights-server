@@ -86,7 +86,7 @@ public class CrawlerThread implements Runnable {
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
+		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?[-|:][\\[|(]?[0-9][\\]|)]?"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
 
 		playerTeams = populatePlayerTeams(); //list of players with team names associated
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
