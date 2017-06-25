@@ -20,11 +20,28 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
-		Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?[-|:][\\[|(]?[0-9][\\]|)]?");
+		String postDescription = "Wissam Ben Yedder 3:6 against Marseille";
 		
-		Matcher m = p.matcher("Marco Reus 7:3 against Bayern");
+		String minName = "Marco Reus";
 		
-		System.out.println(m.find());
+		postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2"); //M. Reus -> M Reus
+		if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
+			postDescription = postDescription.substring(2); //M Reus - > Reus
+		}
+		
+		String hashtag = "";
+		String[] fullN = minName.split(" ");
+		if (fullN.length == 1) {
+			hashtag = fullN[0];
+		} else if (fullN.length == 2) {
+			hashtag = fullN[1];
+		} else {
+			hashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
+		}
+		
+		String stat = postDescription + " | " + "http://google.com" + " #" + hashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
+		
+		System.out.println(stat);
 		
 //		Calendar calendar = Calendar.getInstance();
 //		int hours = calendar.get(Calendar.HOUR_OF_DAY);

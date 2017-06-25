@@ -310,11 +310,24 @@ public class CrawlerThread implements Runnable {
 					postDescription = postDescription.substring(2); //M Reus - > Reus
 				}
 				try {
-					String stat = postDescription + " | " + url + " #" + minName.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
+					
+					String playerHashtag = "";
+					String[] fullN = minName.split(" ");
+					if (fullN.length == 1) {
+						playerHashtag = fullN[0];
+					} else if (fullN.length == 2) {
+						playerHashtag = fullN[1];
+					} else {
+						playerHashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
+					}
+					
+					String stat = postDescription + " | " + url + " #" + playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]","");
 					if (stat.length() < 140) {
 						status = twitter.updateStatus(stat);
 						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
-					} //else do nothing
+					} else {
+						logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
+					}
 				} catch (TwitterException e) {
 					logger.error(e.toString());
 				}
