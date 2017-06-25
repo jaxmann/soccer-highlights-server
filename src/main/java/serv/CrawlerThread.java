@@ -343,7 +343,7 @@ public class CrawlerThread implements Runnable {
 					countryName = playerCountry.get(minName.trim()); //'Germany'
 				}
 
-				String[] countryParts = teamName.split(" ");
+				String[] countryParts = countryName.split(" ");
 				String countryHashtag = "";
 
 				for (int i=0; i<countryParts.length;i++) {
@@ -366,7 +366,7 @@ public class CrawlerThread implements Runnable {
 						status = twitter.updateStatus(stat);
 						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
 					} else {
-						logger.info("TEST ENV: Posted to twitter and successfully updated the status to [" + stat + "].");
+						logger.info("TEST ENV: Would have posted to twitter with [" + stat + "].");
 					}
 				} else {
 					logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
