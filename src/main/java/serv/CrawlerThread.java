@@ -366,7 +366,7 @@ public class CrawlerThread implements Runnable {
 						status = twitter.updateStatus(stat);
 						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
 					} else {
-						logger.info("TEST ENV: Posted to twitter and successfully updated the status to [" + status.getText() + "].");
+						logger.info("TEST ENV: Posted to twitter and successfully updated the status to [" + stat + "].");
 					}
 				} else {
 					logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
