@@ -34,7 +34,7 @@ public class MLSCrawler {
 				
 		String mlsURL = "https://en.wikipedia.org/wiki/" + team;
 		
-		HashSet<MLSPlayer> mlsPlayers = new HashSet<MLSPlayer>();
+		HashSet<Player> mlsPlayers = new HashSet<Player>();
 		
 		try {
 			Document document = Jsoup.connect(mlsURL).followRedirects(true).get(); 
@@ -58,7 +58,7 @@ public class MLSCrawler {
 					
 					playerTeam = team.replaceAll("_", " ").replaceAll("\\.", "");
 				}
-				MLSPlayer newPlayer = new MLSPlayer(playerName.replaceAll(",", ""), playerTeam, playerCountry);
+				Player newPlayer = new Player(playerName.replaceAll(",", ""), playerTeam, playerCountry);
 				
 				mlsPlayers.add(newPlayer);			
 			}
@@ -66,7 +66,7 @@ public class MLSCrawler {
 			e.printStackTrace();
 		}
 		
-		for (MLSPlayer p : mlsPlayers) {
+		for (Player p : mlsPlayers) {
 			System.out.println(" Major League Soccer, " + p.getTeam() + ", " + p.getName() + ", " + p.getCountry());
 		}
 		

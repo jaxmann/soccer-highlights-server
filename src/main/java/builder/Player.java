@@ -1,12 +1,12 @@
 package builder;
 
-public class MLSPlayer {
+public class Player {
 	
 	private String name;
 	private String team;
 	private String country;
 	
-	MLSPlayer(String name, String team, String country) {
+	Player(String name, String team, String country) {
 		this.name = name;
 		this.team = team;
 		this.country = country;
