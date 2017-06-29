@@ -15,3 +15,6 @@ HOME=/
 # *  *  *  *  * user-name command to be executed
 
 0 4 * * * ec2-user sudo java -jar /home/ec2-user/server/delete-timeq.jar
+0 * * * * ec2-user sudo sh /home/ec2-user/server/send-crash-report.sh
+0 2 * * * ec2-user sudo sh /home/ec2-user/server/send-daily-mails.sh
+# timeq at midnight EST, crash reports hourly, dailies at 10 pm
