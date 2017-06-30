@@ -181,9 +181,7 @@ public class CrawlerThread implements Runnable {
 			//String newline = new String(ptext, UTF_8);
 
 			String[] s = line.split(",");
-			//			if (line.contains("zil")) {
-			//				logger.info(line);
-			//			}
+	
 			for (String player : s) {
 
 				// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
@@ -205,7 +203,7 @@ public class CrawlerThread implements Runnable {
 					}
 					if (player.equals(s[0])) {
 						if (!maybes.containsKey(player)) {
-							maybes.put(player, 120); //full name found
+							maybes.put(player, 160); //full name found
 						}
 					}
 					break;
