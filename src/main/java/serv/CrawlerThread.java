@@ -354,16 +354,21 @@ public class CrawlerThread implements Runnable {
 				
 				String ellipsePost = "";
 				String[] postParts = postDescription.split(" ");
-				for (int i=0; i<postParts.length;i++) {
-					if (ellipsePost.length() + postParts[i].length() < maxPostLength) {
-						ellipsePost += postParts[i] + " ";
-					} else {
-						System.out.println(ellipsePost);
-						break;
+				if (postDescription.length() < maxPostLength) {
+					ellipsePost = postDescription; //dont add ellipses if post is already short enough to fit
+				} else {
+					for (int i=0; i<postParts.length;i++) {
+						if (ellipsePost.length() + postParts[i].length() < maxPostLength) {
+							ellipsePost += postParts[i] + " ";
+						} else {
+							System.out.println(ellipsePost);
+							break;
+						}
 					}
+					ellipsePost = ellipsePost.trim();
+					ellipsePost += "...";
 				}
-				ellipsePost = ellipsePost.trim();
-				ellipsePost += "...";
+				
 				
 				String stat = ellipsePost + " | " + url;
 
