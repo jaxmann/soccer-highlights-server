@@ -20,10 +20,22 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
-		for (int i=300; i<400;i++) {
-			System.out.println((char)i + "   " + i);
-		}
+		String postDescription = "celtic Man United goal vs Celtic 4-5";
 		
+		String tm = "celtic";
+		
+		String cleanedPostDescription = postDescription.replaceAll("[Uu]nited","");
+		
+		String teamRegex = "((^|\\s|\\()" + tm + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tm) + "(\\)|'|\\s|$))";
+		
+		Pattern teamP = Pattern.compile(teamRegex, Pattern.CASE_INSENSITIVE);
+		Matcher teamM = teamP.matcher(cleanedPostDescription);
+		
+		if (teamM.find()) {
+			System.out.println("regex found [" + cleanedPostDescription.substring(teamM.start(), teamM.end()).trim() + "] treated as [" + tm + "]");
+		} else {
+			System.out.println("found nothing");
+		}
 		
 		
 		

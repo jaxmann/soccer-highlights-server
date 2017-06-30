@@ -247,29 +247,55 @@ public class CrawlerThread implements Runnable {
 
 			if (playerTeams.containsKey(key.trim())) {
 				String tm = playerTeams.get(key.trim()); //'Manchester City'
-				String[] tmSplit = tm.split(" ");
-				for (int i=0; i<tmSplit.length; i++) {
-					if (postDescription.toLowerCase().contains(tm.toLowerCase()) || postDescription.toLowerCase().contains(simplify.simplifyName(tm.toLowerCase()))) {
-						maybes.put(key, value + 60); //if entire team is contained in snippet
-						logger.info("Team treated as [" + tm + "] for player [" + key + "]");
-					} else if (postDescription.toLowerCase().contains(tmSplit[i].toLowerCase()) || postDescription.toLowerCase().contains(simplify.simplifyName(tmSplit[i].toLowerCase()))) {
-						maybes.put(key, value + 40); //add 15 points for each part of a team that is contained
-						logger.info("Team treated as [" + tm + "] for player [" + key + "]");
+				
+				String cleanedPostDescription = postDescription.replaceAll("[Uu]nited","");
+				
+				String teamRegex = "((^|\\s|\\()" + tm + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tm) + "(\\)|'|\\s|$))";
+				
+				Pattern teamP = Pattern.compile(teamRegex, Pattern.CASE_INSENSITIVE);
+				Matcher teamM = teamP.matcher(cleanedPostDescription);
+				
+				if (teamM.find()) {
+					maybes.put(key, value + 60); //if ENTIRE team is contained in snippet
+					logger.info("Team treated as [" + tm + "] for player [" + key + "]");
+				} else {
+					String[] tmSplit = tm.split(" ");
+					for (int i=0; i<tmSplit.length; i++) {
+						
+						String teamRegexPartial = "((^|\\s|\\()" + tmSplit[i] + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tmSplit[i]) + "(\\)|'|\\s|$))";
+						
+						Pattern teamPPartial = Pattern.compile(teamRegexPartial, Pattern.CASE_INSENSITIVE);
+						Matcher teamMPartial = teamPPartial.matcher(cleanedPostDescription);
+						
+						if (teamMPartial.find()) {
+							maybes.put(key, value + 40); //add 15 points for each part of a team that is contained
+							logger.info("Team treated as [" + tm + "] for player [" + key + "]");
+						}
 					}
 				}
+				
+				
+				
 			}
 		}
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-
+			
 			if (playerCountry.containsKey(key.trim())) {
-				String tm = playerCountry.get(key.trim()); //'Germany'
-				if (postDescription.toLowerCase().contains(tm.toLowerCase())) {
+				String cn = playerCountry.get(key.trim()); //'Germany'
+				
+				String countryRegex = "((^|\\s|\\()" + cn + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(cn) + "(\\)|'|\\s|$))";
+				
+				Pattern countryP = Pattern.compile(countryRegex, Pattern.CASE_INSENSITIVE);
+				Matcher countryM = countryP.matcher(postDescription);
+				
+				if (countryM.find()) {
 					maybes.put(key, value + 50); 
-					logger.info("Country treated as [" + tm + "] for player [" + key + "]");
+					logger.info("Country treated as [" + cn + "] for player [" + key + "]");
 				}
+				
 			}
 
 		}
