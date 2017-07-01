@@ -122,7 +122,7 @@ public class VideoUpload {
 		FileUtils.copyURLToFile(url, file);
 		//String filePath = "/home/jonathan/Downloads/output.mp4";
 		
-		FFprobe ffprobe = new FFprobe("/usr/bin/ffprobe");
+		FFprobe ffprobe = new FFprobe("/usr/local/bin/ffmpeg/ffprobe");
 		FFmpegProbeResult probeResult = ffprobe.probe("/home/jonathan/Downloads/ftmp.mp4");
 		FFmpegFormat format = probeResult.getFormat();
 		double fduration = format.duration;
@@ -133,7 +133,7 @@ public class VideoUpload {
 		long fbitrate = (long) ((long) (4000000*8*.8)/(fduration));
 		System.out.println(fbitrate);
 		
-		FFmpeg ffmpeg = new FFmpeg("/usr/bin/ffmpeg");
+		FFmpeg ffmpeg = new FFmpeg("/usr/local/bin/ffmpeg/ffmpeg");
 		FFmpegBuilder builder = new FFmpegBuilder()
 	
 		.setInput("/home/jonathan/Downloads/ftmp.mp4")     // Filename, or a FFmpegProbeResult
