@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import twitter4j.JSONException;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
@@ -31,27 +32,41 @@ public class Playground {
 	public static void main(String[] args) throws TwitterException {
 		
 		
-		Twitter twitter = new TwitterFactory().getInstance();
-//		twitter.setOAuthConsumer(consumerKey, consumerSecret);
-//        AccessToken accessToken = new AccessToken(accessTokenStr,accessTokenSecret);
-//        twitter.setOAuthAccessToken(accessToken);
+		VideoUpload vu = new VideoUpload();
+		try {
+			vu.tweetTweetWithVideo("https://my.mixtape.moe/eeogvd.mp4", "test content");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-        //twitter.setOAuthConsumer(consumerKey, consumerSecret);
-        //AccessToken accessToken = new AccessToken(accessTokenStr,accessTokenSecret);
-        //twitter.setOAuthAccessToken(accessToken);
-        File file = new File("/home/jonathan/Downloads/video.mp4");
-        //UploadedMedia media = twitter.uploadMedia(file);
-        
-        StatusUpdate update = new StatusUpdate("testing");
-        UploadedMedia media = twitter.uploadMedia(arg0, arg1);
-        
-        long mediaIds[] = new long[1];
-        mediaIds[0] = media.getMediaId();
-        update.setMediaIds(mediaIds);
-        
-        twitter.updateStatus(update);
-        
-        System.out.println("it may have worked...");
+//		Twitter twitter = new TwitterFactory().getInstance();
+////		twitter.setOAuthConsumer(consumerKey, consumerSecret);
+////        AccessToken accessToken = new AccessToken(accessTokenStr,accessTokenSecret);
+////        twitter.setOAuthAccessToken(accessToken);
+//		
+//        //twitter.setOAuthConsumer(consumerKey, consumerSecret);
+//        //AccessToken accessToken = new AccessToken(accessTokenStr,accessTokenSecret);
+//        //twitter.setOAuthAccessToken(accessToken);
+//        File file = new File("/home/jonathan/Downloads/video.mp4");
+//        //UploadedMedia media = twitter.uploadMedia(file);
+//        
+//        StatusUpdate update = new StatusUpdate("testing");
+//        UploadedMedia media = twitter.uploadMedia(arg0, arg1);
+//        
+//        long mediaIds[] = new long[1];
+//        mediaIds[0] = media.getMediaId();
+//        update.setMediaIds(mediaIds);
+//        
+//        twitter.updateStatus(update);
+//        
+//        System.out.println("it may have worked...");
         
         //StatusUpdate statusUpdate = new StatusUpdate(text);
         //statusUpdate.setMedia(media.getMediaId());
