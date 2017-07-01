@@ -2,9 +2,12 @@ buildscript {
     repositories {
         mavenCentral()
     }
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.0'
+    }
 }
 apply plugin: 'application'
-
+apply plugin: 'jacoco'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
@@ -28,10 +31,24 @@ repositories {
     mavenCentral()
 }
 
+
+configurations {
+    provided
+}
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+  	provided 'org.projectlombok:lombok:1.16.6'
+	compile 'com.google.guava:guava:19.0'
+	  compile 'com.google.code.gson:gson:2.6.1'
+	  compile 'com.sun.jersey:jersey-client:1.19'
+	  compile 'com.sun.jersey.contribs:jersey-multipart:1.19'
+	  compile 'com.sun.jersey:jersey-json:1.19'
+	  compile 'com.sun.jersey.contribs.jersey-oauth:oauth-client:1.19'
+	  compile 'com.sun.jersey.contribs.jersey-oauth:oauth-signature:1.19'
+	  compile 'org.apache.commons:commons-lang3:3.0'  
+	compile 'org.projectlombok:lombok:1.16.6'
 	compile group: 'org.jsoup', name: 'jsoup', version: '1.10.1'
 	compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.15.1'
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
@@ -45,6 +62,32 @@ dependencies {
 	compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.6'
 	compile group: 'javax.mail', name: 'mail', version: '1.4.7'
 	
-	
-    
 }
+
+task delombok {
+    description 'Delomboks the source code'
+    ant.taskdef(classname: 'lombok.delombok.ant.Tasks$Delombok', classpath: configurations.compile.asPath,  name: 'delombok')
+    ant.mkdir(dir: 'build/src-delomboked')
+    ant.delombok(verbose: 'true', encoding: 'UTF-8', to: 'build/src-delomboked', from: 'src/main/java')
+}
+
+jacocoTestReport {
+  group = "Reporting"
+  apply plugin: 'com.github.kt3k.coveralls'
+	reports {
+		xml.enabled true
+    html.enabled true
+		csv.enabled true
+		html.destination "${buildDir}/reports/coverage"
+	}
+
+  afterEvaluate {
+          classDirectories = files(classDirectories.files.collect {
+              fileTree(dir: it, exclude: ['com/steelhouse/twitter/ads/enums/**',
+                                          'com/steelhouse/twitter/ads/audience/**',
+                                          'com/steelhouse/twitter/ads/common/Constants'
+              ])
+          })
+      }
+}
+

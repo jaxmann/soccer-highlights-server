@@ -33,6 +33,8 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import test.VideoUpload;
+import twitter4j.JSONException;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -326,9 +328,7 @@ public class CrawlerThread implements Runnable {
 	public static void tweetTweet(String minName, String postDescription, String url) {
 
 		if (!minName.equals("no-player-found")) {
-			// The factory instance is re-usable and thread safe.
-			Twitter twitter = TwitterFactory.getSingleton();
-			Status status = null;
+			
 			postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2"); //M. Reus -> M Reus
 			if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
 				postDescription = postDescription.substring(2); //M Reus - > Reus
@@ -409,16 +409,34 @@ public class CrawlerThread implements Runnable {
 					stat += " #" + simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 
-
-				if (stat.length() < 140) {
-					if (!redditenv.equals("test")) {
-						status = twitter.updateStatus(stat);
-						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
-					} else {
-						logger.info("TEST ENV: Would have posted to twitter with [" + stat + "].");
+				if (url.endsWith(".mp4")) {
+					VideoUpload vu = new VideoUpload();
+					try {
+						vu.tweetTweetWithVideo(url, stat);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				} else {
-					logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
+					if (stat.length() < 140) {
+						// The factory instance is re-usable and thread safe.
+						Twitter twitter = TwitterFactory.getSingleton();
+						Status status = null;
+						if (!redditenv.equals("test")) {
+							status = twitter.updateStatus(stat);
+							logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
+						} else {
+							logger.info("TEST ENV: Would have posted to twitter with [" + stat + "].");
+						}
+					} else {
+						logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
+					}
 				}
 			} catch (TwitterException e) {
 				logger.error(e.toString());

@@ -61,7 +61,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.file.FileDataBodyPart;
 
-public class VideoUploadExample {
+public class VideoUpload {
 	
 	
 	/*
