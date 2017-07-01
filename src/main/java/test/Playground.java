@@ -5,37 +5,78 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import twitter4j.Status;
+import twitter4j.StatusUpdate;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.UploadedMedia;
+import twitter4j.auth.AccessToken;
+
 import serv.simplify;
 
 public class Playground {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws TwitterException {
 		
-		String postDescription = "celtic Man United goal vs Celtic 4-5";
 		
-		String tm = "celtic";
+		Twitter twitter = new TwitterFactory().getInstance();
+//		twitter.setOAuthConsumer(consumerKey, consumerSecret);
+//        AccessToken accessToken = new AccessToken(accessTokenStr,accessTokenSecret);
+//        twitter.setOAuthAccessToken(accessToken);
 		
-		String cleanedPostDescription = postDescription.replaceAll("[Uu]nited","");
+        //twitter.setOAuthConsumer(consumerKey, consumerSecret);
+        //AccessToken accessToken = new AccessToken(accessTokenStr,accessTokenSecret);
+        //twitter.setOAuthAccessToken(accessToken);
+        File file = new File("/home/jonathan/Downloads/video.mp4");
+        //UploadedMedia media = twitter.uploadMedia(file);
+        
+        StatusUpdate update = new StatusUpdate("testing");
+        UploadedMedia media = twitter.uploadMedia(arg0, arg1);
+        
+        long mediaIds[] = new long[1];
+        mediaIds[0] = media.getMediaId();
+        update.setMediaIds(mediaIds);
+        
+        twitter.updateStatus(update);
+        
+        System.out.println("it may have worked...");
+        
+        //StatusUpdate statusUpdate = new StatusUpdate(text);
+        //statusUpdate.setMedia(media.getMediaId());
+        //twitter.updateStatus(statusUpdate.inReplyToStatusId(tweetId));`
 		
-		String teamRegex = "((^|\\s|\\()" + tm + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tm) + "(\\)|'|\\s|$))";
 		
-		Pattern teamP = Pattern.compile(teamRegex, Pattern.CASE_INSENSITIVE);
-		Matcher teamM = teamP.matcher(cleanedPostDescription);
 		
-		if (teamM.find()) {
-			System.out.println("regex found [" + cleanedPostDescription.substring(teamM.start(), teamM.end()).trim() + "] treated as [" + tm + "]");
-		} else {
-			System.out.println("found nothing");
-		}
+		
+		
+//		String postDescription = "celtic Man United goal vs Celtic 4-5";
+//		
+//		String tm = "celtic";
+//		
+//		String cleanedPostDescription = postDescription.replaceAll("[Uu]nited","");
+//		
+//		String teamRegex = "((^|\\s|\\()" + tm + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tm) + "(\\)|'|\\s|$))";
+//		
+//		Pattern teamP = Pattern.compile(teamRegex, Pattern.CASE_INSENSITIVE);
+//		Matcher teamM = teamP.matcher(cleanedPostDescription);
+//		
+//		if (teamM.find()) {
+//			System.out.println("regex found [" + cleanedPostDescription.substring(teamM.start(), teamM.end()).trim() + "] treated as [" + tm + "]");
+//		} else {
+//			System.out.println("found nothing");
+//		}
 		
 		
 		

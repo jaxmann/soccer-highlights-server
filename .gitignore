@@ -4,6 +4,7 @@
 /bin/
 /logs/*
 /twitter4j.properties
+/config.properties
 /client_secret.json
 /build
 .gradle/
