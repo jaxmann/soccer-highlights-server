@@ -44,7 +44,14 @@ dependencies {
     compile 'com.google.apis:google-api-services-gmail:v1-rev64-1.22.0'
 	compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.6'
 	compile group: 'javax.mail', name: 'mail', version: '1.4.7'
-	
+	compile 'com.google.guava:guava:19.0'
+    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.sun.jersey:jersey-client:1.19'
+    compile 'com.sun.jersey.contribs:jersey-multipart:1.19'
+    compile 'com.sun.jersey:jersey-json:1.19'
+    compile 'com.sun.jersey.contribs.jersey-oauth:oauth-client:1.19'
+    compile 'com.sun.jersey.contribs.jersey-oauth:oauth-signature:1.19'
+    compile 'org.apache.commons:commons-lang3:3.0'
 	
     
 }
