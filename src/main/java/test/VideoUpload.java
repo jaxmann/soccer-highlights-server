@@ -20,6 +20,7 @@ import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import serv.CrawlerThread;
 import twitter4j.JSONException;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
@@ -62,6 +64,9 @@ import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.file.FileDataBodyPart;
 
 public class VideoUpload {
+	
+	public static Logger logger = Logger.getLogger(CrawlerThread.class);
+
 	
 	
 	/*
@@ -126,12 +131,12 @@ public class VideoUpload {
 		FFmpegProbeResult probeResult = ffprobe.probe("/home/ec2-user/server/tmpVids/ftmp.mp4");
 		FFmpegFormat format = probeResult.getFormat();
 		double fduration = format.duration;
-		System.out.println(fduration);
+		logger.info("video duration is " + fduration);
 		if (fduration > 29.5) {
 			fduration = 29.0;
 		}
 		long fbitrate = (long) ((long) (4000000*8*.8)/(fduration));
-		System.out.println(fbitrate);
+		logger.info("bitrate is " + fbitrate);
 		
 		FFmpeg ffmpeg = new FFmpeg("/usr/local/bin/ffmpeg");
 		FFmpegBuilder builder = new FFmpegBuilder()
