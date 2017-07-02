@@ -118,12 +118,12 @@ public class VideoUpload {
 
 		// String filePath = "C:/temp/doge.mp4";
 		URL url = new URL(urlText);
-		File file = new File("/home/jonathan/Downloads/ftmp.mp4");
+		File file = new File("/home/ec2-user/server/tmpVids/ftmp.mp4");
 		FileUtils.copyURLToFile(url, file);
 		//String filePath = "/home/jonathan/Downloads/output.mp4";
 		
 		FFprobe ffprobe = new FFprobe("/usr/local/bin/ffmpeg/ffprobe");
-		FFmpegProbeResult probeResult = ffprobe.probe("/home/jonathan/Downloads/ftmp.mp4");
+		FFmpegProbeResult probeResult = ffprobe.probe("/home/ec2-user/server/tmpVids/ftmp.mp4");
 		FFmpegFormat format = probeResult.getFormat();
 		double fduration = format.duration;
 		System.out.println(fduration);
@@ -133,13 +133,13 @@ public class VideoUpload {
 		long fbitrate = (long) ((long) (4000000*8*.8)/(fduration));
 		System.out.println(fbitrate);
 		
-		FFmpeg ffmpeg = new FFmpeg("/usr/local/bin/ffmpeg/ffmpeg");
+		FFmpeg ffmpeg = new FFmpeg("/usr/local/bin/ffmpeg");
 		FFmpegBuilder builder = new FFmpegBuilder()
 	
-		.setInput("/home/jonathan/Downloads/ftmp.mp4")     // Filename, or a FFmpegProbeResult
+		.setInput("/home/ec2-user/server/tmpVids/ftmp.mp4")     // Filename, or a FFmpegProbeResult
 		.overrideOutputFiles(true) // Override the output if it exists
 		
-		.addOutput("/home/jonathan/Downloads/ftmpo.mp4")// Filename for the destination
+		.addOutput("/home/ec2-user/server/tmpVids/ftmpo.mp4")// Filename for the destination
 	
 		//.setFormat("mp4")        // Format is inferred from filename, or can be set
 		//.setTargetSize(4500000)  // Aim for a 250KB file
@@ -163,7 +163,7 @@ public class VideoUpload {
 
 		// Run a one-pass encode
 		executor.createJob(builder).run();
-		file = new File("/home/jonathan/Downloads/ftmpo.mp4");
+		file = new File("/home/ec2-user/server/tmpVids/ftmpo.mp4");
 		
 
 		ClientService clientService = ClientServiceFactory.getInstance();
@@ -197,7 +197,7 @@ public class VideoUpload {
 		}
 
 		String output = response.getEntity(String.class);
-		System.out.println(output);
+		//System.out.println(output);
 
 		JsonObject jsonObj = new JsonParser().parse(output).getAsJsonObject();
 		String mediaId = jsonObj.get("media_id_string").getAsString();
@@ -242,7 +242,7 @@ public class VideoUpload {
 		}
 		
 		output = response.getEntity(String.class);
-		System.out.println(output);
+		//System.out.println(output);
 		
 		// STATUS
 		
