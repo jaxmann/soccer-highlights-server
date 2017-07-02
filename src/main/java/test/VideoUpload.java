@@ -138,7 +138,7 @@ public class VideoUpload {
 		long fbitrate = (long) ((long) (4000000*8*.8)/(fduration));
 		logger.info("bitrate is " + fbitrate);
 		
-		FFmpeg ffmpeg = new FFmpeg("/usr/local/bin/ffmpeg");
+		FFmpeg ffmpeg = new FFmpeg("/usr/local/bin/ffmpeg/ffmpeg");
 		FFmpegBuilder builder = new FFmpegBuilder()
 	
 		.setInput("/home/ec2-user/server/tmpVids/ftmp.mp4")     // Filename, or a FFmpegProbeResult
