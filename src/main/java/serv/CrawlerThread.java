@@ -555,51 +555,52 @@ public class CrawlerThread implements Runnable {
 	}
 
 	public static void addToTimeq(String keyword, String postDescription) {
-
-		try {
-
-			Connection connection = null;
-			PreparedStatement preparedStatement = null;
-
+		
+		if (!keyword.equals("no-player-found")) {
 			try {
-				String url = "jdbc:sqlite:../server/db/timeq.db";
-				connection = DriverManager.getConnection(url);
-				long currentTime = System.nanoTime();
-				keyword = keyword.replace("'", "''");
 
-				Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
-				Matcher m = p.matcher(postDescription);
-				String score = "0-0";
+				Connection connection = null;
+				PreparedStatement preparedStatement = null;
 
-				if (m.find()) { 
-					score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
-				}
-
-				String sql = "INSERT INTO Timeq(Player, Score)"
-						+ " VALUES(?,?)";
-				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setString(1, keyword);
-				preparedStatement.setString(2, score);
-				preparedStatement.executeUpdate(); 
-				logger.info("TQ insertion: [" + keyword + "],[" + score + "]");
-
-			} catch (SQLException e) {
-				logger.error(e.toString());
-			} finally {
 				try {
-					if (connection != null) {
-						preparedStatement.close();
-						connection.close();
+					String url = "jdbc:sqlite:../server/db/timeq.db";
+					connection = DriverManager.getConnection(url);
+					long currentTime = System.nanoTime();
+					keyword = keyword.replace("'", "''");
+
+					Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
+					Matcher m = p.matcher(postDescription);
+					String score = "0-0";
+
+					if (m.find()) { 
+						score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
 					}
-				} catch (SQLException ex) {
-					logger.error(ex.toString());
+
+					String sql = "INSERT INTO Timeq(Player, Score)"
+							+ " VALUES(?,?)";
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setString(1, keyword);
+					preparedStatement.setString(2, score);
+					preparedStatement.executeUpdate(); 
+					logger.info("TQ insertion: [" + keyword + "],[" + score + "]");
+
+				} catch (SQLException e) {
+					logger.error(e.toString());
+				} finally {
+					try {
+						if (connection != null) {
+							preparedStatement.close();
+							connection.close();
+						}
+					} catch (SQLException ex) {
+						logger.error(ex.toString());
+					}
 				}
+			} catch (Exception ex) {
+				logger.error(ex.toString());
 			}
-		} catch (Exception ex) {
-			logger.error(ex.toString());
+
 		}
-
-
 	}
 
 	public static int getSleepTime() {
