@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+	mavenCentral()        
     }
 }
 apply plugin: 'application'
@@ -32,6 +32,11 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+	compile files('../pmr-server-jars/lombok-1.16.16.jar')
+	compile files('../pmr-server-jars/ffmpeg-0.6.1.jar')
+	compile files('../pmr-server-jars/twitter-java-ads-sdk.jar')
+	compile files('../pmr-server-jars/guava-22.0.jar')
+	compile files('../pmr-server-jars/commons-io-2.5.jar')
 	compile group: 'org.jsoup', name: 'jsoup', version: '1.10.1'
 	compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.15.1'
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
