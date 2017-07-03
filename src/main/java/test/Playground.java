@@ -9,12 +9,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import twitter4j.JSONException;
 import twitter4j.Status;
@@ -32,19 +39,72 @@ public class Playground {
 	public static void main(String[] args) throws TwitterException {
 		
 		
-		VideoUpload vu = new VideoUpload();
+		URL yahoo = null;
 		try {
-			vu.tweetTweetWithVideo("https://my.mixtape.moe/eeogvd.mp4", "test content");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
+			yahoo = new URL("https://api.streamable.com/videos/wwbna");
+		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        URLConnection yc = null;
+		try {
+			yc = yahoo.openConnection();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        BufferedReader in = null;
+		try {
+			in = new BufferedReader(
+			                        new InputStreamReader(
+			                        yc.getInputStream()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+        String inputLine = null;
+        String output = "";
+        try {
+			while ((inputLine = in.readLine()) != null) {
+			    System.out.println(inputLine);
+			    output = inputLine;
+			}
+			System.out.println(output);
+        }
+        catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        System.out.println("output is " + output);
+        JsonObject jsonObj = new JsonParser().parse(output).getAsJsonObject();
+		String url = jsonObj.get("files").getAsJsonObject().get("mp4").getAsJsonObject().get("url").getAsString();
+		System.out.println(url);
+		
+		String fullUrl = "https:"+url;
+		System.out.println(fullUrl);
+        
+		
+//		VideoUpload vu = new VideoUpload();
+//		try {
+//			vu.tweetTweetWithVideo("https://my.mixtape.moe/eeogvd.mp4", "test content");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 //		Twitter twitter = new TwitterFactory().getInstance();
 ////		twitter.setOAuthConsumer(consumerKey, consumerSecret);

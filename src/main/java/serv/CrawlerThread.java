@@ -6,6 +6,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +36,9 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import test.VideoUpload;
 import twitter4j.JSONException;
@@ -423,6 +430,21 @@ public class CrawlerThread implements Runnable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				} else if (url.contains("streamable")) {
+					String newURL = getStreamableURL(url);
+					VideoUpload vu = new VideoUpload();
+					try {
+						vu.tweetTweetWithVideo(newURL, stat);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else {
 					if (stat.length() < 140) {
 						// The factory instance is re-usable and thread safe.
@@ -709,6 +731,64 @@ public class CrawlerThread implements Runnable {
 			e.printStackTrace();
 		}
 		return playerMatches;
+	}
+	
+	public static String getStreamableURL(String urlWithStreamable) {
+		
+		String streamableID = urlWithStreamable.replaceAll(".*/", "");
+		
+		URL yahoo = null;
+		try {
+			yahoo = new URL("https://api.streamable.com/videos/" + streamableID);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        URLConnection yc = null;
+		try {
+			yc = yahoo.openConnection();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        BufferedReader in = null;
+		try {
+			in = new BufferedReader(
+			                        new InputStreamReader(
+			                        yc.getInputStream()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+        String inputLine = null;
+        String output = "";
+        try {
+			while ((inputLine = in.readLine()) != null) {
+			    output = inputLine;
+			}
+			System.out.println(output);
+        }
+        catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        JsonObject jsonObj = new JsonParser().parse(output).getAsJsonObject();
+		String url = jsonObj.get("files").getAsJsonObject().get("mp4").getAsJsonObject().get("url").getAsString();
+		
+		String fullUrl = "https:"+url;
+		
+		return fullUrl;
+        
+		
+		
 	}
 
 
