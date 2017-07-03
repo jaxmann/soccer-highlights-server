@@ -40,7 +40,7 @@ import org.apache.log4j.PropertyConfigurator;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import test.VideoUpload;
+import serv.VideoUpload;
 import twitter4j.JSONException;
 import twitter4j.Status;
 import twitter4j.Twitter;
