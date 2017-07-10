@@ -138,7 +138,7 @@ public class CrawlerThread implements Runnable {
 
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
 
-								if (url.contains(".mp4") || url.contains("streamable") || url.contains("imgtc")) { //only trigger if it's a video link
+								if (url.contains(".mp4") || url.contains("streamable") || url.contains("imgtc") || url.contains("clipit")) { //only trigger if it's a video link
 
 									logger.info("New post found: [" + title + "] at [" + time + "]");
 
@@ -416,20 +416,20 @@ public class CrawlerThread implements Runnable {
 					stat += " #" + simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 
-				if (url.endsWith(".mp4")) {
-					VideoUpload vu = new VideoUpload();
-					try {
-						vu.tweetTweetWithVideo(url, stat);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+//				if (url.endsWith(".mp4")) {
+//					VideoUpload vu = new VideoUpload();
+//					try {
+//						vu.tweetTweetWithVideo(url, stat);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (JSONException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
 //				} else if (url.contains("streamable")) {
 //					String newURL = getStreamableURL(url);
 //					VideoUpload vu = new VideoUpload();
@@ -445,7 +445,7 @@ public class CrawlerThread implements Runnable {
 //						// TODO Auto-generated catch block
 //						e.printStackTrace();
 //					}
-				} else {
+//				} else {
 					if (stat.length() < 140) {
 						// The factory instance is re-usable and thread safe.
 						Twitter twitter = TwitterFactory.getSingleton();
@@ -459,7 +459,7 @@ public class CrawlerThread implements Runnable {
 					} else {
 						logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
 					}
-				}
+				//}
 			} catch (TwitterException e) {
 				logger.error(e.toString());
 			}
