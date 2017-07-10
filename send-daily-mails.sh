@@ -2,7 +2,7 @@
 
 attachments=""
 
-for att in $(find /home/ec2-user/server/logs  -name "logging.log.$(date '+%Y')-$(date '+%m')-$(date '+%d')*")
+for att in $(find /home/ec2-user/server/logs  -name "logging.log.$(date '+%Y')-$(date '+%m')-$(date '+%d')*" -size +7k)
 do
      
 	attachments="$attachments -a $att"
