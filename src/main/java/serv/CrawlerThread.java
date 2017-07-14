@@ -210,6 +210,7 @@ public class CrawlerThread implements Runnable {
 					} else {
 						playersFound.put(s[0], m.end());
 					}
+					
 					if (player.equals(s[0])) {
 						if (!maybes.containsKey(player)) {
 							maybes.put(player, 160); //full name found
