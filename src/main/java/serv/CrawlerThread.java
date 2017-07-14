@@ -342,46 +342,53 @@ public class CrawlerThread implements Runnable {
 				postDescription = postDescription.substring(2); //M Reus - > Reus
 			}
 			try {
-
-				//------------------------------------------------------//
+				
 				String playerHashtag = "";
-				String[] fullN = minName.split(" ");
-				if (fullN.length == 1) {
-					playerHashtag = fullN[0];
-				} else if (fullN.length == 2) {
-					playerHashtag = fullN[1];
-				} else {
-					playerHashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
-				}
-				playerHashtag = simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
-				//------------------------------------------------------//
-				String teamName = "";
-				if (playerTeams.containsKey(minName.trim())) {
-					teamName = playerTeams.get(minName.trim()); //'Manchester City'
-				}
-				String[] teamParts = teamName.split(" ");
 				String teamHashtag = "";
-				if (teamParts.length == 1) {
-					teamHashtag = teamParts[0];
+				String countryHashtag = "";
+				
+				if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG")) {
+					//keep hashtags are blanks
 				} else {
-					for (int i=0; i<teamParts.length;i++) {
-						if (!teamParts[i].equals(teamParts[i].toUpperCase())) {
-							teamHashtag += teamParts[i];
+					
+					//------------------------------------------------------//
+					String[] fullN = minName.split(" ");
+					if (fullN.length == 1) {
+						playerHashtag = fullN[0];
+					} else if (fullN.length == 2) {
+						playerHashtag = fullN[1];
+					} else {
+						playerHashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
+					}
+					playerHashtag = simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+					//------------------------------------------------------//
+					String teamName = "";
+					if (playerTeams.containsKey(minName.trim())) {
+						teamName = playerTeams.get(minName.trim()); //'Manchester City'
+					}
+					String[] teamParts = teamName.split(" ");
+					if (teamParts.length == 1) {
+						teamHashtag = teamParts[0];
+					} else {
+						for (int i=0; i<teamParts.length;i++) {
+							if (!teamParts[i].equals(teamParts[i].toUpperCase())) {
+								teamHashtag += teamParts[i];
+							}
 						}
 					}
+					teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+					//------------------------------------------------------//
+					String countryName = "";
+					if (playerCountry.containsKey(minName.trim())) {
+						countryName = playerCountry.get(minName.trim()); //'Germany'
+					}
+					String[] countryParts = countryName.split(" ");
+					for (int i=0; i<countryParts.length;i++) {
+						countryHashtag += countryParts[i];
+					}
+
+					countryHashtag = simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
-				teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
-				//------------------------------------------------------//
-				String countryName = "";
-				if (playerCountry.containsKey(minName.trim())) {
-					countryName = playerCountry.get(minName.trim()); //'Germany'
-				}
-				String[] countryParts = countryName.split(" ");
-				String countryHashtag = "";
-				for (int i=0; i<countryParts.length;i++) {
-					countryHashtag += countryParts[i];
-				}
-				countryHashtag = simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				//------------------------------------------------------//
 				int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
 
