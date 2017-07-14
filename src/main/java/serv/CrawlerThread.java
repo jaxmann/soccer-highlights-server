@@ -177,7 +177,10 @@ public class CrawlerThread implements Runnable {
 		}
 	}
 
-	public static String findKeyword(String postDescription) {
+	public static String[] findKeyword(String postDescription) {
+		
+		String[] s = new String[2];
+		
 		//could do postDescription = simplify.simplifyName(postDescription) here
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 		HashMap<String, Integer> maybes = new HashMap<String, Integer>();
@@ -320,20 +323,25 @@ public class CrawlerThread implements Runnable {
 				maxPoints = value;
 			}
 		}
-		return maxPlayer;
+		
+		s[0] = maxPlayer;
+		s[1] = Integer.toString(maxPoints);
+		return s;
 	}
 
 	//keep going until all instances of any name are found - then select the first one and return it
 	public static String parseKeywords(String postDescription, String url) { 
 
-		String minName = findKeyword(postDescription);
+		String[] namePoints = findKeyword(postDescription);
+		String minName = namePoints[0];
+		String minPoints = namePoints[1];
 		logger.info("first name found was [" + minName + "]");
-		tweetTweet(minName, postDescription, url);
+		tweetTweet(minName, postDescription, url, Integer.parseInt(minPoints));
 
 		return minName; //i.e no player found in the csv
 	}
 
-	public static void tweetTweet(String minName, String postDescription, String url) {
+	public static void tweetTweet(String minName, String postDescription, String url, int score) {
 
 		if (!minName.equals("no-player-found")) {
 			
@@ -347,8 +355,8 @@ public class CrawlerThread implements Runnable {
 				String teamHashtag = "";
 				String countryHashtag = "";
 				
-				if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG")) {
-					//keep hashtags are blanks
+				if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 85) {
+					//keep hashtags as blanks
 				} else {
 					
 					//------------------------------------------------------//
