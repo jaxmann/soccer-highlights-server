@@ -341,7 +341,6 @@ public class CrawlerThread implements Runnable {
 				Statement statement2 = null;
 
 				try {
-					System.out.println("trying to connect 2");
 					connection2 = DriverManager.getConnection(url);
 					String sql2 = "Select distinct Team from player where league= ' " + league +  "';";
 					statement2 = connection2.createStatement();
@@ -397,15 +396,15 @@ public class CrawlerThread implements Runnable {
 
 		////
 		//////////////// remove 10 points if player's name is within parens
-		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
-			String key = entry.getKey();
-			Integer value = entry.getValue();
-
-			if (postDescription.charAt(postDescription.indexOf(key) - 1) == '(' && (postDescription.charAt(postDescription.indexOf(key) + key.length()) == ')')) {
-				maybes.put(key, value - 10); //remove 10 points if key is surrounded by parens (usually means team name instead of player name)
-			}
-
-		}
+//		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+//			String key = entry.getKey();
+//			Integer value = entry.getValue();
+//
+//			if (postDescription.charAt(postDescription.indexOf(key) - 1) == '(' && (postDescription.charAt(postDescription.indexOf(key) + key.length()) == ')')) {
+//				maybes.put(key, value - 10); //remove 10 points if key is surrounded by parens (usually means team name instead of player name)
+//			}
+//
+//		}
 		//////////////////////////////////////////////////////
 		// deduct 10 points if within 2 words of a "vs"
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
