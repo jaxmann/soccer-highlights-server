@@ -36,16 +36,7 @@ public class AccuracyTest {
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
 		
-//		for (HashMap.Entry<String, String> entry : playerTeams.entrySet()) {
-//			String key = entry.getKey();
-//			String value = entry.getValue();
-//			
-//			System.out.println(key + "|" + value);
-//
-//		}
-		
-		//System.out.println(playerTeams.get("Alexis Sánchez"));
-		
+
 		Iterator iter = playerMatches.iterator();
 		while (iter.hasNext()) {
 			System.out.println(iter.next());
