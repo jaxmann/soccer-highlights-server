@@ -49,7 +49,7 @@ import twitter4j.TwitterFactory;
 
 public class CrawlerThread implements Runnable {
 
-	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.0.5 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
+	public static final String USER_AGENT = "User-Agent: desktop:PMR:v0.1.5 (by /u/pmrtest)"; //Required by reddit to be able to crawl their site
 	public static Logger logger = Logger.getLogger(CrawlerThread.class);
 	private static GmailService service;
 	private static String redditenv;
@@ -666,7 +666,7 @@ public class CrawlerThread implements Runnable {
 
 		try {
 
-			Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
+			Pattern p = Pattern.compile("\\D[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?\\D"); 
 			Matcher m = p.matcher(postDescription);
 			String score = "0-0";
 

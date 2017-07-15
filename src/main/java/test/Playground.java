@@ -20,6 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
@@ -30,6 +32,16 @@ public class Playground {
 
 	public static void main(String[] args) throws TwitterException {
 		
+		String a = "Milan still have 0-1 to spend in the current transfer marketVerified account";
+		
+		Pattern p = Pattern.compile("\\D[\\[|(]?[0-9][\\]|)]?[-|:][\\[|(]?[0-9][\\]|)]?\\D"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
+		Matcher m = p.matcher(a);
+		
+		if (m.find()) {
+			System.out.println(a.substring(m.start(), m.end()));
+		} else {
+			System.out.println(a);
+		}
 		
 //		int points = 80;
 //		String a = "Sevilla FC vs Borussia Dortmund Max Sevilla 4-1 second goal";
