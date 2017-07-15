@@ -479,12 +479,12 @@ public class CrawlerThread implements Runnable {
 			String playerHashtag = "";
 			String teamHashtag = "";
 			String countryHashtag = "";
-
-			if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 65) {
+			
+			if (minName.equals("no-player-found")){
+				logger.info("no player found so posting without hashtags");
+			} else if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 65) {
 				//keep hashtags as blanks
 				logger.info("Didn't tweet because own goal or score below threshold. Score was [" + score + "]");
-			} else if (minName.equals("no-player-found")){
-				logger.info("no player found so posting without hashtags");
 			} else {
 
 				//------------------------------------------------------//
