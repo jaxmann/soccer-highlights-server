@@ -601,7 +601,9 @@ public class CrawlerThread implements Runnable {
 					logger.info("TEST ENV: Would have posted to twitter with [" + stat + "].");
 				}
 			} else {
-				logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
+				logger.info("Didn't post to twitter because length was greater than 140. Length was [" + stat.length() + "]");//else do nothing
+				logger.info(stat);
+			
 			}
 			//}
 		} catch (TwitterException e) {
