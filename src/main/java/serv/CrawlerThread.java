@@ -404,9 +404,44 @@ public class CrawlerThread implements Runnable {
 			if (postDescription.charAt(postDescription.indexOf(key) - 1) == '(' && (postDescription.charAt(postDescription.indexOf(key) + key.length()) == ')')) {
 				maybes.put(key, value - 10); //remove 10 points if key is surrounded by parens (usually means team name instead of player name)
 			}
-			
+
 		}
 		//////////////////////////////////////////////////////
+		// deduct 10 points if within 2 words of a "vs"
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			int vsLoc = 0;
+			ArrayList<Integer> pLoc = new ArrayList<Integer>();
+
+			String[] b = postDescription.split(" ");
+			for (int i=0; i<b.length - 1; i++) {
+				if (b[i].equals("vs")) {
+					System.out.println("vs found at: " + i);
+					vsLoc = i;
+				} 
+				if (b[i].equals(key.split(" ")[0])) {
+					if (key.split(" ").length == 1) {
+						System.out.println("name found at pos: " + i);
+						pLoc.add(i);
+					} else if (key.split(" ").length > 1) {
+						if (b[i+1].equals(key.split(" ")[1])) {
+							System.out.println("name found at pos: " + i);
+							pLoc.add(i);
+						}
+					}
+				}
+			}
+
+			for (int l : pLoc) {
+				if (Math.abs(l - vsLoc) < 3) {
+					maybes.put(key, value - 10); //remove 10 points if key is within 2 words of a vs (only teams should be that close)
+					break;
+				}
+			}
+		}
+		//
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
@@ -450,7 +485,7 @@ public class CrawlerThread implements Runnable {
 				String teamHashtag = "";
 				String countryHashtag = "";
 
-				if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 85) {
+				if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 65) {
 					//keep hashtags as blanks
 				} else {
 
