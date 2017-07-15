@@ -73,7 +73,7 @@ public class simplify {
 			return 85; //U
 		} else if (n == 223) {
 			return 115; //s
-		} else if (n>= 224 && n<229) {
+		} else if (n>= 224 && n<231) {
 			return 97; //a
 		} else if (n == 231) {
 			return 99; //c
