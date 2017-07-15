@@ -420,7 +420,7 @@ public class CrawlerThread implements Runnable {
 					System.out.println("vs found at: " + i);
 					vsLoc = i;
 				} 
-				if (b[i].equals(key.split(" ")[0])) {
+				if (b[i].equals(key.split(" ")[0])) {	
 					if (key.split(" ").length == 1) {
 						pLoc.add(i);
 					} else if (key.split(" ").length > 1) {
@@ -484,6 +484,7 @@ public class CrawlerThread implements Runnable {
 
 				if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 65) {
 					//keep hashtags as blanks
+					logger.info("Didn't tweet because own goal or score below threshold. Score was [" + score + "]");
 				} else {
 
 					//------------------------------------------------------//
