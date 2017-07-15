@@ -14,22 +14,14 @@ import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import twitter4j.JSONException;
-import twitter4j.Status;
-import twitter4j.StatusUpdate;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.UploadedMedia;
 import twitter4j.auth.AccessToken;
 
 import serv.simplify;
@@ -38,59 +30,145 @@ public class Playground {
 
 	public static void main(String[] args) throws TwitterException {
 		
+		ArrayList<String> teamsSameLeague = new ArrayList<String>();
 		
-		URL yahoo = null;
-		try {
-			yahoo = new URL("https://api.streamable.com/videos/wwbna");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        URLConnection yc = null;
-		try {
-			yc = yahoo.openConnection();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        BufferedReader in = null;
-		try {
-			in = new BufferedReader(
-			                        new InputStreamReader(
-			                        yc.getInputStream()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Connection connection1 = null;
+		ResultSet resultSet1 = null;
+		Statement statement1 = null;
 		
-        String inputLine = null;
-        String output = "";
-        try {
-			while ((inputLine = in.readLine()) != null) {
-			    System.out.println(inputLine);
-			    output = inputLine;
+		String player = "Cristiano Ronaldo";
+		
+		try {
+			System.out.println("trying to connect");
+			String url = "jdbc:sqlite:../server/db/player.db";
+			connection1 = DriverManager.getConnection(url);
+			String sql = "Select league from player where player = ' " + player + "';"; 
+			statement1 = connection1.createStatement();
+			resultSet1 = statement1.executeQuery(sql);
+			String league = "";
+			while(resultSet1.next()) {
+				league  = resultSet1.getString("league");
+				System.out.println(league);
 			}
-			System.out.println(output);
-        }
-        catch (IOException e) {
-			// TODO Auto-generated catch block
+			league = league.trim();
+			System.out.println(league);
+			
+			
+			Connection connection2 = null;
+			ResultSet resultSet2 = null;
+			Statement statement2 = null;
+						
+			try {
+				System.out.println("trying to connect 2");
+				connection2 = DriverManager.getConnection(url);
+//				keyword = keyword.replace("'", "''");
+				String sql2 = "Select distinct Team from player where league= ' " + league +  "';";
+				statement2 = connection2.createStatement();
+				resultSet2 = statement2.executeQuery(sql2);
+				
+				while(resultSet2.next()) {
+					teamsSameLeague.add(simplify.simplifyName(resultSet2.getString("team").trim().replaceAll("^[a-zA-Z]{1,3}\\s|\\s[a-zA-Z]{1,3}$|\\s[a-zA-Z]{1,3}\\s|[0-9]+", "").trim()));
+				}
+				
+
+
+//				return subscribedUsers;
+
+			} catch (SQLException e) {
+//				logger.error(e.toString());
+				e.printStackTrace();
+			} finally {
+				try {
+					if (connection2 != null) {
+						resultSet2.close();
+
+						statement2.close();
+						connection2.close();
+					}
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+//					logger.error(ex.toString());
+				}
+			}
+			
+
+
+//			return subscribedUsers;
+
+		} catch (SQLException e) {
+//			logger.error(e.toString());
 			e.printStackTrace();
+		} finally {
+			try {
+				if (connection1 != null) {
+					resultSet1.close();
+
+					statement1.close();
+					connection1.close();
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+//				logger.error(ex.toString());
+			}
 		}
-        try {
-			in.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        System.out.println("output is " + output);
-        JsonObject jsonObj = new JsonParser().parse(output).getAsJsonObject();
-		String url = jsonObj.get("files").getAsJsonObject().get("mp4").getAsJsonObject().get("url").getAsString();
-		System.out.println(url);
 		
-		String fullUrl = "https:"+url;
-		System.out.println(fullUrl);
-        
+		for (String a : teamsSameLeague) {
+			System.out.println(a);
+		}
+		
+		
+//		URL yahoo = null;
+//		try {
+//			yahoo = new URL("https://api.streamable.com/videos/wwbna");
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//        URLConnection yc = null;
+//		try {
+//			yc = yahoo.openConnection();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//        BufferedReader in = null;
+//		try {
+//			in = new BufferedReader(
+//			                        new InputStreamReader(
+//			                        yc.getInputStream()));
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//        String inputLine = null;
+//        String output = "";
+//        try {
+//			while ((inputLine = in.readLine()) != null) {
+//			    System.out.println(inputLine);
+//			    output = inputLine;
+//			}
+//			System.out.println(output);
+//        }
+//        catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//        try {
+//			in.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//        
+//        System.out.println("output is " + output);
+//        JsonObject jsonObj = new JsonParser().parse(output).getAsJsonObject();
+//		String url = jsonObj.get("files").getAsJsonObject().get("mp4").getAsJsonObject().get("url").getAsString();
+//		System.out.println(url);
+//		
+//		String fullUrl = "https:"+url;
+//		System.out.println(fullUrl);
+//        
 		
 //		VideoUpload vu = new VideoUpload();
 //		try {

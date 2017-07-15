@@ -157,10 +157,10 @@ public class CrawlerThread implements Runnable {
 										} else {
 											logger.info("Not calling sendEmail because keyword is already in TQ");
 										}
-										
+
 									} 
-										
-								addToTimeq(keyword, title);
+
+									addToTimeq(keyword, title);
 								} else {
 									logger.info("Non-video post found: [" + title + "] at [" + time + "] link [" + url + "]");
 								}
@@ -178,9 +178,9 @@ public class CrawlerThread implements Runnable {
 	}
 
 	public static String[] findKeyword(String postDescription) {
-		
+
 		String[] sToReturn = new String[2];
-		
+
 		//could do postDescription = simplify.simplifyName(postDescription) here
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 		HashMap<String, Integer> maybes = new HashMap<String, Integer>();
@@ -193,7 +193,7 @@ public class CrawlerThread implements Runnable {
 			//String newline = new String(ptext, UTF_8);
 
 			String[] s = line.split(",");
-	
+
 			for (String player : s) {
 
 				// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
@@ -213,7 +213,7 @@ public class CrawlerThread implements Runnable {
 					} else {
 						playersFound.put(s[0], m.end());
 					}
-					
+
 					if (player.equals(s[0])) {
 						if (!maybes.containsKey(player)) {
 							maybes.put(player, 160); //full name found
@@ -260,58 +260,141 @@ public class CrawlerThread implements Runnable {
 
 			if (playerTeams.containsKey(key.trim())) {
 				String tm = playerTeams.get(key.trim()); //'Manchester City'
-				
+
 				String cleanedPostDescription = postDescription.replaceAll("[Uu]nited","");
-				
+
 				String teamRegex = "((^|\\s|\\()" + tm + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tm) + "(\\)|'|\\s|$))";
-				
+
 				Pattern teamP = Pattern.compile(teamRegex, Pattern.CASE_INSENSITIVE);
 				Matcher teamM = teamP.matcher(cleanedPostDescription);
-				
+
 				if (teamM.find()) {
 					maybes.put(key, value + 60); //if ENTIRE team is contained in snippet
 					logger.info("Team treated as [" + tm + "] for player [" + key + "]");
 				} else {
 					String[] tmSplit = tm.split(" ");
 					for (int i=0; i<tmSplit.length; i++) {
-						
+
 						String teamRegexPartial = "((^|\\s|\\()" + tmSplit[i] + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tmSplit[i]) + "(\\)|'|\\s|$))";
-						
+
 						Pattern teamPPartial = Pattern.compile(teamRegexPartial, Pattern.CASE_INSENSITIVE);
 						Matcher teamMPartial = teamPPartial.matcher(cleanedPostDescription);
-						
+
 						if (teamMPartial.find()) {
 							maybes.put(key, value + 40); //add 15 points for each part of a team that is contained
 							logger.info("Team treated as [" + tm + "] for player [" + key + "]");
 						}
 					}
 				}
-				
-				
-				
+
+
+
 			}
 		}
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			
+
 			if (playerCountry.containsKey(key.trim())) {
 				String cn = playerCountry.get(key.trim()); //'Germany'
-				
+
 				String countryRegex = "((^|\\s|\\()" + cn + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(cn) + "(\\)|'|\\s|$))";
-				
+
 				Pattern countryP = Pattern.compile(countryRegex, Pattern.CASE_INSENSITIVE);
 				Matcher countryM = countryP.matcher(postDescription);
-				
+
 				if (countryM.find()) {
 					maybes.put(key, value + 50); 
 					logger.info("Country treated as [" + cn + "] for player [" + key + "]");
 				}
-				
+
 			}
 
 		}
+		//// checking other teams in the same league
+		//if no teams from same league match, deduct 20 pts, if at least one does, add 20 
+		ArrayList<String> teamsSameLeague = new ArrayList<String>();
+
+		Connection connection1 = null;
+		ResultSet resultSet1 = null;
+		Statement statement1 = null;
+
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			try {
+				String url = "jdbc:sqlite:../server/db/player.db";
+				connection1 = DriverManager.getConnection(url);
+				String sql = "Select league from player where player = ' " + key + "';"; 
+				statement1 = connection1.createStatement();
+				resultSet1 = statement1.executeQuery(sql);
+				String league = "";
+				while(resultSet1.next()) {
+					league  = resultSet1.getString("league");
+				}
+				league = league.trim();
+
+				Connection connection2 = null;
+				ResultSet resultSet2 = null;
+				Statement statement2 = null;
+
+				try {
+					System.out.println("trying to connect 2");
+					connection2 = DriverManager.getConnection(url);
+					String sql2 = "Select distinct Team from player where league= ' " + league +  "';";
+					statement2 = connection2.createStatement();
+					resultSet2 = statement2.executeQuery(sql2);
+
+					while(resultSet2.next()) {
+						teamsSameLeague.add(simplify.simplifyName(resultSet2.getString("team").trim().replaceAll("^[a-zA-Z]{1,3}\\s|\\s[a-zA-Z]{1,3}$|\\s[a-zA-Z]{1,3}\\s|[0-9]+", "").trim()));
+					}
+
+				} catch (SQLException e) {
+					logger.error(e.toString());
+				} finally {
+					try {
+						if (connection2 != null) {
+							resultSet2.close();
+							statement2.close();
+							connection2.close();
+						}
+					} catch (SQLException ex) {
+						logger.error(ex.toString());
+					}
+				}
+
+			} catch (SQLException e) {
+				logger.error(e.toString());
+			} finally {
+				try {
+					if (connection1 != null) {
+						resultSet1.close();
+
+						statement1.close();
+						connection1.close();
+					}
+				} catch (SQLException ex) {
+					logger.error(ex.toString());
+				}
+			}
+
+			boolean found = false;
+			for (String a : teamsSameLeague) {
+				if (postDescription.contains(a)) {
+					maybes.put(key, value + 20); //add 20 points if  a team from the same league is found
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				maybes.put(key, value - 20); //subtract 20 if no team from same league is found
+				//this is fine if it's an international game because it will subtract 20 points from ALL maybes
+			}
+		}
+
+		////
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
@@ -323,7 +406,7 @@ public class CrawlerThread implements Runnable {
 				maxPoints = value;
 			}
 		}
-	
+
 		sToReturn[0] = maxPlayer;
 		sToReturn[1] = Integer.toString(maxPoints);
 		return sToReturn;
@@ -344,21 +427,21 @@ public class CrawlerThread implements Runnable {
 	public static void tweetTweet(String minName, String postDescription, String url, int score) {
 
 		if (!minName.equals("no-player-found")) {
-			
+
 			postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2"); //M. Reus -> M Reus
 			if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
 				postDescription = postDescription.substring(2); //M Reus - > Reus
 			}
 			try {
-				
+
 				String playerHashtag = "";
 				String teamHashtag = "";
 				String countryHashtag = "";
-				
+
 				if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 85) {
 					//keep hashtags as blanks
 				} else {
-					
+
 					//------------------------------------------------------//
 					String[] fullN = minName.split(" ");
 					if (fullN.length == 1) {
@@ -400,7 +483,7 @@ public class CrawlerThread implements Runnable {
 				//------------------------------------------------------//
 				int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
 
-				
+
 				String ellipsePost = "";
 				String[] postParts = postDescription.split(" ");
 				if (postDescription.length() < maxPostLength) {
@@ -417,8 +500,8 @@ public class CrawlerThread implements Runnable {
 					ellipsePost = ellipsePost.trim();
 					ellipsePost += "...";
 				}
-				
-				
+
+
 				String stat = ellipsePost + " | " + url;
 
 				if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() + 2 <= 140)) {
@@ -432,49 +515,49 @@ public class CrawlerThread implements Runnable {
 					stat += " #" + simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 
-//				if (url.endsWith(".mp4")) {
-//					VideoUpload vu = new VideoUpload();
-//					try {
-//						vu.tweetTweetWithVideo(url, stat);
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (JSONException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				} else if (url.contains("streamable")) {
-//					String newURL = getStreamableURL(url);
-//					VideoUpload vu = new VideoUpload();
-//					try {
-//						vu.tweetTweetWithVideo(newURL, stat);
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (JSONException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				} else {
-					if (stat.length() < 140) {
-						// The factory instance is re-usable and thread safe.
-						Twitter twitter = TwitterFactory.getSingleton();
-						Status status = null;
-						if (!redditenv.equals("test")) {
-							status = twitter.updateStatus(stat);
-							logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
-						} else {
-							logger.info("TEST ENV: Would have posted to twitter with [" + stat + "].");
-						}
+				//				if (url.endsWith(".mp4")) {
+				//					VideoUpload vu = new VideoUpload();
+				//					try {
+				//						vu.tweetTweetWithVideo(url, stat);
+				//					} catch (IOException e) {
+				//						// TODO Auto-generated catch block
+				//						e.printStackTrace();
+				//					} catch (InterruptedException e) {
+				//						// TODO Auto-generated catch block
+				//						e.printStackTrace();
+				//					} catch (JSONException e) {
+				//						// TODO Auto-generated catch block
+				//						e.printStackTrace();
+				//					}
+				//				} else if (url.contains("streamable")) {
+				//					String newURL = getStreamableURL(url);
+				//					VideoUpload vu = new VideoUpload();
+				//					try {
+				//						vu.tweetTweetWithVideo(newURL, stat);
+				//					} catch (IOException e) {
+				//						// TODO Auto-generated catch block
+				//						e.printStackTrace();
+				//					} catch (InterruptedException e) {
+				//						// TODO Auto-generated catch block
+				//						e.printStackTrace();
+				//					} catch (JSONException e) {
+				//						// TODO Auto-generated catch block
+				//						e.printStackTrace();
+				//					}
+				//				} else {
+				if (stat.length() < 140) {
+					// The factory instance is re-usable and thread safe.
+					Twitter twitter = TwitterFactory.getSingleton();
+					Status status = null;
+					if (!redditenv.equals("test")) {
+						status = twitter.updateStatus(stat);
+						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
 					} else {
-						logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
+						logger.info("TEST ENV: Would have posted to twitter with [" + stat + "].");
 					}
+				} else {
+					logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
+				}
 				//}
 			} catch (TwitterException e) {
 				logger.error(e.toString());
@@ -534,7 +617,7 @@ public class CrawlerThread implements Runnable {
 		Connection tqConnection = null;
 		Statement tqStatement = null;
 		ResultSet tqResultSet = null;
-		
+
 		try {
 
 			Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
@@ -554,7 +637,7 @@ public class CrawlerThread implements Runnable {
 			boolean tqFilled = tqResultSet.next();
 
 			logger.info("Already in TQ? (i.e. already found a highlight for this play today): [" + tqFilled + "]");
-			
+
 			return tqFilled;
 
 		} catch (SQLException e) {
@@ -593,7 +676,7 @@ public class CrawlerThread implements Runnable {
 	}
 
 	public static void addToTimeq(String keyword, String postDescription) {
-		
+
 		if (!keyword.equals("no-player-found")) {
 			try {
 
@@ -748,11 +831,11 @@ public class CrawlerThread implements Runnable {
 		}
 		return playerMatches;
 	}
-	
+
 	public static String getStreamableURL(String urlWithStreamable) {
-		
+
 		String streamableID = urlWithStreamable.replaceAll(".*/", "");
-		
+
 		URL yahoo = null;
 		try {
 			yahoo = new URL("https://api.streamable.com/videos/" + streamableID);
@@ -760,51 +843,51 @@ public class CrawlerThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        URLConnection yc = null;
+		URLConnection yc = null;
 		try {
 			yc = yahoo.openConnection();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        BufferedReader in = null;
+		BufferedReader in = null;
 		try {
 			in = new BufferedReader(
-			                        new InputStreamReader(
-			                        yc.getInputStream()));
+					new InputStreamReader(
+							yc.getInputStream()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-        String inputLine = null;
-        String output = "";
-        try {
+
+		String inputLine = null;
+		String output = "";
+		try {
 			while ((inputLine = in.readLine()) != null) {
-			    output = inputLine;
+				output = inputLine;
 			}
 			System.out.println(output);
-        }
-        catch (IOException e) {
+		}
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        try {
+		try {
 			in.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        JsonObject jsonObj = new JsonParser().parse(output).getAsJsonObject();
+
+		JsonObject jsonObj = new JsonParser().parse(output).getAsJsonObject();
 		String url = jsonObj.get("files").getAsJsonObject().get("mp4").getAsJsonObject().get("url").getAsString();
-		
+
 		String fullUrl = "https:"+url;
-		
+
 		return fullUrl;
-        
-		
-		
+
+
+
 	}
 
 
