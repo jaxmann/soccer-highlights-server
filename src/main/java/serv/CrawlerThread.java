@@ -422,11 +422,9 @@ public class CrawlerThread implements Runnable {
 				} 
 				if (b[i].equals(key.split(" ")[0])) {
 					if (key.split(" ").length == 1) {
-						System.out.println("name found at pos: " + i);
 						pLoc.add(i);
 					} else if (key.split(" ").length > 1) {
 						if (b[i+1].equals(key.split(" ")[1])) {
-							System.out.println("name found at pos: " + i);
 							pLoc.add(i);
 						}
 					}
