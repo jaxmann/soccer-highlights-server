@@ -1,6 +1,6 @@
 *.class
 .classpath
-
+/tmpVids/*
 /bin/
 /logs/*
 /twitter4j.properties
