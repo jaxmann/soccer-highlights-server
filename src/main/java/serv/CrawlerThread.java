@@ -138,7 +138,7 @@ public class CrawlerThread implements Runnable {
 
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
 
-								if (url.contains(".mp4") || url.contains("streamable") || url.contains("imgtc") || url.contains("clipit")) { //only trigger if it's a video link
+								if (url.contains(".mp4") || url.contains("streamable") || url.contains("imgtc") || url.contains("clipit") || url.contains("twitter")) { //only trigger if it's a video link
 
 									logger.info("New post found: [" + title + "] at [" + time + "]");
 
@@ -179,7 +179,7 @@ public class CrawlerThread implements Runnable {
 
 	public static String[] findKeyword(String postDescription) {
 		
-		String[] s = new String[2];
+		String[] sToReturn = new String[2];
 		
 		//could do postDescription = simplify.simplifyName(postDescription) here
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
@@ -323,10 +323,10 @@ public class CrawlerThread implements Runnable {
 				maxPoints = value;
 			}
 		}
-		
-		s[0] = maxPlayer;
-		s[1] = Integer.toString(maxPoints);
-		return s;
+	
+		sToReturn[0] = maxPlayer;
+		sToReturn[1] = Integer.toString(maxPoints);
+		return sToReturn;
 	}
 
 	//keep going until all instances of any name are found - then select the first one and return it
