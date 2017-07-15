@@ -31,40 +31,40 @@ public class Playground {
 	public static void main(String[] args) throws TwitterException {
 		
 		
-		int points = 80;
-		String a = "Sevilla FC vs Borussia Dortmund Max Sevilla 4-1 second goal";
-		String player = "Sevilla";
-		
-		int vsLoc = 0;
-		ArrayList<Integer> pLoc = new ArrayList<Integer>();
-		
-		String[] b = a.split(" ");
-		for (int i=0; i<b.length - 1; i++) {
-			if (b[i].equals("vs")) {
-				System.out.println("vs found at: " + i);
-				vsLoc = i;
-			} 
-			if (b[i].equals(player.split(" ")[0])) {
-				if (player.split(" ").length == 1) {
-					System.out.println("name found at pos: " + i);
-					pLoc.add(i);
-				} else if (player.split(" ").length > 1) {
-					if (b[i+1].equals(player.split(" ")[1])) {
-						System.out.println("name found at pos: " + i);
-						pLoc.add(i);
-					}
-				}
-			}
-		}
-		
-		for (int l : pLoc) {
-			if (Math.abs(l - vsLoc) < 3) {
-				points -= 10;
-				break;
-			}
-		}
-		
-		System.out.println(points);
+//		int points = 80;
+//		String a = "Sevilla FC vs Borussia Dortmund Max Sevilla 4-1 second goal";
+//		String player = "Sevilla";
+//		
+//		int vsLoc = 0;
+//		ArrayList<Integer> pLoc = new ArrayList<Integer>();
+//		
+//		String[] b = a.split(" ");
+//		for (int i=0; i<b.length - 1; i++) {
+//			if (b[i].equals("vs")) {
+//				System.out.println("vs found at: " + i);
+//				vsLoc = i;
+//			} 
+//			if (b[i].equals(player.split(" ")[0])) {
+//				if (player.split(" ").length == 1) {
+//					System.out.println("name found at pos: " + i);
+//					pLoc.add(i);
+//				} else if (player.split(" ").length > 1) {
+//					if (b[i+1].equals(player.split(" ")[1])) {
+//						System.out.println("name found at pos: " + i);
+//						pLoc.add(i);
+//					}
+//				}
+//			}
+//		}
+//		
+//		for (int l : pLoc) {
+//			if (Math.abs(l - vsLoc) < 3) {
+//				points -= 10;
+//				break;
+//			}
+//		}
+//		
+//		System.out.println(points);
 		
 		
 //		ArrayList<String> teamsSameLeague = new ArrayList<String>();

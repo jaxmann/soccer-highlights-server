@@ -203,7 +203,7 @@ public class CrawlerThread implements Runnable {
 				Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
 				Matcher m = p.matcher(postDescription);
 
-				if (m.find()) {
+				if (m.find() && (m.end() - m.start() > 2)) {
 					logger.info("regex found [" + postDescription.substring(m.start(), m.end()).trim() + "] treated as [" + s[0] + "]");
 
 					if (playersFound.containsKey(s[0])) {
