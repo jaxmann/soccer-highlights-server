@@ -396,15 +396,15 @@ public class CrawlerThread implements Runnable {
 
 		////
 		//////////////// remove 10 points if player's name is within parens
-//		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
-//			String key = entry.getKey();
-//			Integer value = entry.getValue();
-//
-//			if (postDescription.charAt(postDescription.indexOf(key) - 1) == '(' && (postDescription.charAt(postDescription.indexOf(key) + key.length()) == ')')) {
-//				maybes.put(key, value - 10); //remove 10 points if key is surrounded by parens (usually means team name instead of player name)
-//			}
-//
-//		}
+		//		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+		//			String key = entry.getKey();
+		//			Integer value = entry.getValue();
+		//
+		//			if (postDescription.charAt(postDescription.indexOf(key) - 1) == '(' && (postDescription.charAt(postDescription.indexOf(key) + key.length()) == ')')) {
+		//				maybes.put(key, value - 10); //remove 10 points if key is surrounded by parens (usually means team name instead of player name)
+		//			}
+		//
+		//		}
 		//////////////////////////////////////////////////////
 		// deduct 10 points if within 2 words of a "vs"
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
@@ -470,145 +470,144 @@ public class CrawlerThread implements Runnable {
 
 	public static void tweetTweet(String minName, String postDescription, String url, int score) {
 
-		if (!minName.equals("no-player-found")) {
-
-			postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2"); //M. Reus -> M Reus
-			if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
-				postDescription = postDescription.substring(2); //M Reus - > Reus
-			}
-			try {
-
-				String playerHashtag = "";
-				String teamHashtag = "";
-				String countryHashtag = "";
-
-				if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 65) {
-					//keep hashtags as blanks
-					logger.info("Didn't tweet because own goal or score below threshold. Score was [" + score + "]");
-				} else {
-
-					//------------------------------------------------------//
-					String[] fullN = minName.split(" ");
-					if (fullN.length == 1) {
-						playerHashtag = fullN[0];
-					} else if (fullN.length == 2) {
-						playerHashtag = fullN[1];
-					} else {
-						playerHashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
-					}
-					playerHashtag = simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
-					//------------------------------------------------------//
-					String teamName = "";
-					if (playerTeams.containsKey(minName.trim())) {
-						teamName = playerTeams.get(minName.trim()); //'Manchester City'
-					}
-					String[] teamParts = teamName.split(" ");
-					if (teamParts.length == 1) {
-						teamHashtag = teamParts[0];
-					} else {
-						for (int i=0; i<teamParts.length;i++) {
-							if (!teamParts[i].equals(teamParts[i].toUpperCase())) {
-								teamHashtag += teamParts[i];
-							}
-						}
-					}
-					teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
-					//------------------------------------------------------//
-					String countryName = "";
-					if (playerCountry.containsKey(minName.trim())) {
-						countryName = playerCountry.get(minName.trim()); //'Germany'
-					}
-					String[] countryParts = countryName.split(" ");
-					for (int i=0; i<countryParts.length;i++) {
-						countryHashtag += countryParts[i];
-					}
-
-					countryHashtag = simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
-				}
-				//------------------------------------------------------//
-				int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
-
-
-				String ellipsePost = "";
-				String[] postParts = postDescription.split(" ");
-				if (postDescription.length() < maxPostLength) {
-					ellipsePost = postDescription; //dont add ellipses if post is already short enough to fit
-				} else {
-					for (int i=0; i<postParts.length;i++) {
-						if (ellipsePost.length() + postParts[i].length() < maxPostLength) {
-							ellipsePost += postParts[i] + " ";
-						} else {
-							System.out.println(ellipsePost);
-							break;
-						}
-					}
-					ellipsePost = ellipsePost.trim();
-					ellipsePost += "...";
-				}
-
-
-				String stat = ellipsePost + " | " + url;
-
-				if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() + 2 <= 140)) {
-					stat += " #" + simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
-				}
-
-				if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 <= 140)) {
-					stat += " #" + simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
-				}
-				if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() + 2 <= 140)) {
-					stat += " #" + simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
-				}
-
-				//				if (url.endsWith(".mp4")) {
-				//					VideoUpload vu = new VideoUpload();
-				//					try {
-				//						vu.tweetTweetWithVideo(url, stat);
-				//					} catch (IOException e) {
-				//						// TODO Auto-generated catch block
-				//						e.printStackTrace();
-				//					} catch (InterruptedException e) {
-				//						// TODO Auto-generated catch block
-				//						e.printStackTrace();
-				//					} catch (JSONException e) {
-				//						// TODO Auto-generated catch block
-				//						e.printStackTrace();
-				//					}
-				//				} else if (url.contains("streamable")) {
-				//					String newURL = getStreamableURL(url);
-				//					VideoUpload vu = new VideoUpload();
-				//					try {
-				//						vu.tweetTweetWithVideo(newURL, stat);
-				//					} catch (IOException e) {
-				//						// TODO Auto-generated catch block
-				//						e.printStackTrace();
-				//					} catch (InterruptedException e) {
-				//						// TODO Auto-generated catch block
-				//						e.printStackTrace();
-				//					} catch (JSONException e) {
-				//						// TODO Auto-generated catch block
-				//						e.printStackTrace();
-				//					}
-				//				} else {
-				if (stat.length() < 140) {
-					// The factory instance is re-usable and thread safe.
-					Twitter twitter = TwitterFactory.getSingleton();
-					Status status = null;
-					if (!redditenv.equals("test")) {
-						status = twitter.updateStatus(stat);
-						logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
-					} else {
-						logger.info("TEST ENV: Would have posted to twitter with [" + stat + "].");
-					}
-				} else {
-					logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
-				}
-				//}
-			} catch (TwitterException e) {
-				logger.error(e.toString());
-			}
-
+		postDescription = postDescription.replaceAll("([A-Z])\\.(\\s\\w)", "$1$2"); //M. Reus -> M Reus
+		if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
+			postDescription = postDescription.substring(2); //M Reus - > Reus
 		}
+		try {
+
+			String playerHashtag = "";
+			String teamHashtag = "";
+			String countryHashtag = "";
+
+			if (postDescription.toLowerCase().contains("own goal") || postDescription.contains("OG") || score < 65) {
+				//keep hashtags as blanks
+				logger.info("Didn't tweet because own goal or score below threshold. Score was [" + score + "]");
+			} else if (minName.equals("no-player-found")){
+				logger.info("no player found so posting without hashtags");
+			} else {
+
+				//------------------------------------------------------//
+				String[] fullN = minName.split(" ");
+				if (fullN.length == 1) {
+					playerHashtag = fullN[0];
+				} else if (fullN.length == 2) {
+					playerHashtag = fullN[1];
+				} else {
+					playerHashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
+				}
+				playerHashtag = simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+				//------------------------------------------------------//
+				String teamName = "";
+				if (playerTeams.containsKey(minName.trim())) {
+					teamName = playerTeams.get(minName.trim()); //'Manchester City'
+				}
+				String[] teamParts = teamName.split(" ");
+				if (teamParts.length == 1) {
+					teamHashtag = teamParts[0];
+				} else {
+					for (int i=0; i<teamParts.length;i++) {
+						if (!teamParts[i].equals(teamParts[i].toUpperCase())) {
+							teamHashtag += teamParts[i];
+						}
+					}
+				}
+				teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+				//------------------------------------------------------//
+				String countryName = "";
+				if (playerCountry.containsKey(minName.trim())) {
+					countryName = playerCountry.get(minName.trim()); //'Germany'
+				}
+				String[] countryParts = countryName.split(" ");
+				for (int i=0; i<countryParts.length;i++) {
+					countryHashtag += countryParts[i];
+				}
+
+				countryHashtag = simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+			}
+			//------------------------------------------------------//
+			int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
+
+
+			String ellipsePost = "";
+			String[] postParts = postDescription.split(" ");
+			if (postDescription.length() < maxPostLength) {
+				ellipsePost = postDescription; //dont add ellipses if post is already short enough to fit
+			} else {
+				for (int i=0; i<postParts.length;i++) {
+					if (ellipsePost.length() + postParts[i].length() < maxPostLength) {
+						ellipsePost += postParts[i] + " ";
+					} else {
+						System.out.println(ellipsePost);
+						break;
+					}
+				}
+				ellipsePost = ellipsePost.trim();
+				ellipsePost += "...";
+			}
+
+
+			String stat = ellipsePost + " | " + url;
+
+			if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() + 2 <= 140)) {
+				stat += " #" + simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+			}
+
+			if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 <= 140)) {
+				stat += " #" + simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+			}
+			if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() + 2 <= 140)) {
+				stat += " #" + simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+			}
+
+			//				if (url.endsWith(".mp4")) {
+			//					VideoUpload vu = new VideoUpload();
+			//					try {
+			//						vu.tweetTweetWithVideo(url, stat);
+			//					} catch (IOException e) {
+			//						// TODO Auto-generated catch block
+			//						e.printStackTrace();
+			//					} catch (InterruptedException e) {
+			//						// TODO Auto-generated catch block
+			//						e.printStackTrace();
+			//					} catch (JSONException e) {
+			//						// TODO Auto-generated catch block
+			//						e.printStackTrace();
+			//					}
+			//				} else if (url.contains("streamable")) {
+			//					String newURL = getStreamableURL(url);
+			//					VideoUpload vu = new VideoUpload();
+			//					try {
+			//						vu.tweetTweetWithVideo(newURL, stat);
+			//					} catch (IOException e) {
+			//						// TODO Auto-generated catch block
+			//						e.printStackTrace();
+			//					} catch (InterruptedException e) {
+			//						// TODO Auto-generated catch block
+			//						e.printStackTrace();
+			//					} catch (JSONException e) {
+			//						// TODO Auto-generated catch block
+			//						e.printStackTrace();
+			//					}
+			//				} else {
+			if (stat.length() < 140) {
+				// The factory instance is re-usable and thread safe.
+				Twitter twitter = TwitterFactory.getSingleton();
+				Status status = null;
+				if (!redditenv.equals("test")) {
+					status = twitter.updateStatus(stat);
+					logger.info("Posted to twitter and successfully updated the status to [" + status.getText() + "].");
+				} else {
+					logger.info("TEST ENV: Would have posted to twitter with [" + stat + "].");
+				}
+			} else {
+				logger.info("Didn't post to twitter because length was greater than 140");//else do nothing
+			}
+			//}
+		} catch (TwitterException e) {
+			logger.error(e.toString());
+		}
+
 	}
 
 	public static ArrayList<String> findSubscribedUsers(String keyword, String postDescription) { 
