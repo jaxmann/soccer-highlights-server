@@ -384,6 +384,7 @@ public class CrawlerThread implements Runnable {
 			for (String a : teamsSameLeague) {
 				if (postDescription.contains(a)) {
 					maybes.put(key, value + 20); //add 20 points if  a team from the same league is found
+					logger.info("[" + key + "] team in same league is [" + a + "]");
 					found = true;
 					break;
 				}
@@ -395,6 +396,17 @@ public class CrawlerThread implements Runnable {
 		}
 
 		////
+		//////////////// remove 10 points if player's name is within parens
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			if (postDescription.charAt(postDescription.indexOf(key) - 1) == '(' && (postDescription.charAt(postDescription.indexOf(key) + key.length()) == ')')) {
+				maybes.put(key, value - 10); //remove 10 points if key is surrounded by parens (usually means team name instead of player name)
+			}
+			
+		}
+		//////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();

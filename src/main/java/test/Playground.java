@@ -30,92 +30,102 @@ public class Playground {
 
 	public static void main(String[] args) throws TwitterException {
 		
-		ArrayList<String> teamsSameLeague = new ArrayList<String>();
+		String a = "the red (fox) runs";
 		
-		Connection connection1 = null;
-		ResultSet resultSet1 = null;
-		Statement statement1 = null;
+		System.out.println("fox runs from " + a.indexOf("fox"));
+		System.out.println(a.charAt(8));
+		System.out.println(a.charAt(a.indexOf("fox") + "fox".length()));
 		
-		String player = "Cristiano Ronaldo";
-		
-		try {
-			System.out.println("trying to connect");
-			String url = "jdbc:sqlite:../server/db/player.db";
-			connection1 = DriverManager.getConnection(url);
-			String sql = "Select league from player where player = ' " + player + "';"; 
-			statement1 = connection1.createStatement();
-			resultSet1 = statement1.executeQuery(sql);
-			String league = "";
-			while(resultSet1.next()) {
-				league  = resultSet1.getString("league");
-				System.out.println(league);
-			}
-			league = league.trim();
-			System.out.println(league);
-			
-			
-			Connection connection2 = null;
-			ResultSet resultSet2 = null;
-			Statement statement2 = null;
-						
-			try {
-				System.out.println("trying to connect 2");
-				connection2 = DriverManager.getConnection(url);
-//				keyword = keyword.replace("'", "''");
-				String sql2 = "Select distinct Team from player where league= ' " + league +  "';";
-				statement2 = connection2.createStatement();
-				resultSet2 = statement2.executeQuery(sql2);
-				
-				while(resultSet2.next()) {
-					teamsSameLeague.add(simplify.simplifyName(resultSet2.getString("team").trim().replaceAll("^[a-zA-Z]{1,3}\\s|\\s[a-zA-Z]{1,3}$|\\s[a-zA-Z]{1,3}\\s|[0-9]+", "").trim()));
-				}
-				
-
-
-//				return subscribedUsers;
-
-			} catch (SQLException e) {
-//				logger.error(e.toString());
-				e.printStackTrace();
-			} finally {
-				try {
-					if (connection2 != null) {
-						resultSet2.close();
-
-						statement2.close();
-						connection2.close();
-					}
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-//					logger.error(ex.toString());
-				}
-			}
-			
-
-
-//			return subscribedUsers;
-
-		} catch (SQLException e) {
-//			logger.error(e.toString());
-			e.printStackTrace();
-		} finally {
-			try {
-				if (connection1 != null) {
-					resultSet1.close();
-
-					statement1.close();
-					connection1.close();
-				}
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-//				logger.error(ex.toString());
-			}
+		if (a.charAt(a.indexOf("fox") - 1) == '(' && (a.charAt(a.indexOf("fox") + "fox".length()) == ')')) {
+			System.out.println("true");
 		}
 		
-		for (String a : teamsSameLeague) {
-			System.out.println(a);
-		}
-		
+//		ArrayList<String> teamsSameLeague = new ArrayList<String>();
+//		
+//		Connection connection1 = null;
+//		ResultSet resultSet1 = null;
+//		Statement statement1 = null;
+//		
+//		String player = "Cristiano Ronaldo";
+//		
+//		try {
+//			System.out.println("trying to connect");
+//			String url = "jdbc:sqlite:../server/db/player.db";
+//			connection1 = DriverManager.getConnection(url);
+//			String sql = "Select league from player where player = ' " + player + "';"; 
+//			statement1 = connection1.createStatement();
+//			resultSet1 = statement1.executeQuery(sql);
+//			String league = "";
+//			while(resultSet1.next()) {
+//				league  = resultSet1.getString("league");
+//				System.out.println(league);
+//			}
+//			league = league.trim();
+//			System.out.println(league);
+//			
+//			
+//			Connection connection2 = null;
+//			ResultSet resultSet2 = null;
+//			Statement statement2 = null;
+//						
+//			try {
+//				System.out.println("trying to connect 2");
+//				connection2 = DriverManager.getConnection(url);
+////				keyword = keyword.replace("'", "''");
+//				String sql2 = "Select distinct Team from player where league= ' " + league +  "';";
+//				statement2 = connection2.createStatement();
+//				resultSet2 = statement2.executeQuery(sql2);
+//				
+//				while(resultSet2.next()) {
+//					teamsSameLeague.add(simplify.simplifyName(resultSet2.getString("team").trim().replaceAll("^[a-zA-Z]{1,3}\\s|\\s[a-zA-Z]{1,3}$|\\s[a-zA-Z]{1,3}\\s|[0-9]+", "").trim()));
+//				}
+//				
+//
+//
+////				return subscribedUsers;
+//
+//			} catch (SQLException e) {
+////				logger.error(e.toString());
+//				e.printStackTrace();
+//			} finally {
+//				try {
+//					if (connection2 != null) {
+//						resultSet2.close();
+//
+//						statement2.close();
+//						connection2.close();
+//					}
+//				} catch (SQLException ex) {
+//					ex.printStackTrace();
+////					logger.error(ex.toString());
+//				}
+//			}
+//			
+//
+//
+////			return subscribedUsers;
+//
+//		} catch (SQLException e) {
+////			logger.error(e.toString());
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				if (connection1 != null) {
+//					resultSet1.close();
+//
+//					statement1.close();
+//					connection1.close();
+//				}
+//			} catch (SQLException ex) {
+//				ex.printStackTrace();
+////				logger.error(ex.toString());
+//			}
+//		}
+//		
+//		for (String a : teamsSameLeague) {
+//			System.out.println(a);
+//		}
+//		
 		
 //		URL yahoo = null;
 //		try {
