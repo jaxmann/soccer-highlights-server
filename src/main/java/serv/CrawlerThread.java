@@ -138,7 +138,7 @@ public class CrawlerThread implements Runnable {
 
 								mostRecentPostTime = formatter.parse(link.select("p.tagline").select("time").attr("title")); //update most recent post time
 
-								if (url.contains(".mp4") || url.contains("streamable") || url.contains("imgtc") || url.contains("clipit") || url.contains("twitter")) { //only trigger if it's a video link
+								if (url.contains(".mp4") || url.contains("streamable") || url.contains("imgtc") || url.contains("clipit")) { //only trigger if it's a video link
 
 									logger.info("New post found: [" + title + "] at [" + time + "]");
 
