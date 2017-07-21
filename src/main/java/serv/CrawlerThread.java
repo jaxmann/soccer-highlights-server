@@ -438,6 +438,18 @@ public class CrawlerThread implements Runnable {
 				}
 			}
 		}
+		// if any name found is a subset of another name found, reduce 30 pts from smaller
+		String[] keys = maybes.keySet().toArray(new String[maybes.size()]);
+		for (int i = 0; i < keys.length; i++) {
+		  for (int j = 0; j<keys.length; j++) {
+		    if (i != j) {
+		      if (keys[j].contains(keys[i])) {
+		    	  maybes.put(keys[i], maybes.get(keys[i]) - 30);
+		      }
+		    }
+		  }
+		}
+		//
 		//
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {

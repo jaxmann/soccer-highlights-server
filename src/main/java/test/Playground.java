@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,17 +33,41 @@ public class Playground {
 
 	public static void main(String[] args) throws TwitterException {
 		
-		String a = "Milan still have 0-1 to spend in the current transfer marketVerified account";
+		String a = "Nice goal for Andre Balada goal vs lisbon 4-3";
 		
-		Pattern p = Pattern.compile("\\D[\\[|(]?[0-9][\\]|)]?[-|:][\\[|(]?[0-9][\\]|)]?\\D"); //does the link text have something like (2-0) displaying the score of a game ^[0-9]+(-[0-9]+)
-		Matcher m = p.matcher(a);
+		HashMap<String, Integer> list = new HashMap<String, Integer>();
 		
-		if (m.find()) {
-			System.out.println(a.substring(m.start(), m.end()));
-		} else {
-			System.out.println(a);
+		list.put("Andre Belada", 80);
+		list.put("Andre", 80);
+		
+		
+		
+		String[] keys = list.keySet().toArray(new String[list.size()]);
+		for (int i = 0; i < keys.length; i++) {
+		  for (int j = 0; j<keys.length; j++) {
+		    if (i != j) {
+		      if (keys[j].contains(keys[i])) {
+		    	  list.put(keys[i], list.get(keys[i]) - 30);
+		      }
+		    }
+		  }
 		}
 		
+		for (HashMap.Entry<String, Integer> entry : list.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			System.out.println(key + " at " + value);
+		}
+		
+		
+		
+//		if (m.find()) {
+//			System.out.println(a.substring(m.start(), m.end()));
+//		} else {
+//			System.out.println(a);
+//		}
+	
 //		int points = 80;
 //		String a = "Sevilla FC vs Borussia Dortmund Max Sevilla 4-1 second goal";
 //		String player = "Sevilla";
