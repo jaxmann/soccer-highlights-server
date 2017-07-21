@@ -14,6 +14,6 @@ HOME=/
 # |  |  |  |  |
 # *  *  *  *  * user-name command to be executed
 
-0 4 * * * ec2-user sudo sh /home/ec2-user/server/delete-timeq.sh
+0 4 * * * ec2-user sudo java -jar /home/ec2-user/server/delete-timeq.jar
 0 * * * * ec2-user sudo sh /home/ec2-user/server/send-crash-report.sh
 55 23 * * * ec2-user sudo sh /home/ec2-user/server/send-daily-mails.sh
