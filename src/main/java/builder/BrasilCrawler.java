@@ -64,7 +64,7 @@ public class BrasilCrawler {
 						playerCountry = td.select("td[style~=text-align] > span > a").attr("title");
 					}
 					
-					playerTeam = team.replaceAll("_", " ").replaceAll("\\.", "");
+					playerTeam = team; //.replaceAll("_", " ").replaceAll("\\.", "");
 				}
 				if (containsPlayerNumber) {
 					Player newPlayer = new Player(playerName.replaceAll(",", ""), playerTeam, playerCountry);
@@ -77,7 +77,47 @@ public class BrasilCrawler {
 		}
 		
 		for (Player p : mlsPlayers) {
-			System.out.println(" Campeonato Brasileiro Série A, " + p.getTeam() + ", " + p.getName() + ", " + p.getCountry());
+			String thisteam = p.getTeam();
+			
+			if (thisteam.equals("Sociedade_Esportiva_Palmeiras")) {
+				thisteam = "Palmeiras";
+			} else if (thisteam.equals("Santos_FC")) {
+				thisteam = "Santos FC";
+			} else if (thisteam.equals("São_Paulo_FC")) {
+				thisteam = "São Paulo FC";
+			} else if (thisteam.equals("Sport_Club_Corinthians_Paulista")) {
+				thisteam = "Corinthians";
+			} else if (thisteam.equals("Clube_de_Regatas_do_Flamengo")) {
+				thisteam = "Flamengo";
+			} else if (thisteam.equals("Cruzeiro_Esporte_Clube")) {
+				thisteam = "Cruzeiro";
+			} else if (thisteam.equals("CR_Vasco_da_Gama")) {
+				thisteam = "Vasco de Gama";
+			} else if (thisteam.equals("Fluminense_FC")) {
+				thisteam ="Fluminense";
+			} else if (thisteam.equals("Sport_Club_Internacional")) {
+				thisteam = "Internacional";
+			} else if (thisteam.equals("Botafogo_de_Futebol_e_Regatas")) {
+				thisteam = "Botafogo";
+			} else if (thisteam.equals("Grêmio_Foot-Ball_Porto_Alegrense")) {
+				thisteam = "Grêmio";
+			} else if (thisteam.equals("Esporte_Clube_Bahia")) {
+				thisteam = "Bahia";
+			} else if (thisteam.equals("Clube_Atlético_Mineiro")) {
+				thisteam = "Atlético Mineiro";
+			} else if (thisteam.equals("Guarani_FC")) {
+				thisteam = "Guarani";
+			} else if (thisteam.equals("Clube_Atlético_Paranaense")) {
+				thisteam = "Atlético Paranaense";
+			} else if (thisteam.equals("Sport_Club_do_Recife")) {
+				thisteam = "Recife";
+			} else if (thisteam.equals("Coritiba_Foot_Ball_Club")) {
+				thisteam = "Coritiba";
+			} else {
+				thisteam = "error";
+			}
+			
+			System.out.println(" Campeonato Brasileiro Série A, " + thisteam + ", " + p.getName() + ", " + p.getCountry());
 		}
 		
 		
