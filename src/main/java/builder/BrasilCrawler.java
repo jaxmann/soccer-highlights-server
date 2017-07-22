@@ -63,11 +63,10 @@ public class BrasilCrawler {
 					if (!td.select("td[style~=text-align] > span > a > img").attr("alt").isEmpty()) {
 						playerCountry = td.select("td[style~=text-align] > span > a").attr("title");
 					}
-					
 					playerTeam = team; //.replaceAll("_", " ").replaceAll("\\.", "");
 				}
 				if (containsPlayerNumber) {
-					Player newPlayer = new Player(playerName.replaceAll(",", ""), playerTeam, playerCountry);
+					Player newPlayer = new Player(playerName.replaceAll(",", "").replaceAll("\\.", ""), playerTeam, playerCountry);
 					mlsPlayers.add(newPlayer);			
 				}
 				
