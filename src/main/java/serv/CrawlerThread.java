@@ -689,7 +689,7 @@ public class CrawlerThread implements Runnable {
 			String score = "0-0";
 
 			if (m.find()) { 
-				score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "");
+				score = postDescription.substring(m.start(), m.end()).replaceAll("\\(|\\)|\\[|\\]|\\{|\\}", "").trim();
 			}
 
 			String tqUrl = "jdbc:sqlite:../server/db/timeq.db";
