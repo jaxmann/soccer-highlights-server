@@ -101,14 +101,6 @@ public class CrawlerThread implements Runnable {
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
 
-		//		for (HashMap.Entry<String, String> entry : playerCountry.entrySet()) {
-		//			String key = entry.getKey();
-		//			String value = entry.getValue();
-		//			
-		//			System.out.println(key + "|" + value);
-		//
-		//		}
-
 		while (true) { //run forever unless stopped
 
 			try {
@@ -157,7 +149,6 @@ public class CrawlerThread implements Runnable {
 										} else {
 											logger.info("Not calling sendEmail because keyword is already in TQ");
 										}
-
 									} 
 
 									addToTimeq(keyword, title);
@@ -181,16 +172,10 @@ public class CrawlerThread implements Runnable {
 
 		String[] sToReturn = new String[2];
 
-		//could do postDescription = simplify.simplifyName(postDescription) here
 		HashMap<String, Integer> playersFound = new HashMap<String, Integer>();
 		HashMap<String, Integer> maybes = new HashMap<String, Integer>();
 
 		for (String line : playerMatches) {
-
-
-
-			//byte ptext[] = line.getBytes(ISO_8859_1);
-			//String newline = new String(ptext, UTF_8);
 
 			String[] s = line.split(",");
 
@@ -701,7 +686,6 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 		return false; //exit with error
-
 	}
 
 	public static void sendEmail(String link, String keyword, ArrayList<String> emailAddresses, String postDescription) {
@@ -766,7 +750,6 @@ public class CrawlerThread implements Runnable {
 			} catch (Exception ex) {
 				logger.error(ex.toString());
 			}
-
 		}
 	}
 
@@ -785,7 +768,6 @@ public class CrawlerThread implements Runnable {
 		} else {
 			return 60000;
 		}
-
 
 	}
 
@@ -814,6 +796,7 @@ public class CrawlerThread implements Runnable {
 			reader.close();
 
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return playerTeams;
 	}
@@ -847,6 +830,7 @@ public class CrawlerThread implements Runnable {
 			reader.close();
 
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return playerCountry;
 	}	
@@ -927,10 +911,6 @@ public class CrawlerThread implements Runnable {
 
 		return fullUrl;
 
-
-
 	}
-
-
 
 }
