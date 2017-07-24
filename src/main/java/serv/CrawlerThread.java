@@ -236,6 +236,7 @@ public class CrawlerThread implements Runnable {
 				minNum = value;
 				minName = key;
 			}
+			//find which name occurs nearest to the front of the postdescription
 		}
 
 		//if outright first choice from above, assign 100 points, if it wasn't the first name found or a snippet was found, assign 80
@@ -245,7 +246,7 @@ public class CrawlerThread implements Runnable {
 
 			if (!key.equals(minName) && (!maybes.containsKey(key))) {
 				maybes.put(key, 80); //partial/syn name found inside snippet
-			} else if (key.equals(minName)) { //overwrite if already set as 100
+			} else if (key.equals(minName)) { //overwrite if already set as 160
 				maybes.put(key, 90); //full name found and is minName (closest to front)
 			}
 		}
@@ -262,7 +263,6 @@ public class CrawlerThread implements Runnable {
 				String tm = playerTeams.get(key.trim()); //'Manchester City'
 
 				String cleanedPostDescription = postDescription.replaceAll("[Uu]nited","");
-
 				String teamRegex = "((^|\\s|\\()" + tm + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tm) + "(\\)|'|\\s|$))";
 
 				Pattern teamP = Pattern.compile(teamRegex, Pattern.CASE_INSENSITIVE);
@@ -286,9 +286,6 @@ public class CrawlerThread implements Runnable {
 						}
 					}
 				}
-
-
-
 			}
 		}
 		//////////////////////////////////////////////////////
@@ -308,9 +305,7 @@ public class CrawlerThread implements Runnable {
 					maybes.put(key, value + 50); 
 					logger.info("Country treated as [" + cn + "] for player [" + key + "]");
 				}
-
 			}
-
 		}
 		//// checking other teams in the same league
 		//if no teams from same league match, deduct 20 pts, if at least one does, add 20 
@@ -393,7 +388,6 @@ public class CrawlerThread implements Runnable {
 				//this is fine if it's an international game because it will subtract 20 points from ALL maybes
 			}
 		}
-
 		////
 		//////////////// remove 10 points if player's name is within parens
 		//		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
@@ -449,8 +443,6 @@ public class CrawlerThread implements Runnable {
 				}
 			}
 		}
-		//
-		//
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
@@ -545,7 +537,6 @@ public class CrawlerThread implements Runnable {
 				//------------------------------------------------------//
 				int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
 
-
 				String ellipsePost = "";
 				String[] postParts = postDescription.split(" ");
 				if (postDescription.length() < maxPostLength) {
@@ -562,7 +553,6 @@ public class CrawlerThread implements Runnable {
 					ellipsePost = ellipsePost.trim();
 					ellipsePost += "...";
 				}
-
 
 				String stat = ellipsePost + " | " + url;
 
@@ -582,13 +572,10 @@ public class CrawlerThread implements Runnable {
 				//					try {
 				//						vu.tweetTweetWithVideo(url, stat);
 				//					} catch (IOException e) {
-				//						// TODO Auto-generated catch block
 				//						e.printStackTrace();
 				//					} catch (InterruptedException e) {
-				//						// TODO Auto-generated catch block
 				//						e.printStackTrace();
 				//					} catch (JSONException e) {
-				//						// TODO Auto-generated catch block
 				//						e.printStackTrace();
 				//					}
 				//				} else if (url.contains("streamable")) {
@@ -597,13 +584,10 @@ public class CrawlerThread implements Runnable {
 				//					try {
 				//						vu.tweetTweetWithVideo(newURL, stat);
 				//					} catch (IOException e) {
-				//						// TODO Auto-generated catch block
 				//						e.printStackTrace();
 				//					} catch (InterruptedException e) {
-				//						// TODO Auto-generated catch block
 				//						e.printStackTrace();
 				//					} catch (JSONException e) {
-				//						// TODO Auto-generated catch block
 				//						e.printStackTrace();
 				//					}
 				//				} else {
@@ -654,7 +638,6 @@ public class CrawlerThread implements Runnable {
 				while(resultSet.next()){
 					subscribedUsers.add(resultSet.getString("Email"));
 				}
-
 
 				return subscribedUsers;
 
@@ -750,7 +733,6 @@ public class CrawlerThread implements Runnable {
 				try {
 					String url = "jdbc:sqlite:../server/db/timeq.db";
 					connection = DriverManager.getConnection(url);
-					long currentTime = System.nanoTime();
 					keyword = keyword.replace("'", "''");
 
 					Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
@@ -904,14 +886,12 @@ public class CrawlerThread implements Runnable {
 		try {
 			yahoo = new URL("https://api.streamable.com/videos/" + streamableID);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		URLConnection yc = null;
 		try {
 			yc = yahoo.openConnection();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		BufferedReader in = null;
@@ -920,7 +900,6 @@ public class CrawlerThread implements Runnable {
 					new InputStreamReader(
 							yc.getInputStream()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -933,13 +912,11 @@ public class CrawlerThread implements Runnable {
 			System.out.println(output);
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
