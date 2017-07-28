@@ -6,7 +6,7 @@ import urllib2
 import json
 from sets import Set
 
-g = open("fifa-full-table.csv","a")
+g = open("full-table-tmp.csv","a")
 w = csv.writer(g, lineterminator='\n')
 
 players = Set([])
@@ -43,13 +43,13 @@ for n in xrange(779):
 				#country
 				country = player['nation']['name'].encode('UTF-8')
 
-				print(league + ', ' + team + ', ' + name + ', ' + country)
+				print(league.replace("[.']","") + ', ' + team.replace("[.']","") + ', ' + name.replace("[.']","") + ', ' + country.replace("[.']",""))
 
 				w.writerow((
-		            ' ' + league,
-		            ' ' + team,
-		            ' ' + name,
-		            ' ' + country
+		            ' ' + league.replace("[.']",""),
+		            ' ' + team.replace("[.']",""),
+		            ' ' + name.replace("[.']",""),
+		            ' ' + country.replace("[.']","")
 		        ))
 
 
