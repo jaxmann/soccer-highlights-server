@@ -69,14 +69,12 @@ public class Transfers {
 			while ((line = reader.readLine()) != null) {
 				String[] arr = line.split(",");
 				String name = arr[2].trim();
-				byte pFull[] = name.getBytes(UTF_8);
-				String fullName = new String(pFull, UTF_8);
-//				for (int i=0; i<fullName.length();i++) {
-//					if ((int)fullName.charAt(i)>300) {
-//						System.out.println((int)fullName.charAt(i));
-//						System.out.println(fullName.charAt(i));
-//					}
-//				}
+				if (xferredPlayers.containsKey(name)) {
+					if (xferredPlayers.get(name)[0].equals(arr[1].trim())) {
+						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + name + "," + arr[3]);
+					}
+				}
+
 			}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
