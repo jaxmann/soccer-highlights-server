@@ -275,6 +275,25 @@ public class CrawlerThread implements Runnable {
 				}
 			}
 		}
+		/////////////////rip out team names from string and if player sitll found, +100/////////////////////////////////////
+		String cleanedPD = postDescription;
+		for (HashMap.Entry<String, String> entry : playerTeams.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue(); //teamname
+
+			if (cleanedPD.contains(value.trim())) {
+				cleanedPD = cleanedPD.replace(value, "");
+			}
+		}
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			if (cleanedPD.contains(key)) {
+				maybes.put(key, value + 100);
+				logger.info("Added 100 to [" + key + "] because still contained in PD when teams removed");
+			}
+		}
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
@@ -465,9 +484,9 @@ public class CrawlerThread implements Runnable {
 		if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
 			postDescription = postDescription.substring(2); //M Reus - > Reus
 		}
-		
+
 		String countryName = "";
-		
+
 		if (isInvalidTQ(postDescription, minName)) {
 			//do nothing
 		} else {
@@ -869,7 +888,7 @@ public class CrawlerThread implements Runnable {
 		}
 		return playerCountry;
 	}	
-	
+
 	public static HashMap<String, String> populatePlayerLeague() {
 
 		HashMap<String, String> playerLeague = new HashMap<String, String>();

@@ -33,7 +33,13 @@ public class Playground {
 
 	public static void main(String[] args) throws TwitterException {
 		
-		System.out.println(simplify.simplifyName("Džeko"));
+		String a = "One two three four five";
+		
+		String b = "two";
+		
+		System.out.println(a.replace(b, ""));
+		
+		/*System.out.println(simplify.simplifyName("Džeko"));
 		
 		System.out.println((char)122);
 		
@@ -62,7 +68,7 @@ public class Playground {
 			Integer value = entry.getValue();
 
 			System.out.println(key + " at " + value);
-		}
+		}*/
 		
 		
 		
