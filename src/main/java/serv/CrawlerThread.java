@@ -648,7 +648,7 @@ public class CrawlerThread implements Runnable {
 				String url = "jdbc:sqlite:../server/db/user.db";
 				connection = DriverManager.getConnection(url);
 				long currentTime = System.nanoTime();
-				keyword = keyword.replace("'", "''");
+				//keyword = keyword.replace("'", "''");
 				String sql = "Select Email from User WHERE Keywords like '%" + keyword.replaceAll("'", "''") + "%' and ReceiveEmails<" + currentTime + " and ReceiveEmails>0;";
 				logger.info("SQL: " + sql);
 				statement = connection.createStatement();
