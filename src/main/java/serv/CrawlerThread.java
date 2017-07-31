@@ -309,7 +309,7 @@ public class CrawlerThread implements Runnable {
 			try {
 				String url = "jdbc:sqlite:../server/db/player.db";
 				connection1 = DriverManager.getConnection(url);
-				String sql = "Select league from player where player = ' " + key + "';"; 
+				String sql = "Select league from player where player = ' " + key.replaceAll("'", "''") + "';"; //extra single quote to escape ' in sqlite3
 				statement1 = connection1.createStatement();
 				resultSet1 = statement1.executeQuery(sql);
 				String league = "";
@@ -649,7 +649,7 @@ public class CrawlerThread implements Runnable {
 				connection = DriverManager.getConnection(url);
 				long currentTime = System.nanoTime();
 				keyword = keyword.replace("'", "''");
-				String sql = "Select Email from User WHERE Keywords like '%" + keyword + "%' and ReceiveEmails<" + currentTime + " and ReceiveEmails>0;";
+				String sql = "Select Email from User WHERE Keywords like '%" + keyword.replaceAll("'", "''") + "%' and ReceiveEmails<" + currentTime + " and ReceiveEmails>0;";
 				logger.info("SQL: " + sql);
 				statement = connection.createStatement();
 				resultSet = statement.executeQuery(sql);
