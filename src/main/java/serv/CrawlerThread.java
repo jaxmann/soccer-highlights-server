@@ -294,9 +294,10 @@ public class CrawlerThread implements Runnable {
 			Integer value = entry.getValue();
 			
 			for (String a : key.split(" ")) {
-				if (cleanedPD.contains(key)) {
+				if (cleanedPD.contains(a)) {
 					maybes.put(key, value + 20);
 					logger.info("Added 20 to [" + key + "] because still contained in PD when teams removed");
+					break;
 				}
 			}
 			
