@@ -282,9 +282,7 @@ public class CrawlerThread implements Runnable {
 			String value = entry.getValue(); //teamname
 			
 			for (String s : value.split(" ")) {
-				if (cleanedPD.contains(s)) {
-					cleanedPD = cleanedPD.replace(s, "");
-				}
+				cleanedPD = cleanedPD.replaceAll("\\s|^" + s + "\\s|$", "");
 			}
 			
 		}
