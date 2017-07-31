@@ -70,8 +70,8 @@ public class Transfers {
 
 			while ((line = reader.readLine()) != null) {
 				String[] arr = line.split(",");
-				String name = arr[2].trim();
-				if (xferredPlayers.containsKey(simplify.simplifyName(name))) {
+				String name = simplify.simplifyName(arr[2].trim());
+				if (xferredPlayers.containsKey(name)) {
 					if (xferredPlayers.get(name)[0].equals(arr[1].trim())) {
 						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + name + "," + arr[3]);
 					} else {
