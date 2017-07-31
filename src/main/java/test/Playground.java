@@ -33,11 +33,17 @@ public class Playground {
 
 	public static void main(String[] args) throws TwitterException {
 		
-		String a = "One two three four five";
+		String cleanedPD = "Arsenal 1-1 Sevilla - Lacazette 62' (Emirates Cup)";
 		
-		String b = "two";
+		String x[] = {"Arsenal","Sevilla"};
 		
-		System.out.println(a.replace(b, ""));
+		for (String s : x) {
+	
+			cleanedPD = cleanedPD.replaceAll("\\s" + s + "\\s|^" + s + "\\s|\\s" + s + "$", "");
+		}
+		
+		System.out.println(cleanedPD);
+						
 		
 		/*System.out.println(simplify.simplifyName("Džeko"));
 		
