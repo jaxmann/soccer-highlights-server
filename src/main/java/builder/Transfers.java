@@ -62,7 +62,7 @@ public class Transfers {
 		//transferred players (most recent page) loaded into hashmap ^, now compare to existing set of players and update as necessary (below)
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv"));
+			BufferedReader reader = new BufferedReader (new FileReader("/home/ec2-user/server/regenerate-players//fullTable.csv"));
 			String line;
  
 
