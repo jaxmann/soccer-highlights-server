@@ -73,7 +73,7 @@ public class Transfers {
 				String name = simplify.simplifyName(arr[2].trim());
 				if (xferredPlayers.containsKey(name)) {
 					if (xferredPlayers.get(name)[0].equals(arr[1].trim())) {
-						System.out.println(arr[0] + ", " + xferredPlayers.get(arr[2].trim())[1] + ", " + arr[2].trim() + "," + arr[3]);
+						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + arr[2].trim() + "," + arr[3]);
 					} else {
 						System.out.println(line);
 					}
