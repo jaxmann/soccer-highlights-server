@@ -701,7 +701,7 @@ public class CrawlerThread implements Runnable {
 			logger.info("SQL time queue: " + sqlTQ);
 			tqStatement = tqConnection.createStatement();
 			tqResultSet = tqStatement.executeQuery(sqlTQ);
-			boolean tqFilled = tqResultSet.next();
+			boolean tqFilled = tqResultSet.first();
 
 			logger.info("Already in TQ? (i.e. already found a highlight for this play today): [" + tqFilled + "]");
 
