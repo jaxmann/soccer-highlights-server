@@ -32,7 +32,7 @@ public class simplify {
 			int charVal = (int)newline.charAt(c);
 			if (charVal < 128) {
 				a[c] = newline.charAt(c);
-			} else if (charVal > 127 && charVal < 301) {
+			} else if (charVal > 127 && charVal < 383) {
 				char newChar = (char)simplifyChar(charVal);
 				a[c] = newChar;
 			} else {

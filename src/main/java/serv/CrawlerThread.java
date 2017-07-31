@@ -53,7 +53,7 @@ public class CrawlerThread implements Runnable {
 	public static Logger logger = Logger.getLogger(CrawlerThread.class);
 	private static GmailService service;
 	private static String redditenv;
-	public static HashMap<String, String> playerTeams;
+	public static HashMap<String, String> playerTeams;l
 	public static HashMap<String, String> playerCountry;
 	public static HashSet<String> playerMatches;
 

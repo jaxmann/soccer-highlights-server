@@ -33,6 +33,10 @@ public class Playground {
 
 	public static void main(String[] args) throws TwitterException {
 		
+		System.out.println(simplify.simplifyName("Džeko"));
+		
+		System.out.println((char)122);
+		
 		String a = "Nice goal for Andre Balada goal vs lisbon 4-3";
 		
 		HashMap<String, Integer> list = new HashMap<String, Integer>();
