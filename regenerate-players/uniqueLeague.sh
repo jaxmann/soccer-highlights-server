@@ -1,1 +1,1 @@
-awk -F, '{print }' fullTable.csv | sort | uniq
+awk -F"," '{print $1}' fullTable.csv | sort | uniq
