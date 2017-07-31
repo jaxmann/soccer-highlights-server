@@ -752,7 +752,7 @@ public class CrawlerThread implements Runnable {
 				try {
 					String url = "jdbc:sqlite:../server/db/timeq.db";
 					connection = DriverManager.getConnection(url);
-					keyword = keyword.replace("'", "''");
+					//keyword = keyword.replace("'", "''"); //dont need to do this for insertions i think
 
 					Pattern p = Pattern.compile("[\\[|(]?[0-9][\\]|)]?-[\\[|(]?[0-9][\\]|)]?"); 
 					Matcher m = p.matcher(postDescription);
