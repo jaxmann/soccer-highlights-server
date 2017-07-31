@@ -288,6 +288,7 @@ public class CrawlerThread implements Runnable {
 			}
 			
 		}
+		logger.info("Stripped string is [" + cleanedPD + "]");
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
