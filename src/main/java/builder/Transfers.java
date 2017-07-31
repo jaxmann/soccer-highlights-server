@@ -17,6 +17,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import serv.simplify;
+
 public class Transfers {
 
 	public static void main(String[] args) {
@@ -52,7 +54,7 @@ public class Transfers {
 				String player = thisPlayer.select("div.transfer-module-header > h4 > a").text();
 				p[0] = thisPlayer.select("div.transfer-module-content > div.transfer-graphic > a.previous").text();
 				p[1] = thisPlayer.select("div.transfer-module-content > div.transfer-graphic > a.new").text();
-				xferredPlayers.put(player, p);
+				xferredPlayers.put(simplify.simplifyName(player), p);
 			}
 
 		} catch (IOException e) {
@@ -69,7 +71,7 @@ public class Transfers {
 			while ((line = reader.readLine()) != null) {
 				String[] arr = line.split(",");
 				String name = arr[2].trim();
-				if (xferredPlayers.containsKey(name)) {
+				if (xferredPlayers.containsKey(simplify.simplifyName(name))) {
 					if (xferredPlayers.get(name)[0].equals(arr[1].trim())) {
 						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + name + "," + arr[3]);
 					} else {

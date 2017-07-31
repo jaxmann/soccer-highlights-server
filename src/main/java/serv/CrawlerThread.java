@@ -234,7 +234,7 @@ public class CrawlerThread implements Runnable {
 			if (!key.equals(minName) && (!maybes.containsKey(key))) {
 				maybes.put(key, 80); //partial/syn name found inside snippet
 			} else if (key.equals(minName)) { //overwrite if already set as 160
-				maybes.put(key, 90); //full name found and is minName (closest to front)
+				maybes.put(key, 100); //full name found and is minName (closest to front)
 			}
 		}
 		/////////////////////////
@@ -257,7 +257,7 @@ public class CrawlerThread implements Runnable {
 
 				if (teamM.find()) {
 					maybes.put(key, value + 60); //if ENTIRE team is contained in snippet
-					logger.info("Team treated as [" + tm + "] for player [" + key + "]");
+					logger.info("Team treated as [" + tm + "] for player [" + key + "] and added 60 (full team)");
 				} else {
 					String[] tmSplit = tm.split(" ");
 					for (int i=0; i<tmSplit.length; i++) {
@@ -269,7 +269,7 @@ public class CrawlerThread implements Runnable {
 
 						if (teamMPartial.find()) {
 							maybes.put(key, value + 40); //add 15 points for each part of a team that is contained
-							logger.info("Team treated as [" + tm + "] for player [" + key + "]");
+							logger.info("Team treated as [" + tm + "] for player [" + key + "] and added 40 (partial)");
 						}
 					}
 				}
