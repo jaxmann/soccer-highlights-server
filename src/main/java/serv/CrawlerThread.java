@@ -555,6 +555,12 @@ public class CrawlerThread implements Runnable {
 						leagueHashtag = "LaLiga";
 					} else if (leagueName.trim().equals("Bundesliga 2")) {
 						leagueHashtag = "Bundesliga2";
+					} else if (leagueName.trim().equals("Sogaz Russian Football Championship")) {
+						leagueHashtag = "RussianPremierLeague";
+					} else if (leagueName.trim().equals("Österreichische Fußball-Bundesliga")) {
+						leagueHashtag = "AustrianFootballBundesliga";
+					} else if (leagueName.trim().equals("Campeonato Brasileiro Série A")) {
+						leagueHashtag = "Brasileiro";
 					} else {
 						String[] leagueParts = leagueName.split(" ");
 						if (leagueParts.length == 1) {
