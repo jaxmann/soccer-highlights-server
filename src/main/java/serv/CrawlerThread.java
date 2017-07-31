@@ -53,8 +53,9 @@ public class CrawlerThread implements Runnable {
 	public static Logger logger = Logger.getLogger(CrawlerThread.class);
 	private static GmailService service;
 	private static String redditenv;
-	public static HashMap<String, String> playerTeams;l
+	public static HashMap<String, String> playerTeams;
 	public static HashMap<String, String> playerCountry;
+	public static HashMap<String, String> playerLeague;
 	public static HashSet<String> playerMatches;
 
 	public CrawlerThread(String env) {
@@ -99,6 +100,7 @@ public class CrawlerThread implements Runnable {
 
 		playerTeams = populatePlayerTeams(); //list of players with team names associated
 		playerCountry = populatePlayerCountry(); //list of players with country names associated
+		playerLeague = populatePlayerLeague(); //list of players with league names associated
 		playerMatches = loadPlayers(); //list of players with player syns associated
 
 		while (true) { //run forever unless stopped
@@ -463,7 +465,9 @@ public class CrawlerThread implements Runnable {
 		if ((postDescription.charAt(0) == 'M' || postDescription.charAt(0) == 'D') && postDescription.charAt(1) == ' ') {
 			postDescription = postDescription.substring(2); //M Reus - > Reus
 		}
-
+		
+		String countryName = "";
+		
 		if (isInvalidTQ(postDescription, minName)) {
 			//do nothing
 		} else {
@@ -473,6 +477,7 @@ public class CrawlerThread implements Runnable {
 				String playerHashtag = "";
 				String teamHashtag = "";
 				String countryHashtag = "";
+				String leagueHashtag = "";
 
 				if (minName.equals("no-player-found")){
 					logger.info("no player found so posting without hashtags");
@@ -508,7 +513,31 @@ public class CrawlerThread implements Runnable {
 					}
 					teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
 					//------------------------------------------------------//
-					String countryName = "";
+					String leagueName = "";
+					if (playerLeague.containsKey(minName.trim())) {
+						leagueName = playerLeague.get(minName.trim()); //'Manchester City'
+					}
+					//special cases
+					if (leagueName.trim().equals("Premier League")) {
+						leagueHashtag = "EPL";
+					} else if (leagueName.trim().equals("LaLiga Santander")) {
+						leagueHashtag = "LaLiga";
+					} else if (leagueName.trim().equals("Major League Soccer")) {
+						leagueHashtag = "MLS";
+					} else {
+						String[] leagueParts = leagueName.split(" ");
+						if (leagueParts.length == 1) {
+							leagueHashtag = leagueParts[0];
+						} else {
+							for (int i=0; i<leagueParts.length;i++) {
+								if (!leagueParts[i].equals(leagueParts[i].toUpperCase())) {
+									leagueHashtag += leagueParts[i];
+								}
+							}
+						}
+						leagueHashtag = simplify.simplifyName(leagueHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+					}
+					//------------------------------------------------------//
 					if (playerCountry.containsKey(minName.trim())) {
 						countryName = playerCountry.get(minName.trim()); //'Germany'
 					}
@@ -519,8 +548,14 @@ public class CrawlerThread implements Runnable {
 
 					countryHashtag = simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
+				String altHashtag = "";
+				if (postDescription.contains(countryName)) {
+					altHashtag = countryHashtag;
+				} else {
+					altHashtag = leagueHashtag;
+				}
 				//------------------------------------------------------//
-				int maxPostLength = 140 - url.length() - countryHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
+				int maxPostLength = 140 - url.length() - altHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
 
 				String ellipsePost = "";
 				String[] postParts = postDescription.split(" ");
@@ -548,8 +583,8 @@ public class CrawlerThread implements Runnable {
 				if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 <= 140)) {
 					stat += " #" + simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
 				}
-				if (!countryHashtag.equals("") && (stat.length() + countryHashtag.length() + 2 <= 140)) {
-					stat += " #" + simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+				if (!altHashtag.equals("") && (stat.length() + altHashtag.length() + 2 <= 140)) {
+					stat += " #" + simplify.simplifyName(altHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 
 				//				if (url.endsWith(".mp4")) {
@@ -834,6 +869,39 @@ public class CrawlerThread implements Runnable {
 		}
 		return playerCountry;
 	}	
+	
+	public static HashMap<String, String> populatePlayerLeague() {
+
+		HashMap<String, String> playerLeague = new HashMap<String, String>();
+
+		try {
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
+			String line;
+			logger.info("Loading playerLeague HashMap...");
+
+
+			while ((line = reader.readLine()) != null) {
+
+				String[] s = line.split(",");
+
+				byte pplayer[] = s[2].trim().getBytes(UTF_8);
+				String newplayer = new String(pplayer, UTF_8);
+				byte pteam[] = s[0].trim().getBytes(UTF_8);
+				String newleague = new String(pteam, UTF_8);
+
+				playerLeague.put(newplayer, newleague);
+
+
+			}
+			logger.info("playerLeague HashMap loaded.");
+
+			reader.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return playerLeague;
+	}
 
 	public static HashSet<String> loadPlayers() {
 
