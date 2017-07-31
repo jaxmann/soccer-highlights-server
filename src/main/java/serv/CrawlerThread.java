@@ -280,10 +280,13 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, String> entry : playerTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue(); //teamname
-
-			if (cleanedPD.contains(value.trim())) {
-				cleanedPD = cleanedPD.replace(value, "");
+			
+			for (String s : value.split(" ")) {
+				if (cleanedPD.contains(s)) {
+					cleanedPD = cleanedPD.replace(s, "");
+				}
 			}
+			
 		}
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
