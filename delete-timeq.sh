@@ -1,1 +1,1 @@
-java -jar delete-timeq.jar
+sudo java -jar delete-timeq.jar
