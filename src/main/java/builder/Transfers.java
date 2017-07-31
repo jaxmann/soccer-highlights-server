@@ -72,7 +72,11 @@ public class Transfers {
 				if (xferredPlayers.containsKey(name)) {
 					if (xferredPlayers.get(name)[0].equals(arr[1].trim())) {
 						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + name + "," + arr[3]);
+					} else {
+						System.out.println(line);
 					}
+				} else {
+					System.out.println(line);
 				}
 
 			}
