@@ -291,11 +291,14 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-
-			if (cleanedPD.contains(key)) {
-				maybes.put(key, value + 100);
-				logger.info("Added 100 to [" + key + "] because still contained in PD when teams removed");
+			
+			for (String a : key.split(" ")) {
+				if (cleanedPD.contains(key)) {
+					maybes.put(key, value + 20);
+					logger.info("Added 20 to [" + key + "] because still contained in PD when teams removed");
+				}
 			}
+			
 		}
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
