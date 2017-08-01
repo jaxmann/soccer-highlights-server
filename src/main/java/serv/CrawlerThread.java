@@ -544,7 +544,7 @@ public class CrawlerThread implements Runnable {
 					}
 					//special cases
 					if (leagueName.trim().equals("Premier League")) {
-						leagueHashtag = "EPL";
+						leagueHashtag = "EPL #PremierLeague";
 					} else if (leagueName.trim().equals("LaLiga Santander")) {
 						leagueHashtag = "LaLiga";
 					} else if (leagueName.trim().equals("Major League Soccer")) {
@@ -563,6 +563,48 @@ public class CrawlerThread implements Runnable {
 						leagueHashtag = "Brasileiro";
 					} else if (leagueName.trim().equals("Calcio A")) {
 						leagueHashtag = "SerieA";
+					} else if (leagueName.trim().equals("Alka Superliga")) {
+						leagueHashtag = "Superliga";
+					} else if (leagueName.trim().equals("Belgium Pro League")) {
+						leagueHashtag = "ProLeague";
+					} else if (leagueName.trim().equals("Calcio B")) {
+						leagueHashtag = "SerieB";
+					} else if (leagueName.trim().equals("Campeonato Scotiabank")) {
+						leagueHashtag = "PrimeraDivision";
+					} else if (leagueName.trim().equals("Dawry Jameel")) {
+						leagueHashtag = "JameelLeague";
+					} else if (leagueName.trim().equals("Domino's Ligue 2")) {
+						leagueHashtag = "Ligue2";
+					} else if (leagueName.trim().equals("EFL Championship")) {
+						leagueHashtag = "Championship";
+					} else if (leagueName.trim().equals("EFL League One")) {
+						leagueHashtag = "LeagueOne";
+					} else if (leagueName.trim().equals("EFL League Two")) {
+						leagueHashtag = "LeagueTwo";
+					} else if (leagueName.trim().equals("Hyundai A-League")) {
+						leagueHashtag = "ALeague";
+					} else if (leagueName.trim().equals("K LEAGUE Classic")) {
+						leagueHashtag = "KLeague";
+					} else if (leagueName.trim().equals("Liga Bancomer MX")) {
+						leagueHashtag = "LigaMX";
+					} else if (leagueName.trim().equals("Liga Dimayor")) {
+						leagueHashtag = "LigaAguila";
+					} else if (leagueName.trim().equals("Meiji Yasuda J1 League")) {
+						leagueHashtag = "J1League";
+					} else if (leagueName.trim().equals("Primera División")) {
+						leagueHashtag = "PrimeraDivision";
+					} else if (leagueName.trim().equals("Raiffeisen Super League")) {
+						leagueHashtag = "SuperLeague";
+					} else if (leagueName.trim().equals("Scottish Premiership")) {
+						leagueHashtag = "ScottishPremiership";
+					} else if (leagueName.trim().equals("South African FL")) {
+						leagueHashtag = "SAFL";
+					} else if (leagueName.trim().equals("SSE Airtricity League")) {
+						leagueHashtag = "AirtricityLeague";
+					} else if (leagueName.trim().equals("Süper Lig")) {
+						leagueHashtag = "SuperLig";
+					} else if (leagueName.trim().equals("Ukrayina Liha")) {
+						leagueHashtag = "UkrayinaLiha";
 					} else {
 						String[] leagueParts = leagueName.split(" ");
 						if (leagueParts.length == 1) {
