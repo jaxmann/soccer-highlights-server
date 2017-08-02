@@ -544,7 +544,7 @@ public class CrawlerThread implements Runnable {
 					}
 					//special cases
 					if (leagueName.trim().equals("Premier League")) {
-						leagueHashtag = "EPL #PremierLeague";
+						leagueHashtag = "EPL";
 					} else if (leagueName.trim().equals("LaLiga Santander")) {
 						leagueHashtag = "LaLiga";
 					} else if (leagueName.trim().equals("Major League Soccer")) {
@@ -616,7 +616,11 @@ public class CrawlerThread implements Runnable {
 								}
 							}
 						}
-						leagueHashtag = simplify.simplifyName(leagueHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+						if (leagueHashtag.equals("EPL")) {
+							leagueHashtag = "EPL #PremierLeague";
+						} else {
+							leagueHashtag = simplify.simplifyName(leagueHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+						}
 					}
 					//------------------------------------------------------//
 					if (playerCountry.containsKey(minName.trim())) {
