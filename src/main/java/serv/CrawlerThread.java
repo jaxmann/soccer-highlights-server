@@ -585,7 +585,7 @@ public class CrawlerThread implements Runnable {
 						leagueHashtag = "ALeague";
 					} else if (leagueName.trim().equals("K LEAGUE Classic")) {
 						leagueHashtag = "KLeague";
-					} else if (leagueName.trim().equals("Liga Bancomer MX")) {
+					} else if (leagueName.trim().equals("LIGA Bancomer MX")) {
 						leagueHashtag = "LigaMX";
 					} else if (leagueName.trim().equals("Liga Dimayor")) {
 						leagueHashtag = "LigaAguila";
