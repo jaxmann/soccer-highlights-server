@@ -605,6 +605,8 @@ public class CrawlerThread implements Runnable {
 						leagueHashtag = "SuperLig";
 					} else if (leagueName.trim().equals("Ukrayina Liha")) {
 						leagueHashtag = "UkrayinaLiha";
+					} else if (leagueName.trim().equals("Domino’s Ligue 2")) {
+						leagueHashtag = "Ligue2";
 					} else {
 						String[] leagueParts = leagueName.split(" ");
 						if (leagueParts.length == 1) {
