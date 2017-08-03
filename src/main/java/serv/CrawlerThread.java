@@ -237,6 +237,12 @@ public class CrawlerThread implements Runnable {
 				maybes.put(key, 100); //full name found and is minName (closest to front)
 			}
 		}
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+
+			logger.info("Initial -- ["+key+"] : ["+value+"]");
+		}
 		/////////////////////////
 		int maxPoints = 0;
 		String maxPlayer = "no-player-found";
