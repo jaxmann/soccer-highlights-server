@@ -447,7 +447,7 @@ public class CrawlerThread implements Runnable {
 			for (int l : pLoc) {
 				if (Math.abs(l - vsLoc) < 3) {
 					maybes.put(key, value - 10); //remove 10 points if key is within 2 words of a vs (only teams should be that close)
-					logger.info("10 points removed from [" + key "] because within 2 words of a 'vs'");
+					logger.info("10 points removed from [" + key + "] because within 2 words of a 'vs'");
 					break;
 				}
 			}
