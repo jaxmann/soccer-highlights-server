@@ -608,16 +608,16 @@ public class CrawlerThread implements Runnable {
 					} else if (leagueName.trim().equals("Domino’s Ligue 2")) {
 						leagueHashtag = "Ligue2";
 					} else {
-						String[] leagueParts = leagueName.split(" ");
-						if (leagueParts.length == 1) {
-							leagueHashtag = leagueParts[0];
-						} else {
-							for (int i=0; i<leagueParts.length;i++) {
-								if (!leagueParts[i].equals(leagueParts[i].toUpperCase())) {
-									leagueHashtag += leagueParts[i];
-								}
-							}
-						}
+//						String[] leagueParts = leagueName.split(" ");
+//						if (leagueParts.length == 1) {
+//							leagueHashtag = leagueParts[0];
+//						} else {
+//							for (int i=0; i<leagueParts.length;i++) {
+//								if (!leagueParts[i].equals(leagueParts[i].toUpperCase())) {
+//									leagueHashtag += leagueParts[i];
+//								}
+//							}
+//						}
 						if (leagueHashtag.equals("EPL")) {
 							leagueHashtag = "EPL #PremierLeague";
 						} else {
