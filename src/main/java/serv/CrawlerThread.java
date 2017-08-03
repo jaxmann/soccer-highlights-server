@@ -300,7 +300,7 @@ public class CrawlerThread implements Runnable {
 			for (String a : key.split(" ")) {
 				if (cleanedPD.contains(a)) {
 					maybes.put(key, value + 20);
-					logger.info("Added 20 to [" + key + "] because still contained in PD when teams removed");
+					logger.info("Added 40 to [" + key + "] because still contained in PD when teams removed");
 					break;
 				}
 			}
@@ -402,8 +402,8 @@ public class CrawlerThread implements Runnable {
 				}
 			}
 			if (!found) {
-				maybes.put(key, value - 20); //subtract 20 if no team from same league is found
-				logger.info("20 deducted from [" + key + "] because no team from same league found");
+				maybes.put(key, value - 40); //subtract 40 if no team from same league is found
+				logger.info("40 deducted from [" + key + "] because no team from same league found");
 				//this is fine if it's an international game because it will subtract 20 points from ALL maybes
 			}
 		}
