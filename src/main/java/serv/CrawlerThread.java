@@ -461,7 +461,7 @@ public class CrawlerThread implements Runnable {
 			Integer value = entry.getValue();
 
 			logger.info("["+key+"] : ["+value+"]");
-			if (value > maxPoints) {
+			if (value >= maxPoints) {
 				maxPlayer = key;
 				maxPoints = value;
 			}
