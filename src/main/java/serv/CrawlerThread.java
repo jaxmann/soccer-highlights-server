@@ -397,6 +397,7 @@ public class CrawlerThread implements Runnable {
 			}
 			if (!found) {
 				maybes.put(key, value - 20); //subtract 20 if no team from same league is found
+				logger.info("20 deducted from [" + key + "] because no team from same league found");
 				//this is fine if it's an international game because it will subtract 20 points from ALL maybes
 			}
 		}
@@ -440,6 +441,7 @@ public class CrawlerThread implements Runnable {
 			for (int l : pLoc) {
 				if (Math.abs(l - vsLoc) < 3) {
 					maybes.put(key, value - 10); //remove 10 points if key is within 2 words of a vs (only teams should be that close)
+					logger.info("10 points removed from [" + key "] because within 2 words of a 'vs'");
 					break;
 				}
 			}
@@ -451,6 +453,7 @@ public class CrawlerThread implements Runnable {
 				if (i != j) {
 					if (keys[j].contains(keys[i])) {
 						maybes.put(keys[i], maybes.get(keys[i]) - 30);
+						logger.info("30 points deducted from [" + keys[i] + "] because it is contained in [" + keys[j] + "]");
 					}
 				}
 			}
