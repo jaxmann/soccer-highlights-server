@@ -545,7 +545,7 @@ public class CrawlerThread implements Runnable {
 							}
 						}
 					}
-					teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+					teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replace("FootballClub", "FC");
 					//------------------------------------------------------//
 					String leagueName = "";
 					if (playerLeague.containsKey(minName.trim())) {
@@ -630,7 +630,7 @@ public class CrawlerThread implements Runnable {
 						if (leagueHashtag.equals("EPL")) {
 							leagueHashtag = "EPL #PremierLeague";
 						} else {
-							leagueHashtag = simplify.simplifyName(leagueHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+							leagueHashtag = simplify.simplifyName(leagueHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replaceAll("PremierLeague", "PL");
 						}
 					}
 					//------------------------------------------------------//
