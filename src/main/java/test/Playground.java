@@ -33,7 +33,11 @@ public class Playground {
 
 	public static void main(String[] args) throws TwitterException {
 		
-		String cleanedPD = "Arsenal 1-1 Sevilla - Lacazette 62' (Emirates Cup)";
+		String a  = "FCdeMetz";
+		
+		System.out.println(a.replaceAll("([a-zA-Z])de([A-Z])", "$1$2"));
+		
+		/*String cleanedPD = "Arsenal 1-1 Sevilla - Lacazette 62' (Emirates Cup)";
 		
 		String x[] = {"Arsenal","Sevilla"};
 		
@@ -43,7 +47,7 @@ public class Playground {
 		}
 		
 		System.out.println(cleanedPD);
-						
+						*/
 		
 		/*System.out.println(simplify.simplifyName("Džeko"));
 		
