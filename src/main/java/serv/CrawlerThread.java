@@ -545,7 +545,7 @@ public class CrawlerThread implements Runnable {
 							}
 						}
 					}
-					teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replace("FootballClub", "FC");
+					teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replace("FootballClub", "FC").replace("SoccerClub", "");
 					//------------------------------------------------------//
 					String leagueName = "";
 					if (playerLeague.containsKey(minName.trim())) {
