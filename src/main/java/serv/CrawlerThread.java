@@ -465,7 +465,20 @@ public class CrawlerThread implements Runnable {
 				}
 			}
 		}
-		//////////////////////////////////////////////////////
+		////////////////////////////////////////////////////// if postDescription contains the last name with special chars add 30
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+			
+			String[] name = key.split(" ");
+			if (name.length == 2) {
+				if (postDescription.contains(name[1]) && !postDescription.contains(simplify.simplifyName(name[1])) {
+					maybes.put(key, value + 30);
+				}
+			}
+		}
+		//////////////////////////////////////////////////////////
+		
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
