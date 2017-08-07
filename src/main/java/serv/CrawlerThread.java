@@ -472,7 +472,7 @@ public class CrawlerThread implements Runnable {
 			
 			String[] name = key.split(" ");
 			if (name.length == 2) {
-				if (postDescription.contains(name[1]) && !postDescription.contains(simplify.simplifyName(name[1])) {
+				if (postDescription.contains(name[1]) && !postDescription.contains(simplify.simplifyName(name[1]))) {
 					maybes.put(key, value + 30);
 				}
 			}
