@@ -33,6 +33,11 @@ public class Transfers {
 		
 		leagueTeams = populateLeagueTeams();
 		System.out.println("size is " + leagueTeams.size());
+		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			System.out.println(key + " | " + value);
+		}
 
 		String transferURL = "http://www.espnfc.us/transfers?year=2017";
 
@@ -102,13 +107,14 @@ public class Transfers {
 	}
 	
 	public static String getLeague(String team, HashMap<String, String> leagueTeams) {
+		System.out.println("team is " + team);
+		System.out.println("leagueTeam size here is " + leagueTeams.size());
 		
 		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			
 			
-	
 			if (similarity(team, key) >= .500) {
 				return value;
 			} else {
