@@ -31,8 +31,9 @@ public class Transfers {
 
 	public static void start() {
 		
-		leagueTeams = populateLeagueTeams();
+		HashMap<String, String> leagueTeams = populateLeagueTeams();
 		System.out.println("size is " + leagueTeams.size());
+		System.out.println("begin printing keys and values...");
 		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
@@ -130,9 +131,8 @@ public class Transfers {
 		HashMap<String, String> leagueTeam = new HashMap<String, String>();
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players//fullTable.csv")); 
+			BufferedReader reader = new BufferedReader (new FileReader("/home/ec2-user/server/regenerate-players/fullTable.csv")); 
 			String line;
-
 
 			String[] s;
 			
