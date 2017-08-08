@@ -36,15 +36,19 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
-		System.out.println(Similar.similarity("Sporting Club de Bastia", "Nice"));
+		String[] a = {"Atalanta", "Bologna", "Cagliari","Chievo Verona","Crotone","Empoli","Fiorentina","Genoa","Inter","Juventus","Lazio","Legia Warszawa","Milan","Napoli","Palermo","Pescara","Roma","Sampdoria","Sassuolo","Torino","Udinese"};
 		
-		HashMap<String, String> a = Transfers.populateLeagueTeams();
+		for (String x: a) {
+			System.out.println(Similar.similarity("St Etienne", x) >= .7);
+		}
+		
+		/*HashMap<String, String> a = Transfers.populateLeagueTeams();
 		
 		System.out.println(a.get(" Watford"));
 		
 		System.out.println(Similar.similarity(" Watford", "Watford") >= .500);
 		
-		System.out.println(Transfers.getLeague("Watford", a));
+		System.out.println(Transfers.getLeague("Watford", a));*/
 
 
 		/*HashMap<String, String> leagueTeams = new HashMap<String, String>();
