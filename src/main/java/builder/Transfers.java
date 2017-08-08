@@ -117,9 +117,15 @@ public class Transfers {
 	
 	public static String getLeague(String team, HashMap<String, String> leagueTeams) {
 		
+		System.out.println(leagueTeams.size());
+		
 		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
+			
+			if (key.contains("Tienne")) {
+				System.out.println(key);
+			}
 			
 			if (Similar.similarity(team, key) >= .700) {
 				System.out.println("similarity found between " + team + " and " + key);

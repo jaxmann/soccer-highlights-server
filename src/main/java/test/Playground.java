@@ -36,6 +36,8 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
+		System.out.println(Similar.similarity("AS Saint-Étienne", "St Etienne"));
+		
 		/*String[] a = {"Atalanta", "Bologna", "Cagliari","Chievo Verona","Crotone","Empoli","Fiorentina","Genoa","Inter","Juventus","Lazio","Legia Warszawa","Milan","Napoli","Palermo","Pescara","Roma","Sampdoria","Sassuolo","Torino","Udinese"};
 		
 		for (String x: a) {
@@ -78,7 +80,7 @@ public class Playground {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			
-			System.out.println(key + " | " + value);
+			//System.out.println(key + " | " + value);
 		}
 
 
