@@ -78,7 +78,7 @@ public class Transfers {
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
 						} else {
-							System.out.println(" " + league.trim() + ", " + team + ", " + arr[2].trim() + "," + arr[3]);
+							System.out.println(" " + league.trim() + ", " + team.trim() + ", " + arr[2].trim() + "," + arr[3]);
 						}
 						written = true;
 					} else if (Similar.similarity(key, arr[2].trim()) >= .95) {
@@ -88,7 +88,7 @@ public class Transfers {
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
 						} else {
-							System.out.println(" " + league.trim()  + ", " + team + ", " + arr[2].trim() + "," + arr[3]);
+							System.out.println(" " + league.trim()  + ", " + team.trim() + ", " + arr[2].trim() + "," + arr[3]);
 						}
 						written = true;
 					} 
@@ -127,7 +127,6 @@ public class Transfers {
 			
 			
 			if (Similar.similarity(team, key) >= .700) {
-				System.out.println("similarity found between " + team + " and " + key);
 				a[0] = key; //team
 				a[1] = value; //league
 				break;
