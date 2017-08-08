@@ -76,7 +76,7 @@ public class Transfers {
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
 						} else {
-							System.out.println(" " + league + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+							System.out.println(" " + league.trim() + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
 						}
 						written = true;
 					} else if (Similar.similarity(key, arr[2]) >= .95) {
@@ -84,7 +84,7 @@ public class Transfers {
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
 						} else {
-							System.out.println(" " + league  + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+							System.out.println(" " + league.trim()  + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
 						}
 						written = true;
 					} 
