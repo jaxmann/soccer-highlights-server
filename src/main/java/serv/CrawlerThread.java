@@ -647,6 +647,7 @@ public class CrawlerThread implements Runnable {
 							leagueHashtag = simplify.simplifyName(leagueHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replaceAll("PremierLeague", "PL");
 						}
 					}
+					logger.info("League hashtag is [" + leagueHashtag + "]");
 					//------------------------------------------------------//
 					if (playerCountry.containsKey(minName.trim())) {
 						countryName = playerCountry.get(minName.trim()); //'Germany'
