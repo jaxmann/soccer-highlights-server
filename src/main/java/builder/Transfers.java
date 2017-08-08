@@ -72,12 +72,6 @@ public class Transfers {
 			}
 
 		}
-		
-		for (HashMap.Entry<String, String[]> entry : xferredPlayers.entrySet()) {
-			String key = entry.getKey();
-			String[] value = entry.getValue();
-			System.out.println(key);
-		}
 
 //		try {
 //			Document document = Jsoup.connect(transferURL).followRedirects(true).get(); 
@@ -137,7 +131,7 @@ public class Transfers {
 				}
 
 				if (!written) {
-					//System.out.println(line);
+					System.out.println(line);
 				}
 
 				/*if (xferredPlayers.containsKey(name)) {
