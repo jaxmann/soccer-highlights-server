@@ -5,12 +5,15 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -24,6 +27,11 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import builder.Transfers;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
@@ -31,12 +39,87 @@ import serv.Similar;
 import serv.Simplify;
 
 public class Playground {
+	
+	public static String executePost(String targetURL) {
+		  HttpURLConnection connection = null;
+
+		  try {
+		    //Create connection
+		    URL url = new URL(targetURL);
+		    connection = (HttpURLConnection) url.openConnection();
+		    connection.setRequestMethod("GET");
+		    //connection.setRequestProperty("Content-Type", 
+		       // "application/x-www-form-urlencoded");
+
+//		    connection.setRequestProperty("Content-Length", 
+//		        Integer.toString(urlParameters.getBytes().length));
+//		    connection.setRequestProperty("Content-Language", "en-US");  
+
+		    connection.setUseCaches(false);
+		    connection.setDoOutput(true);
+
+		    //Send request
+		    DataOutputStream wr = new DataOutputStream (
+		        connection.getOutputStream());
+		    //wr.writeBytes(urlParameters);
+		    wr.close();
+
+		    //Get Response  
+		    InputStream is = connection.getInputStream();
+		    BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+		    StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+		    String line;
+		    while ((line = rd.readLine()) != null) {
+		      response.append(line);
+		      response.append('\r');
+		    }
+		    rd.close();
+		    return response.toString();
+		  } catch (Exception e) {
+		    e.printStackTrace();
+		    return null;
+		  } finally {
+		    if (connection != null) {
+		      connection.disconnect();
+		    }
+		  }
+		}
 
 
 
 	public static void main(String[] args) {
 		
-		System.out.println(Similar.similarity("AS Saint-Étienne", "St Etienne"));
+		
+		String a = executePost("http://www.espnfc.us/api/transfers?limit=20");
+		
+		JsonObject jsonObj = new JsonParser().parse(a).getAsJsonObject();
+		
+		
+		JsonArray data = jsonObj.getAsJsonObject("data").get("transferGroups").getAsJsonArray();
+		
+		
+		for (int i=0; i<data.size(); i++) {
+			JsonObject chunk = data.get(i).getAsJsonObject();
+			JsonArray transfers = chunk.get("transfers").getAsJsonArray();
+			for (int j=0; j<transfers.size(); j++) {
+				JsonObject playerChunk = transfers.get(j).getAsJsonObject();
+				String playerName = playerChunk.get("playerName").getAsString();
+				String fromTeam = playerChunk.get("fromTeamName").getAsString();
+				String toTeam = playerChunk.get("toTeamName").getAsString();
+				System.out.println(playerName + " | " + fromTeam + " | " + toTeam);
+			}
+
+		}
+		
+//		JsonObject data2 = data.get(0).getAsJsonObject();
+//		
+//		JsonArray data3 = data2.get("transfers").getAsJsonArray();
+//		
+//		System.out.println(data3);
+		
+		
+		
+//		System.out.println(Similar.similarity("AS Saint-Étienne", "St Etienne"));
 		
 		/*String[] a = {"Atalanta", "Bologna", "Cagliari","Chievo Verona","Crotone","Empoli","Fiorentina","Genoa","Inter","Juventus","Lazio","Legia Warszawa","Milan","Napoli","Palermo","Pescara","Roma","Sampdoria","Sassuolo","Torino","Udinese"};
 		
@@ -52,7 +135,7 @@ public class Playground {
 		
 		System.out.println(Transfers.getLeague("Watford", a));*/
 
-
+/*
 		HashMap<String, String> leagueTeams = new HashMap<String, String>();
 
 		try {
@@ -82,7 +165,7 @@ public class Playground {
 			
 			//System.out.println(key + " | " + value);
 		}
-
+*/
 
 
 			//		printSimilarity("", "");
