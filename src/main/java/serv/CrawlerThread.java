@@ -184,7 +184,7 @@ public class CrawlerThread implements Runnable {
 			for (String player : s) {
 
 				// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
-				String reg = "((^|\\s|\\()" + player + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(player) + "(\\)|'|\\s|$))";
+				String reg = "((^|\\s|\\()" + player + "(\\)|'|\\s|$))|((^|\\s|\\()" + Simplify.simplifyName(player) + "(\\)|'|\\s|$))";
 
 
 				Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
@@ -257,7 +257,7 @@ public class CrawlerThread implements Runnable {
 				String tm = playerTeams.get(key.trim()); //'Manchester City'
 
 				String cleanedPostDescription = postDescription.replaceAll("[Uu]nited","");
-				String teamRegex = "((^|\\s|\\()" + tm + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tm) + "(\\)|'|\\s|$))";
+				String teamRegex = "((^|\\s|\\()" + tm + "(\\)|'|\\s|$))|((^|\\s|\\()" + Simplify.simplifyName(tm) + "(\\)|'|\\s|$))";
 
 				Pattern teamP = Pattern.compile(teamRegex, Pattern.CASE_INSENSITIVE);
 				Matcher teamM = teamP.matcher(cleanedPostDescription);
@@ -269,7 +269,7 @@ public class CrawlerThread implements Runnable {
 					String[] tmSplit = tm.split(" ");
 					for (int i=0; i<tmSplit.length; i++) {
 
-						String teamRegexPartial = "((^|\\s|\\()" + tmSplit[i] + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(tmSplit[i]) + "(\\)|'|\\s|$))";
+						String teamRegexPartial = "((^|\\s|\\()" + tmSplit[i] + "(\\)|'|\\s|$))|((^|\\s|\\()" + Simplify.simplifyName(tmSplit[i]) + "(\\)|'|\\s|$))";
 
 						Pattern teamPPartial = Pattern.compile(teamRegexPartial, Pattern.CASE_INSENSITIVE);
 						Matcher teamMPartial = teamPPartial.matcher(cleanedPostDescription);
@@ -315,7 +315,7 @@ public class CrawlerThread implements Runnable {
 			if (playerCountry.containsKey(key.trim())) {
 				String cn = playerCountry.get(key.trim()); //'Germany'
 
-				String countryRegex = "((^|\\s|\\()" + cn + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(cn) + "(\\)|'|\\s|$))";
+				String countryRegex = "((^|\\s|\\()" + cn + "(\\)|'|\\s|$))|((^|\\s|\\()" + Simplify.simplifyName(cn) + "(\\)|'|\\s|$))";
 
 				Pattern countryP = Pattern.compile(countryRegex, Pattern.CASE_INSENSITIVE);
 				Matcher countryM = countryP.matcher(postDescription);
@@ -361,7 +361,7 @@ public class CrawlerThread implements Runnable {
 					resultSet2 = statement2.executeQuery(sql2);
 
 					while(resultSet2.next()) {
-						teamsSameLeague.add(simplify.simplifyName(resultSet2.getString("team").trim().replaceAll("^[a-zA-Z]{1,3}\\s|\\s[a-zA-Z]{1,3}$|\\s[a-zA-Z]{1,3}\\s|[0-9]+", "").trim()));
+						teamsSameLeague.add(Simplify.simplifyName(resultSet2.getString("team").trim().replaceAll("^[a-zA-Z]{1,3}\\s|\\s[a-zA-Z]{1,3}$|\\s[a-zA-Z]{1,3}\\s|[0-9]+", "").trim()));
 					}
 
 				} catch (SQLException e) {
@@ -472,7 +472,7 @@ public class CrawlerThread implements Runnable {
 			
 			String[] name = key.split(" ");
 			if (name.length == 2) {
-				if (postDescription.contains(name[1]) && !postDescription.contains(simplify.simplifyName(name[1]))) {
+				if (postDescription.contains(name[1]) && !postDescription.contains(Simplify.simplifyName(name[1]))) {
 					maybes.put(key, value + 30);
 				}
 			}
@@ -543,7 +543,7 @@ public class CrawlerThread implements Runnable {
 					} else {
 						playerHashtag = fullN[fullN.length - 2] + fullN[fullN.length - 1];
 					}
-					playerHashtag = simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+					playerHashtag = Simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 					//------------------------------------------------------//
 					String teamName = "";
 					if (playerTeams.containsKey(minName.trim())) {
@@ -559,7 +559,7 @@ public class CrawlerThread implements Runnable {
 							}
 						}
 					}
-					teamHashtag = simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replace("FootballClub", "FC").replace("SoccerClub", "").replaceAll("([a-zA-Z])de([A-Z])", "$1$2");
+					teamHashtag = Simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replace("FootballClub", "FC").replace("SoccerClub", "").replaceAll("([a-zA-Z])de([A-Z])", "$1$2");
 					//------------------------------------------------------//
 					String leagueName = "";
 					if (playerLeague.containsKey(minName.trim())) {
@@ -644,7 +644,7 @@ public class CrawlerThread implements Runnable {
 						if (leagueHashtag.equals("EPL")) {
 							leagueHashtag = "EPL #PremierLeague";
 						} else {
-							leagueHashtag = simplify.simplifyName(leagueHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replaceAll("PremierLeague", "PL");
+							leagueHashtag = Simplify.simplifyName(leagueHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d","")).replaceAll("PremierLeague", "PL");
 						}
 					}
 					logger.info("League hashtag is [" + leagueHashtag + "]");
@@ -657,7 +657,7 @@ public class CrawlerThread implements Runnable {
 						countryHashtag += countryParts[i];
 					}
 
-					countryHashtag = simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+					countryHashtag = Simplify.simplifyName(countryHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 				String altHashtag = "";
 				if (postDescription.contains(countryName)) {
@@ -688,14 +688,14 @@ public class CrawlerThread implements Runnable {
 				String stat = ellipsePost + " | " + url;
 
 				if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() + 2 <= 140)) {
-					stat += " #" + simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+					stat += " #" + Simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 
 				if (!teamHashtag.equals("") && (stat.length() + teamHashtag.length() + 2 <= 140)) {
-					stat += " #" + simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
+					stat += " #" + Simplify.simplifyName(teamHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']|\\d",""));
 				}
 				if (!altHashtag.equals("") && (stat.length() + altHashtag.length() + 2 <= 140)) {
-					stat += " #" + simplify.simplifyName(altHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
+					stat += " #" + Simplify.simplifyName(altHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
 				}
 
 				//				if (url.endsWith(".mp4")) {

@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 
-import serv.simplify;
+import serv.Simplify;
 
 public class Playground {
 	

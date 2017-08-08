@@ -20,7 +20,7 @@ import org.jsoup.select.Elements;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import serv.simplify;
+import serv.Simplify;
 
 public class AccuracyTest {
 
@@ -155,7 +155,7 @@ public class AccuracyTest {
 			for (String player : s) {
 
 				// find player starting at start of string or after a whitespace with trailing whitespace, apostrophe, or line boundary
-				String reg = "((^|\\s|\\()" + player + "(\\)|'|\\s|$))|((^|\\s|\\()" + simplify.simplifyName(player) + "(\\)|'|\\s|$))";
+				String reg = "((^|\\s|\\()" + player + "(\\)|'|\\s|$))|((^|\\s|\\()" + Simplify.simplifyName(player) + "(\\)|'|\\s|$))";
 				
 				
 				Pattern p = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
@@ -219,10 +219,10 @@ public class AccuracyTest {
 				String tm = playerTeams.get(key.trim()); //'Manchester City'
 				String[] tmSplit = tm.split(" ");
 				for (int i=0; i<tmSplit.length; i++) {
-					if (postDescription.contains(tm) || postDescription.contains(simplify.simplifyName(tm))) {
+					if (postDescription.contains(tm) || postDescription.contains(Simplify.simplifyName(tm))) {
 						maybes.put(key, value + 60); //if entire team is contained in snippet
 						System.out.println("Team treated as [" + tm + "] for player [" + key + "]");
-					} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(simplify.simplifyName(tmSplit[i]))) {
+					} else if (postDescription.contains(tmSplit[i]) || postDescription.contains(Simplify.simplifyName(tmSplit[i]))) {
 						maybes.put(key, value + 40); //add 15 points for each part of a team that is contained
 					}
 				}

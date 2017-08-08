@@ -17,7 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import serv.simplify;
+import serv.Simplify;
 
 public class Transfers {
 
@@ -54,7 +54,7 @@ public class Transfers {
 				String player = thisPlayer.select("div.transfer-module-header > h4 > a").text();
 				p[0] = thisPlayer.select("div.transfer-module-content > div.transfer-graphic > a.previous").text();
 				p[1] = thisPlayer.select("div.transfer-module-content > div.transfer-graphic > a.new").text();
-				xferredPlayers.put(simplify.simplifyName(player), p);
+				xferredPlayers.put(Simplify.simplifyName(player), p);
 			}
 
 		} catch (IOException e) {
@@ -70,7 +70,7 @@ public class Transfers {
 
 			while ((line = reader.readLine()) != null) {
 				String[] arr = line.split(",");
-				String name = simplify.simplifyName(arr[2].trim());
+				String name = Simplify.simplifyName(arr[2].trim());
 				
 				for (HashMap.Entry<String, String[]> entry : xferredPlayers.entrySet()) {
 					String key = entry.getKey();

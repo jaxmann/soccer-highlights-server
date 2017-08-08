@@ -2,7 +2,7 @@ package serv;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class simplify {
+public class Simplify {
 	
 	public static String simplifyUTF8Name(String name) {
 		byte ptext[] = name.getBytes(ISO_8859_1);
