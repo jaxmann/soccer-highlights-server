@@ -191,7 +191,7 @@ public class CrawlerThread implements Runnable {
 				Matcher m = p.matcher(postDescription);
 
 				if (m.find() && (m.end() - m.start() > 2) && (postDescription.substring(m.start(), m.end()).trim().length() > 2)) {
-					
+
 					logger.info("regex found [" + postDescription.substring(m.start(), m.end()).trim() + "] treated as [" + s[0] + "]");
 
 					if (playersFound.containsKey(s[0])) {
@@ -287,17 +287,17 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, String> entry : playerTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue(); //teamname
-			
+
 			for (String s : value.split(" ")) {
 				cleanedPD = cleanedPD.replaceAll("\\s" + s + "\\s|^" + s + "\\s|\\s" + s + "$", "");
 			}
-			
+
 		}
 		logger.info("Stripped string is [" + cleanedPD + "]");
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			
+
 			for (String a : key.split(" ")) {
 				if (cleanedPD.contains(a)) {
 					maybes.put(key, value + 20);
@@ -305,7 +305,7 @@ public class CrawlerThread implements Runnable {
 					break;
 				}
 			}
-			
+
 		}
 		//////////////////////////////////////////////////////
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
@@ -469,7 +469,7 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			
+
 			for (String s: postDescription.split(" ")) {
 				if (Similar.similarity(s, key.split(" ")[key.split(" ").length-1]) >= .9) {
 					maybes.put(key, value + 20); //add 20 points if last name is contained in PD (similar, at least)
@@ -480,7 +480,7 @@ public class CrawlerThread implements Runnable {
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-			
+
 			String[] name = key.split(" ");
 			if (name.length == 2) {
 				if (postDescription.contains(name[1]) && !postDescription.contains(Simplify.simplifyName(name[1]))) {
@@ -489,7 +489,7 @@ public class CrawlerThread implements Runnable {
 			}
 		}
 		//////////////////////////////////////////////////////////
-		
+
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
@@ -642,16 +642,16 @@ public class CrawlerThread implements Runnable {
 					} else if (leagueName.trim().equals("Domino’s Ligue 2")) {
 						leagueHashtag = "Ligue2";
 					} else {
-//						String[] leagueParts = leagueName.split(" ");
-//						if (leagueParts.length == 1) {
-//							leagueHashtag = leagueParts[0];
-//						} else {
-//							for (int i=0; i<leagueParts.length;i++) {
-//								if (!leagueParts[i].equals(leagueParts[i].toUpperCase())) {
-//									leagueHashtag += leagueParts[i];
-//								}
-//							}
-//						}
+						//						String[] leagueParts = leagueName.split(" ");
+						//						if (leagueParts.length == 1) {
+						//							leagueHashtag = leagueParts[0];
+						//						} else {
+						//							for (int i=0; i<leagueParts.length;i++) {
+						//								if (!leagueParts[i].equals(leagueParts[i].toUpperCase())) {
+						//									leagueHashtag += leagueParts[i];
+						//								}
+						//							}
+						//						}
 						if (leagueHashtag.equals("EPL")) {
 							leagueHashtag = "EPL #PremierLeague";
 						} else {

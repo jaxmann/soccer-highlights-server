@@ -90,7 +90,7 @@ public class Playground {
 	public static void main(String[] args) {
 		
 		
-		System.out.println(Similar.similarity("Colchester United", "Manchester United"));
+		System.out.println(Similar.similarity("Olympique Lyonnais", "Olympique Lyon"));
 		
 		/*String a = executePost("http://www.espnfc.us/api/transfers?limit=20");
 		
