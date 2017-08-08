@@ -121,7 +121,7 @@ public class Transfers {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			
-			if (Similar.similarity(team, key) >= .700 || key.contains(team)) {
+			if (Similar.similarity(team, key) >= .700) {
 				System.out.println("similarity found between " + team + " and " + key);
 				return value;
 			} else {

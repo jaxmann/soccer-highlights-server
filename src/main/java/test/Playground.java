@@ -36,11 +36,11 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
-		String[] a = {"Atalanta", "Bologna", "Cagliari","Chievo Verona","Crotone","Empoli","Fiorentina","Genoa","Inter","Juventus","Lazio","Legia Warszawa","Milan","Napoli","Palermo","Pescara","Roma","Sampdoria","Sassuolo","Torino","Udinese"};
+		/*String[] a = {"Atalanta", "Bologna", "Cagliari","Chievo Verona","Crotone","Empoli","Fiorentina","Genoa","Inter","Juventus","Lazio","Legia Warszawa","Milan","Napoli","Palermo","Pescara","Roma","Sampdoria","Sassuolo","Torino","Udinese"};
 		
 		for (String x: a) {
 			System.out.println(Similar.similarity("St Etienne", x) >= .7);
-		}
+		}*/
 		
 		/*HashMap<String, String> a = Transfers.populateLeagueTeams();
 		
@@ -51,7 +51,7 @@ public class Playground {
 		System.out.println(Transfers.getLeague("Watford", a));*/
 
 
-		/*HashMap<String, String> leagueTeams = new HashMap<String, String>();
+		HashMap<String, String> leagueTeams = new HashMap<String, String>();
 
 		try {
 			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players/fullTable.csv")); 
@@ -79,7 +79,7 @@ public class Playground {
 			String value = entry.getValue();
 			
 			System.out.println(key + " | " + value);
-		}*/
+		}
 
 
 
