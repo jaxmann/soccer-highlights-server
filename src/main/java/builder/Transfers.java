@@ -129,15 +129,9 @@ public class Transfers {
 			while ((line = reader.readLine()) != null) {
 
 				String[] s = line.split(",");
-
-				byte pteam[] = s[1].trim().getBytes(UTF_8);
-				String newteam = new String(pteam, UTF_8);
-				byte pleague[] = s[0].trim().getBytes(UTF_8);
-				String newleague = new String(pleague, UTF_8);
-
-				leagueTeam.put(newteam, newleague);
-
-
+				
+				leagueTeam.put(s[1], s[0]);
+	
 			}
 
 			reader.close();
