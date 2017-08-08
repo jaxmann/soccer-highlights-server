@@ -32,6 +32,7 @@ public class Transfers {
 	public static void start() {
 		
 		leagueTeams = populateLeagueTeams();
+		System.out.println("size is " + leagueTeams.size());
 
 		String transferURL = "http://www.espnfc.us/transfers?year=2017";
 
@@ -101,12 +102,13 @@ public class Transfers {
 	}
 	
 	public static String getLeague(String team, HashMap<String, String> leagueTeams) {
+		
 		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			
-			System.out.println(key + " | " + value);
 			
+	
 			if (similarity(team, key) >= .500) {
 				return value;
 			} else {
@@ -132,9 +134,8 @@ public class Transfers {
 
 				s = line.split(",");
 				
-				if (!leagueTeam.containsKey(s[1])) {
-					leagueTeam.put(s[1], s[0]);
-				}
+				leagueTeam.put(s[1], s[0]);
+				
 	
 			}
 
