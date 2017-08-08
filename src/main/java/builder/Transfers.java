@@ -126,11 +126,15 @@ public class Transfers {
 			String line;
 
 
+			String[] s;
+			
 			while ((line = reader.readLine()) != null) {
 
-				String[] s = line.split(",");
+				s = line.split(",");
 				
-				leagueTeam.put(s[1], s[0]);
+				if (!leagueTeam.containsKey(s[1])) {
+					leagueTeam.put(s[1], s[0]);
+				}
 	
 			}
 
