@@ -395,10 +395,15 @@ public class CrawlerThread implements Runnable {
 
 			boolean found = false;
 			for (String a : teamsSameLeague) {
-				if (postDescription.contains(a)) {
-					maybes.put(key, value + 20); //add 20 points if  a team from the same league is found
-					logger.info("[" + key + "] team in same league is [" + a + "]");
-					found = true;
+				for (String ab : a.split(" ")) {
+					if (postDescription.contains(ab)) {
+						maybes.put(key, value + 20); //add 20 points if part of a team from the same league is found
+						logger.info("[" + key + "] team in same league fragment is [" + ab + "]");
+						found = true;
+						break;
+					}
+				}
+				if (found) {
 					break;
 				}
 			}
