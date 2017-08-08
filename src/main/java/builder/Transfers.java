@@ -48,6 +48,7 @@ public class Transfers {
 				p[0] = thisPlayer.select("div.transfer-module-content > div.transfer-graphic > a.previous").text();
 				p[1] = thisPlayer.select("div.transfer-module-content > div.transfer-graphic > a.new").text();
 				xferredPlayers.put(Simplify.simplifyName(player), p);
+				
 			}
 
 		} catch (IOException e) {
@@ -70,7 +71,7 @@ public class Transfers {
 					String key = entry.getKey();
 					String[] value = entry.getValue();
 
-					if (Simplify.simplifyName(key).equals(Simplify.simplifyName(arr[2].trim())) && Similar.similarity(value[0], arr[1]) >= .500) {
+					if (Simplify.simplifyName(key).equals(Simplify.simplifyName(arr[2].trim()))) {
 						String league = getLeague(value[1], leagueTeams);
 						if (league.equals("PMR")) {
 							System.out.println(line);
