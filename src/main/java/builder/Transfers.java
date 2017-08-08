@@ -71,21 +71,24 @@ public class Transfers {
 			while ((line = reader.readLine()) != null) {
 				String[] arr = line.split(",");
 				String name = Simplify.simplifyName(arr[2].trim());
+				boolean written = false;
 				
 				for (HashMap.Entry<String, String[]> entry : xferredPlayers.entrySet()) {
 					String key = entry.getKey();
 					String[] value = entry.getValue();
-					try {
-						if (similarity(key, arr[2]) >= .500 && similarity(value[0], arr[1]) >= .500) {
-							System.out.println(arr[0] + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
-						} else if (similarity(key, arr[2]) >= .75 && similarity(value[0], arr[1]) <= .500) {
-							System.out.println(arr[0] + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
-						} else {
-							System.out.println(line);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+
+					if (similarity(key, arr[2]) >= .500 && similarity(value[0], arr[1]) >= .500) {
+						System.out.println(arr[0] + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+						written = true;
+					} else if (similarity(key, arr[2]) >= .75 && similarity(value[0], arr[1]) <= .500) {
+						System.out.println(arr[0] + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+						written = true;
+					} 
+
+				}
+				
+				if (!written) {
+					System.out.println(line);
 				}
 				
 				/*if (xferredPlayers.containsKey(name)) {
