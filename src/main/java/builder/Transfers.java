@@ -78,6 +78,8 @@ public class Transfers {
 					
 					if (similarity(key, arr[2]) >= .500 && similarity(value[0], arr[1]) >= .500) {
 						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + arr[2].trim() + "," + arr[3]);
+					} else if (similarity(key, arr[2]) >= .75 && similarity(value[0], arr[1]) <= .500) {
+						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + arr[2].trim() + "," + arr[3]);
 					} else {
 						System.out.println(line);
 					}
