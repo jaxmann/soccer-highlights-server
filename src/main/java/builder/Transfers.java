@@ -70,7 +70,7 @@ public class Transfers {
 					String key = entry.getKey();
 					String[] value = entry.getValue();
 
-					if (Similar.similarity(key, arr[2]) >= .500 && Similar.similarity(value[0], arr[1]) >= .500) {
+					if (Simplify.simplifyName(key).equals(Simplify.simplifyName(arr[2].trim())) && Similar.similarity(value[0], arr[1]) >= .500) {
 						String league = getLeague(value[1], leagueTeams);
 						if (league.equals("PMR")) {
 							System.out.println(line);
@@ -78,7 +78,7 @@ public class Transfers {
 							System.out.println(" " + league + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
 						}
 						written = true;
-					} else if (Similar.similarity(key, arr[2]) >= .75 && Similar.similarity(value[0], arr[1]) <= .500) {
+					} else if (Similar.similarity(key, arr[2]) >= .95) {
 						String league = getLeague(value[1], leagueTeams);
 						if (league.equals("PMR")) {
 							System.out.println(line);
