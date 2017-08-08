@@ -72,22 +72,23 @@ public class Transfers {
 					String[] value = entry.getValue();
 
 					if (Simplify.simplifyName(key).equals(Simplify.simplifyName(arr[2].trim()))) {
-						System.out.println(key + " is equal to " + arr[2].trim());
-						String league = getLeague(value[1], leagueTeams);
-						System.out.println("league is: " + league + " and team is: " + value[1]);
+						String[] lnt = getLeague(value[1], leagueTeams);
+						String league = lnt[1];
+						String team = lnt[0];
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
 						} else {
-							System.out.println(" " + league.trim() + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+							System.out.println(" " + league.trim() + ", " + team + ", " + arr[2].trim() + "," + arr[3]);
 						}
 						written = true;
 					} else if (Similar.similarity(key, arr[2].trim()) >= .95) {
-						System.out.println(key + " is 95% conf match with " + arr[2].trim());
-						String league = getLeague(value[1], leagueTeams);
+						String[] lnt = getLeague(value[1], leagueTeams);
+						String league = lnt[1];
+						String team = lnt[0];						
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
 						} else {
-							System.out.println(" " + league.trim()  + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+							System.out.println(" " + league.trim()  + ", " + team + ", " + arr[2].trim() + "," + arr[3]);
 						}
 						written = true;
 					} 
@@ -115,27 +116,31 @@ public class Transfers {
 		} 
 	}
 	
-	public static String getLeague(String team, HashMap<String, String> leagueTeams) {
+	public static String[] getLeague(String team, HashMap<String, String> leagueTeams) {
 		
-		System.out.println(leagueTeams.size());
+		String[] a = {"",""};
 		
+		//league
 		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			
-			if (key.contains("Tienne")) {
-				System.out.println(key);
-			}
 			
 			if (Similar.similarity(team, key) >= .700) {
 				System.out.println("similarity found between " + team + " and " + key);
-				return value;
+				a[0] = key; //team
+				a[1] = value; //league
+				break;
 			} else {
 				//do nothing...
 			}
 		}
 		
-		return "PMR";
+		if (a[1].equals("")) {
+			a[1] = "PMR";
+		}
+		
+		return a;
 	}
 
 	public static HashMap<String, String> populateLeagueTeams() {
