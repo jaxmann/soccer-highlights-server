@@ -17,6 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import serv.Similar;
 import serv.Simplify;
 
 public class Transfers {
@@ -31,14 +32,7 @@ public class Transfers {
 
 	public static void start() {
 		
-		HashMap<String, String> leagueTeams = populateLeagueTeams();
-		System.out.println("size is " + leagueTeams.size());
-		System.out.println("begin printing keys and values...");
-		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			System.out.println(key + " | " + value);
-		}
+		leagueTeams = populateLeagueTeams();
 
 		String transferURL = "http://www.espnfc.us/transfers?year=2017";
 
@@ -76,10 +70,10 @@ public class Transfers {
 					String key = entry.getKey();
 					String[] value = entry.getValue();
 
-					if (similarity(key, arr[2]) >= .500 && similarity(value[0], arr[1]) >= .500) {
+					if (Similar.similarity(key, arr[2]) >= .500 && Similar.similarity(value[0], arr[1]) >= .500) {
 						System.out.println(" " + getLeague(value[1], leagueTeams) + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
 						written = true;
-					} else if (similarity(key, arr[2]) >= .75 && similarity(value[0], arr[1]) <= .500) {
+					} else if (Similar.similarity(key, arr[2]) >= .75 && Similar.similarity(value[0], arr[1]) <= .500) {
 						System.out.println(" " + getLeague(value[1], leagueTeams)  + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
 						written = true;
 					} 
@@ -108,18 +102,15 @@ public class Transfers {
 	}
 	
 	public static String getLeague(String team, HashMap<String, String> leagueTeams) {
-		System.out.println("team is " + team);
-		System.out.println("leagueTeam size here is " + leagueTeams.size());
 		
 		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			
-			
-			if (similarity(team, key) >= .500) {
+			if (Similar.similarity(team, key) >= .500) {
 				return value;
 			} else {
-				return "PMR";
+				//do nothing...
 			}
 		}
 		
@@ -131,7 +122,7 @@ public class Transfers {
 		HashMap<String, String> leagueTeam = new HashMap<String, String>();
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("/home/ec2-user/server/regenerate-players/fullTable.csv")); 
+			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players/fullTable.csv")); 
 			String line;
 
 			String[] s;
@@ -153,55 +144,6 @@ public class Transfers {
 		return leagueTeam;
 	}
 
-	/**
-	 * Calculates the similarity (a number within 0 and 1) between two strings.
-	 */
-	public static double similarity(String s1, String s2) {
-		String longer = s1, shorter = s2;
-		if (s1.length() < s2.length()) { // longer should always have greater length
-			longer = s2; shorter = s1;
-		}
-		int longerLength = longer.length();
-		if (longerLength == 0) { return 1.0; /* both strings are zero length */ }
-		/* // If you have StringUtils, you can use it to calculate the edit distance:
-	    return (longerLength - StringUtils.getLevenshteinDistance(longer, shorter)) /
-	                               (double) longerLength; */
-		return (longerLength - editDistance(longer, shorter)) / (double) longerLength;
-
-	}
-
-	// Example implementation of the Levenshtein Edit Distance
-	// See http://rosettacode.org/wiki/Levenshtein_distance#Java
-	public static int editDistance(String s1, String s2) {
-		s1 = s1.toLowerCase();
-		s2 = s2.toLowerCase();
-
-		int[] costs = new int[s2.length() + 1];
-		for (int i = 0; i <= s1.length(); i++) {
-			int lastValue = i;
-			for (int j = 0; j <= s2.length(); j++) {
-				if (i == 0)
-					costs[j] = j;
-				else {
-					if (j > 0) {
-						int newValue = costs[j - 1];
-						if (s1.charAt(i - 1) != s2.charAt(j - 1))
-							newValue = Math.min(Math.min(newValue, lastValue),
-									costs[j]) + 1;
-						costs[j - 1] = lastValue;
-						lastValue = newValue;
-					}
-				}
-			}
-			if (i > 0)
-				costs[s2.length()] = lastValue;
-		}
-		return costs[s2.length()];
-	}
-
-	public static void printSimilarity(String s, String t) {
-		System.out.println(String.format(
-				"%.3f is the similarity between \"%s\" and \"%s\"", similarity(s, t), s, t));
-	}
+	
 
 }
