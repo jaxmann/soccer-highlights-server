@@ -90,7 +90,9 @@ public class Playground {
 	public static void main(String[] args) {
 		
 		
-		String a = executePost("http://www.espnfc.us/api/transfers?limit=20");
+		System.out.println(Similar.similarity("Colchester United", "Manchester United"));
+		
+		/*String a = executePost("http://www.espnfc.us/api/transfers?limit=20");
 		
 		JsonObject jsonObj = new JsonParser().parse(a).getAsJsonObject();
 		
@@ -109,7 +111,7 @@ public class Playground {
 				System.out.println(playerName + " | " + fromTeam + " | " + toTeam);
 			}
 
-		}
+		}*/
 		
 //		JsonObject data2 = data.get(0).getAsJsonObject();
 //		

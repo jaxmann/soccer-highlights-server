@@ -161,7 +161,7 @@ public class Transfers {
 			String value = entry.getValue();
 
 
-			if (Similar.similarity(team, key) >= .700) {
+			if (Similar.similarity(team, key) >= .850 || key.contains(team)) {
 				a[0] = key; //team
 				a[1] = value; //league
 				break;
