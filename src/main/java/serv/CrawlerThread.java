@@ -465,6 +465,17 @@ public class CrawlerThread implements Runnable {
 				}
 			}
 		}
+		////////////////////////////////////////////// add 20 points if similar last name is found
+		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+			
+			for (String s: postDescription.split(" ")) {
+				if (Similar.similarity(s, key.split(" ")[key.split(" ").length-1]) >= .9) {
+					maybes.put(key, value + 20); //add 20 points if last name is contained in PD (similar, at least)
+				}
+			}
+		}
 		////////////////////////////////////////////////////// if postDescription contains the last name with special chars add 30
 		for (HashMap.Entry<String, Integer> entry : maybes.entrySet()) {
 			String key = entry.getKey();
