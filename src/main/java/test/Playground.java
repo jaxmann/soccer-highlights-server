@@ -36,7 +36,7 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
-		System.out.println(Similar.similarity("Hernane", " Hernani"));
+		System.out.println(Similar.similarity("Sporting Club de Bastia", "Nice"));
 		
 		HashMap<String, String> a = Transfers.populateLeagueTeams();
 		

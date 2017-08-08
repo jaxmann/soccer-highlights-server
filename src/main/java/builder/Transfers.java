@@ -74,6 +74,7 @@ public class Transfers {
 					if (Simplify.simplifyName(key).equals(Simplify.simplifyName(arr[2].trim()))) {
 						System.out.println(key + " is equal to " + arr[2].trim());
 						String league = getLeague(value[1], leagueTeams);
+						System.out.println("league is: " + league + " and team is: " + value[1]);
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
 						} else {
