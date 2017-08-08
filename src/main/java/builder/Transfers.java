@@ -43,13 +43,13 @@ public class Transfers {
 
 		leagueTeams = populateLeagueTeams();
 
-		String transferURL = "http://www.espnfc.us/transfers?year=2017";
+		//String transferURL = "http://www.espnfc.us/transfers?year=2017";
 
 		HashMap<String,String[]> xferredPlayers = new HashMap<String, String[]>();
 		
 		
 
-		String a = executePost("http://www.espnfc.us/api/transfers?limit=20");
+		String a = executePost("http://www.espnfc.us/api/transfers?limit=200");
 
 		JsonObject jsonObj = new JsonParser().parse(a).getAsJsonObject();
 
@@ -73,9 +73,9 @@ public class Transfers {
 
 		}
 		
-		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
+		for (HashMap.Entry<String, String[]> entry : xferredPlayers.entrySet()) {
 			String key = entry.getKey();
-			String value = entry.getValue();
+			String[] value = entry.getValue();
 			System.out.println(key);
 		}
 
