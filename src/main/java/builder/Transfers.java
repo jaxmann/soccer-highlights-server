@@ -80,7 +80,7 @@ public class Transfers {
 				}
 
 				if (!written) {
-					System.out.println(line);
+					//System.out.println(line);
 				}
 
 				/*if (xferredPlayers.containsKey(name)) {
@@ -104,6 +104,8 @@ public class Transfers {
 		for (HashMap.Entry<String, String> entry : leagueTeams.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
+			
+			System.out.println(key + " | " + value);
 			
 			if (similarity(team, key) >= .500) {
 				return value;
