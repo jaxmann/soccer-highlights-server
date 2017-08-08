@@ -72,6 +72,7 @@ public class Transfers {
 					String[] value = entry.getValue();
 
 					if (Simplify.simplifyName(key).equals(Simplify.simplifyName(arr[2].trim()))) {
+						System.out.println(key + " is equal to " + arr[2].trim());
 						String league = getLeague(value[1], leagueTeams);
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
@@ -79,7 +80,8 @@ public class Transfers {
 							System.out.println(" " + league.trim() + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
 						}
 						written = true;
-					} else if (Similar.similarity(key, arr[2]) >= .95) {
+					} else if (Similar.similarity(key, arr[2].trim()) >= .95) {
+						System.out.println(key + " is 95% conf match with " + arr[2].trim());
 						String league = getLeague(value[1], leagueTeams);
 						if (league.equals("PMR")) {
 							System.out.println(" " + line.trim());
