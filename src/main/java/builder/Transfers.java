@@ -75,13 +75,17 @@ public class Transfers {
 				for (HashMap.Entry<String, String[]> entry : xferredPlayers.entrySet()) {
 					String key = entry.getKey();
 					String[] value = entry.getValue();
-					
-					if (similarity(key, arr[2]) >= .500 && similarity(value[0], arr[1]) >= .500) {
-						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + arr[2].trim() + "," + arr[3]);
-					} else if (similarity(key, arr[2]) >= .75 && similarity(value[0], arr[1]) <= .500) {
-						System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + arr[2].trim() + "," + arr[3]);
-					} else {
-						System.out.println(line);
+					try {
+						if (similarity(key, arr[2]) >= .500 && similarity(value[0], arr[1]) >= .500) {
+							System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + arr[2].trim() + "," + arr[3]);
+						} else if (similarity(key, arr[2]) >= .75 && similarity(value[0], arr[1]) <= .500) {
+							System.out.println(arr[0] + ", " + xferredPlayers.get(name)[1] + ", " + arr[2].trim() + "," + arr[3]);
+						} else {
+							System.out.println(line);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(xferredPlayers.get(name));
 					}
 				}
 				
