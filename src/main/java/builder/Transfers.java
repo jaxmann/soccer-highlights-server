@@ -71,10 +71,20 @@ public class Transfers {
 					String[] value = entry.getValue();
 
 					if (Similar.similarity(key, arr[2]) >= .500 && Similar.similarity(value[0], arr[1]) >= .500) {
-						System.out.println(" " + getLeague(value[1], leagueTeams) + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+						String league = getLeague(value[1], leagueTeams);
+						if (league.equals("PMR")) {
+							System.out.println(line);
+						} else {
+							System.out.println(" " + league + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+						}
 						written = true;
 					} else if (Similar.similarity(key, arr[2]) >= .75 && Similar.similarity(value[0], arr[1]) <= .500) {
-						System.out.println(" " + getLeague(value[1], leagueTeams)  + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+						String league = getLeague(value[1], leagueTeams);
+						if (league.equals("PMR")) {
+							System.out.println(line);
+						} else {
+							System.out.println(" " + league  + ", " + value[1] + ", " + arr[2].trim() + "," + arr[3]);
+						}
 						written = true;
 					} 
 
