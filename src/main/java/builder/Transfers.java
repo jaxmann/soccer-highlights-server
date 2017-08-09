@@ -182,7 +182,7 @@ public class Transfers {
 		HashMap<String, String> leagueTeam = new HashMap<String, String>();
 
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("regenerate-players/fullTable.csv")); 
+			BufferedReader reader = new BufferedReader (new FileReader("/home/ec2-user/server/regenerate-players/fullTable.csv")); 
 			String line;
 
 			String[] s;
