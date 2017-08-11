@@ -1,0 +1,2 @@
+sudo java -jar /home/ec2-user/server/transfer.jar > /home/ec2-user/server/regenerate-players/transfer-tmp.csv
+sudo cp /home/ec2-user/server/regenerate-players/transfer-tmp.csv /home/ec2-user/server/regenerate-players/fullTable.csv
