@@ -682,7 +682,7 @@ public class CrawlerThread implements Runnable {
 					altHashtag = leagueHashtag;
 				}
 				//------------------------------------------------------//
-				int maxPostLength = 140 - url.length() - altHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
+				int maxPostLength = 140 - altHashtag.length() - teamHashtag.length() - playerHashtag.length() - 6 - 1; //140 max twitter, 3 is 1x" | ", second 3 is ..., 1 is off by 1 error below due to whitespace added
 
 				String ellipsePost = "";
 				String[] postParts = postDescription.split(" ");
@@ -701,7 +701,7 @@ public class CrawlerThread implements Runnable {
 					ellipsePost += "...";
 				}
 
-				String stat = ellipsePost + " | " + url;
+				String stat = ellipsePost; // + " | " + url;
 
 				if (!playerHashtag.equals("") && (stat.length() + playerHashtag.length() + 2 <= 140)) {
 					stat += " #" + Simplify.simplifyName(playerHashtag.replaceAll("\\s|[-]|[!]|[$]|[%]|[\\^]|[&]|[\\*]|[\\+]|[']",""));
