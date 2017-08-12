@@ -105,7 +105,7 @@ public class Simplify {
 			return 100; //d
 		} else if (n == 274 || n == 276 || n == 278 || n == 280 || n == 282) {
 			return 69; //E
-		} else if (n == 275 || n == 277 || n == 279 || n == 281 || n == 281) {
+		} else if (n == 275 || n == 277 || n == 279 || n == 281 || n == 281 || n == 283) {
 			return 101; //e
 		} else if (n == 285 || n == 287 || n == 289 || n == 291) {
 			return 103; //g

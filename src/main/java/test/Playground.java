@@ -89,6 +89,8 @@ public class Playground {
 
 	public static void main(String[] args) {
 		
+		System.out.println((char)304);
+		
 		
 		System.out.println(Similar.similarity("Olympique Lyonnais", "Olympique Lyon"));
 		
