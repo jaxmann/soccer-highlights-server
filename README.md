@@ -1,19 +1,11 @@
-     _____     ___ ___     _ __  
-    /\ '__`\ /' __` __`\  /\`'__\
-    \ \ \L\ \/\ \/\ \/\ \ \ \ \/ 
-     \ \ ,__/\ \_\ \_\ \_\ \ \_\ 
-      \ \ \/  \/_/\/_/\/_/  \/_/ 
-       \ \_\                     
-        \/_/   
 
-# PMR &lt; 20
-serving up sick highlights since the year 19 just the server though
+serving up sick highlights just the server though
 
 &nbsp;
 
-### PMR Services
+### S Services
 
-[pmr-server](https://github.com/jaxmann/pmr-server)
+[s-server](https://github.com/jaxmann/s-server)
 
 [pmr-rest](https://github.com/kevinchesser/pmr-rest)
 
